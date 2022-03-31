@@ -1,0 +1,32 @@
+<div class="container">
+
+    <div class="col-md-6 col-md-offset-3 loginBox">
+        <ng-container *ngTemplateOutlet="this.logged ? logoutBlock : loginBlock">
+        </ng-container>
+    </div>
+</div>
+
+
+<ng-template #loginBlock>
+    <h3>Log In</h3>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3 form-group">
+            <label>Cédula</label>
+            <input type="email" formControlName="id" class="form-control" placeholder="Ingrese su cédula">
+        </div>
+        <div class="mb-3 form-group">
+            <label for="exampleInputPassword1">Contraseña</label>
+            <input type="password" formControlName="password" class="form-control" placeholder="Contraseña">
+        </div>
+        <ng-container *ngIf="this.message">
+            <p>
+                {{this.message}}
+            </p>
+        </ng-container>
+        <button type="submit" class="btn btn-primary">Ingresar</button>
+    </form>
+</ng-template>
+<ng-template #logoutBlock>
+    <h2>Bienvenido al sistema!</h2>
+    <button type="submit" (click)="logout()" class="btn btn-danger">Salir</button>
+</ng-template>
