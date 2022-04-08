@@ -36,7 +36,7 @@ export class AuthService {
     return JSON.parse(localStorage.getItem('token') || '{}')
   }
 
-  public login(id: string, password: string) {
+  public login(id: string, password: string, role: number) {
 
     let hash = password
     let loginUrl = "check_login?cedula=" + id.trim() + "&password_hash=" + hash
@@ -44,12 +44,12 @@ export class AuthService {
     // TODO: descomentar esto cuando esté el servidor 
     // return this.repo.getData(
     //   loginUrl)
-    return of({ success: true })
+    return of({ success: true }) // y comentar esto
       .pipe(map((res: any) => {
         if (res.success) {
           console.log("Login successful");
           localStorage.setItem('isLoggedIn', "true");
-          localStorage.setItem('token', JSON.stringify({ "id": id, "password": hash }));
+          localStorage.setItem('token', JSON.stringify({ "id": id, "password": hash, role }));
           // this.logged = true
           // this.message = ""
           return true

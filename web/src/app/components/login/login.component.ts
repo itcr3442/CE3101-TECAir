@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { RepositoryService } from 'src/app/services/repository.service';
+import { RoleLevels } from 'src/app/constants/auth.constants'
 
 @Component({
   selector: 'app-login',
@@ -13,9 +13,15 @@ import { RepositoryService } from 'src/app/services/repository.service';
  * Componente que contiene la página de inicio de sesión
  */
 export class LoginComponent implements OnInit {
+  // Este get es para poder usarlo dentro de template
+  public get RoleLevels(): typeof RoleLevels {
+    return RoleLevels;
+  }
+
   loginForm = new FormGroup({
     id: new FormControl('', [Validators.required, Validators.pattern('[0-9]*')]),
-    password: new FormControl('', [Validators.required])
+    password: new FormControl('', [Validators.required]),
+    role: new FormControl(RoleLevels.User, [Validators.required, Validators.min(RoleLevels.User), Validators.max(RoleLevels.Admin)])
   })
   message: string = ""
   logged: boolean;
@@ -31,6 +37,10 @@ export class LoginComponent implements OnInit {
     if (this.router.url === "/login/redirect") {
       this.message = "Debe ingresar al sistema para poder acceder a esa página"
     }
+  }
+
+  get role() {
+    return this.loginForm.controls['role'].value
   }
 
   get id() {
@@ -55,7 +65,7 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (this.loginForm.valid) {
 
-      this.authService.login(this.id, this.password).subscribe(
+      this.authService.login(this.id, this.password, this.role).subscribe(
         (res: boolean) => {
           if (res) {
             this.logged = true
@@ -69,7 +79,7 @@ export class LoginComponent implements OnInit {
       )
     }
     else {
-      this.message = "Por favor verifique que ingresó ambos campos y su cédula solo contiene dígitos";
+      this.message = "Por favor verifique que ingresó todos los campos correctamente y su cédula solo contiene dígitos";
     }
   }
 }
