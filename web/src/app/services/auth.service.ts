@@ -28,6 +28,15 @@ export class AuthService {
     }
     return false;
   }
+
+  public getRole(): number {
+    if (localStorage.getItem('isLoggedIn') == "true") {
+      let token = JSON.parse(localStorage.getItem('token') || '{}')
+      return token.role
+    }
+    return 0;
+  }
+
   /**
    * Obtiene la info del usuario actual de local storage, llamar después de isLoggedIn()
    * @returns Object con 'id' y 'password' fields
@@ -49,7 +58,7 @@ export class AuthService {
         if (res.success) {
           console.log("Login successful");
           localStorage.setItem('isLoggedIn', "true");
-          localStorage.setItem('token', JSON.stringify({ "id": id, "password": hash, role }));
+          localStorage.setItem('token', JSON.stringify({ id, "password": hash, role }));
           // this.logged = true
           // this.message = ""
           return true

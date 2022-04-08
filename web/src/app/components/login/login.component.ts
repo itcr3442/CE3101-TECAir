@@ -13,10 +13,6 @@ import { RoleLevels } from 'src/app/constants/auth.constants'
  * Componente que contiene la página de inicio de sesión
  */
 export class LoginComponent implements OnInit {
-  // Este get es para poder usarlo dentro de template
-  public get RoleLevels(): typeof RoleLevels {
-    return RoleLevels;
-  }
 
   loginForm = new FormGroup({
     id: new FormControl('', [Validators.required, Validators.pattern('[0-9]*')]),
@@ -39,6 +35,11 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  // Este get es para poder usarlo dentro de template
+  public get RoleLevels(): typeof RoleLevels {
+    return RoleLevels;
+  }
+
   get role() {
     return this.loginForm.controls['role'].value
   }
@@ -57,6 +58,7 @@ export class LoginComponent implements OnInit {
   logout() {
     this.authService.logout()
     this.logged = false
+    window.location.reload()
   }
   /**
   * Método que se llama para verificar con el servido si los datos introducidos
@@ -70,7 +72,7 @@ export class LoginComponent implements OnInit {
           if (res) {
             this.logged = true
             this.message = ""
-
+            window.location.reload()
           }
           else {
             this.message = "Cédula o contraseña incorrectos";
