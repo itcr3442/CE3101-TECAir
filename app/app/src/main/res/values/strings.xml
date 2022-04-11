@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">TECAir</string>
+    <string name="firstname_hint">First Name</string>
+    <string name="lastname_hint">Last Name</string>
+    <string name="password_hint">Password</string>
+    <string name="login_hint">User</string>
+    <string name="phone_hint">Phone Number</string>
+    <string name="email_hint">E-Mail</string>
+    <string name="university_hint">University Name</string>
+    <string name="student_id_hint">Student ID</string>
+    <string name="flight_from_hint">From</string>
+    <string name="flight_to_hint">To</string>
+    <string name="login_button">Login</string>
+    <string name="credentials_error">Incorrect Credentials</string>
+    <string name="url_entry">Custom airline address</string>
+    <string name="default_url">192.168.0.114</string>
+    <string name="url_button">Server Settings</string>
+    <string name="offline_switch">Offline Mode</string>
+    <string name="student_switch">User is a student</string>
+    <string name="user_management_button">User Management</string>
+    <string name="add_user_button">Register User</string>
+    <string name="flights_button">Flights</string>
+    <string name="search_flight_button">Search</string>
+    <string name="promo_button">Promos</string>
+
+</resources>
