@@ -9,7 +9,10 @@ import java.util.*
  * the SQLite APIs as noted in this article: https://developer.android.com/training/data-storage/room#kts
  */
 
-abstract class LocalDB: RoomDatabase(){}
+@Database(entities = [User::class, Flight::class, Reservation::class, Promo::class],version=1)
+abstract class LocalDB: RoomDatabase(){
+	abstract fun userDao(): UserDao
+}
 
 
 @Entity
@@ -49,10 +52,14 @@ data class Promo(
 )
 
 @Dao
-interface userDao{
+interface UserDao{
     @Insert
     fun insertUser(user: User)
 
     @Query("SELECT username, firstname, lastname FROM user")
-    fun getAll()
+    fun getAll(): List<User>
+
+    @Query(
+        "SELECT username, password FROM user WHERE username = :username AND password = :password")
+    fun findUser(username: String, password: String): List<User>
 }

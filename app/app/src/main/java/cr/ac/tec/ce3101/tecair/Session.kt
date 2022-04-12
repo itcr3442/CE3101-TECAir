@@ -1,13 +1,11 @@
 package cr.ac.tec.ce3101.tecair
 
-import android.content.Context
-
-class Session(
-    url: String,
-    private val user: String,
-    private val password: String,
-    private val cx: Context
-    ) {
-
-
+interface Session
+{
+    fun login(auth: (Boolean)-> Unit)
+    fun registerUser(user: User, afterOp : (Boolean)->Unit)
+    fun getPromoList(): List<Promo>
+    fun getFlights(): List<String>
+    fun getFlightInfo(): Flight
+    fun makeReservation(reservation: Reservation, afterOp: (Boolean) -> Unit)
 }

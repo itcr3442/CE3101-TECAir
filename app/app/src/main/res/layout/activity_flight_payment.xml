@@ -75,7 +75,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/flightID"
+        android:id="@+id/flightIDText"
         android:layout_width="299dp"
         android:layout_height="53dp"
         android:layout_marginStart="56dp"
