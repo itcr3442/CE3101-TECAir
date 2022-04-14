@@ -12,15 +12,23 @@
     <string name="flight_to_hint">To</string>
     <string name="login_button">Login</string>
     <string name="credentials_error">Incorrect Credentials</string>
+    <string name="new_user_error">Unable to create user. Perhaps it already exists?</string>
+    <string name="empty_error">Field must have a value</string>
     <string name="url_entry">Custom airline address</string>
     <string name="default_url">https://192.168.0.114:5000</string>
     <string name="url_button">Server Settings</string>
     <string name="offline_switch">Offline Mode</string>
     <string name="student_switch">User is a student</string>
-    <string name="user_management_button">User Management</string>
+    <string name="register_user_button">Register User</string>
+    <string name="list_user_button">User Management</string>
     <string name="add_user_button">Register User</string>
+    <string name="view_info_user_button">Info</string>
+    <string name="edit_user_button">Edit</string>
+    <string name="delete_user_button">Delete</string>
+    <string name="delete_user_error">Could not delete user</string>
     <string name="flights_button">Flights</string>
     <string name="search_flight_button">Search</string>
     <string name="promo_button">Promos</string>
+
 
 </resources>

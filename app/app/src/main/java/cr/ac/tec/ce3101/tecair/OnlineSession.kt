@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.startActivity
+import androidx.room.Room
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,6 +19,8 @@ class OnlineSession(
     private val cx: Context
     ) : Session {
     private val service: TECAirService
+    private val localDB: LocalDB =
+        Room.databaseBuilder(cx.applicationContext, LocalDB::class.java, "local-data").allowMainThreadQueries().build()
 
     init{
         val retrofit = Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build()
@@ -40,19 +43,22 @@ class OnlineSession(
     }
     override fun registerUser(user: User, afterOp: (Boolean)->Unit){
         TODO()
-        (cx as TECAirApp).localDB.userDao().insertUser(user)
+    }
+
+    override fun deleteUser(user: User, afterOp: (Boolean) -> Unit) {
+        TODO("Not yet implemented")
     }
 
     override fun getPromoList(): List<Promo> {
         TODO("Not yet implemented")
     }
 
-    override fun getFlights(): List<String> {
+    override fun getFlights(): List<Flight> {
         TODO("Not yet implemented")
     }
 
-    override fun getFlightInfo(): Flight {
-        TODO("Not yet implemented")
+    override fun getUserList(): List<User> {
+        TODO()
     }
 
     override fun makeReservation(reservation: Reservation, afterOp: (Boolean) -> Unit) {

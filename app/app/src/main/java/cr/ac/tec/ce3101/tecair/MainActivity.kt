@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
             run {
                 if (success) {
                     (application as TECAirApp).session = session
-                    val intent = Intent(this, Menu::class.java)
+                    val intent = Intent(this, MainMenuActivity::class.java)
                     startActivity(intent)
                 } else {
                     findViewById<TextView>(R.id.credentialsErrorText).visibility = View.VISIBLE

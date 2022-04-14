@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FlightPayment">
+    tools:context=".FlightPaymentActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -26,7 +26,6 @@
             android:layout_marginBottom="16dp"
             android:ems="10"
             android:inputType="number|textPersonName|textEmailAddress"
-            android:text="Name"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -41,7 +40,6 @@
             android:layout_marginBottom="16dp"
             android:ems="10"
             android:inputType="date|none|datetime"
-            android:text="Name"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/CVEText"
             app:layout_constraintStart_toStartOf="parent"

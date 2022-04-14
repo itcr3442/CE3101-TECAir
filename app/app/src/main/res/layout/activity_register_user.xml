@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserManagement">
+    tools:context=".RegisterUserActivity">
 
     <EditText
         android:id="@+id/newUsernameText"
@@ -129,34 +129,51 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newStudentIDText" />
+        app:layout_constraintTop_toBottomOf="@+id/newUserErrorText" />
 
     <EditText
         android:id="@+id/newUniversityText"
         android:layout_width="317dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/university_hint"
         android:inputType="textPersonName"
         android:textColorHint="#757575"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/studentSwitch"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/studentSwitch" />
 
     <EditText
         android:id="@+id/newStudentIDText"
         android:layout_width="317dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/student_id_hint"
         android:inputType="textPersonName"
         android:textColorHint="#757575"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newUniversityText"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/newUniversityText" />
+
+    <TextView
+        android:id="@+id/newUserErrorText"
+        android:layout_width="315dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/new_user_error"
+        android:textColor="@color/design_default_color_error"
+        android:textSize="16sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newStudentIDText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

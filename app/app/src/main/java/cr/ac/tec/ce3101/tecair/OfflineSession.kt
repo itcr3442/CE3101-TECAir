@@ -1,35 +1,56 @@
 package cr.ac.tec.ce3101.tecair
 
 import android.content.Context
+import androidx.room.Room
 
 class OfflineSession(
     private val username: String,
-    private val  password: String,
-    private val cx: Context
-): Session {
+    private val password: String,
+    private val cx: Context,
+    private val localDB: LocalDB =
+        Room.databaseBuilder(cx.applicationContext, LocalDB::class.java, "local-data")
+            .allowMainThreadQueries().build()
+) : Session {
     override fun login(auth: (Boolean) -> Unit) {
-        val users = (cx as TECAirApp).localDB.userDao().findUser(username, password)
-        if (users.isNotEmpty()){
+        val users = localDB.userDao().findCredentials(username, password)
+        if (users.isNotEmpty()) {
             auth(true)
-        }else{
+        } else {
             auth(false)
         }
     }
 
     override fun registerUser(user: User, afterOp: (Boolean) -> Unit) {
-        TODO("Not yet implemented")
+        val users = localDB.userDao().findUser(user.username)
+        if (users.isEmpty()) {
+            localDB.userDao().insertAll(user)
+            afterOp(true)
+        } else {
+            afterOp(false)
+        }
+    }
+
+    override fun deleteUser(user: User, afterOp: (Boolean) -> Unit) {
+        val users = localDB.userDao().findUser(user.username)
+        if (users.isEmpty()) {
+            localDB.userDao().delete(user)
+            afterOp(true)
+        } else {
+            afterOp(false)
+        }
+
     }
 
     override fun getPromoList(): List<Promo> {
-        TODO("Not yet implemented")
+        return localDB.promoDao().getAll()
     }
 
-    override fun getFlights(): List<String> {
-        TODO("Not yet implemented")
+    override fun getFlights(): List<Flight> {
+        return localDB.flightDao().getAll()
     }
 
-    override fun getFlightInfo(): Flight {
-        TODO("Not yet implemented")
+    override fun getUserList(): List<User> {
+        return localDB.userDao().getAll()
     }
 
     override fun makeReservation(reservation: Reservation, afterOp: (Boolean) -> Unit) {
