@@ -1,13 +1,12 @@
 package cr.ac.tec.ce3101.tecair
 
-import android.content.DialogInterface
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
-import androidx.core.view.children
+import com.google.gson.Gson
 
 class UserListActivity : AppCompatActivity() {
     private lateinit var userList: LinearLayout
@@ -30,7 +29,7 @@ class UserListActivity : AppCompatActivity() {
                     textSize = 18F
                 })
                 addView(Button(this.context).apply {
-                    text = getString(R.string.view_info_user_button)
+                    text = getString(R.string.info)
                     setOnClickListener { _ -> viewInfoUser(user) }
                     textSize = 16F
                 })
@@ -51,52 +50,49 @@ class UserListActivity : AppCompatActivity() {
     }
 
     private fun viewInfoUser(user: User) {
-        val builder = AlertDialog.Builder(this)
         var message = "${getString(R.string.login_hint)} : ${user.username} \n" +
-                "${getString(R.string.firstname_hint)} : ${user.firstname} \n" +
-                "${getString(R.string.lastname_hint)} : ${user.lastname} \n" +
-                "${getString(R.string.phone_hint)} : ${user.phoneNumber} \n" +
+                "${getString(R.string.firstname_hint)} : ${user.first_name} \n" +
+                "${getString(R.string.lastname_hint)} : ${user.last_name} \n" +
+                "${getString(R.string.phone_hint)} : ${user.phonenumber} \n" +
                 "${getString(R.string.email_hint)} : ${user.email} \n"
         if (user.university != null) {
             message += "${getString(R.string.university_hint)} : ${user.university} \n" +
-                    "${getString(R.string.student_id_hint)} : ${user.studentId} \n"
+                    "${getString(R.string.student_id_hint)} : ${user.student_id} \n"
 
         }
-        builder
-            .setCancelable(false)
-            .setMessage(message)
-            .setPositiveButton(
-                "Ok",
-                DialogInterface.OnClickListener { _, _ -> Unit }
-            )
-            .create()
-        builder.create().show()
-
+        simpleDialog(this, message)
     }
 
     private fun editUser(user: User) {
-        TODO("Todavía no está el view para editar el usuario y se debe agregar el update al UserDao")
+        val session = (application as TECAirApp).session
+        //will only allow editing the current user
+        if  (session == null || session.getUsername() == user.username || session.getPassword() == user.password){
+            simpleDialog(this, getString(R.string.edit_non_current_user_error))
+        }else {
+            val intent = Intent(this, EditUserActivity::class.java).apply {
+                putExtra("info", Gson().toJson(user))
+            }
+        }
     }
 
     private fun deleteUser(user: User) {
-        (application as TECAirApp).session?.deleteUser(user) { success ->
-            run {
-                if (success) {
-                    refreshUserList()
-                } else {
-                    val builder = AlertDialog.Builder(this)
-                    builder
-                        .setCancelable(false)
-                        .setMessage(getString(R.string.delete_user_error))
-                        .setPositiveButton(
-                            "Ok",
-                            DialogInterface.OnClickListener { _, _ -> Unit }
-                        )
-                        .create()
-                    builder.create().show()
+        val session = (application as TECAirApp).session
+        //will only allow editing the current user
+        if  (session == null || session.getUsername() == user.username || session.getPassword() == user.password){
+            simpleDialog(this, getString(R.string.delete_non_current_user_error))
+        }else {
+            (application as TECAirApp).session?.deleteUser(user) { success ->
+                run {
+                    if (success) {
+                        val intent = Intent(this, MainActivity::class.java)
+                        (application as TECAirApp).session = null
+                        startActivity(intent)
+                    } else {
+                        simpleDialog(this, getString(R.string.delete_user_error))
+                    }
                 }
-            }
 
+            }
         }
     }
 }

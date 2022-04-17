@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">TECAir</string>
+    <string name="flight_number">Flight No.</string>
+    <string name="code">Code</string>
+    <string name="price">Price</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
+    <string name="book">Book</string>
+    <string name="route">Route</string>
+    <string name="card_number">Card Number</string>
+    <string name="exp_date">Expiration date</string>
+    <string name="cve">CVE</string>
     <string name="firstname_hint">First Name</string>
     <string name="lastname_hint">Last Name</string>
     <string name="password_hint">Password</string>
@@ -12,7 +22,12 @@
     <string name="flight_to_hint">To</string>
     <string name="login_button">Login</string>
     <string name="credentials_error">Incorrect Credentials</string>
+    <string name="booking_error">Unable to book flight</string>
+    <string name="booking_sync_error">Failed to confirm the booking of a flight that was booked in offline mode</string>
     <string name="new_user_error">Unable to create user. Perhaps it already exists?</string>
+    <string name="edit_user_error">Unable to modify user</string>
+    <string name="edit_non_current_user_error">Only current user can be modified</string>
+    <string name="delete_non_current_user_error">Only current user can be deleted</string>
     <string name="empty_error">Field must have a value</string>
     <string name="url_entry">Custom airline address</string>
     <string name="default_url">https://192.168.0.114:5000</string>
@@ -22,13 +37,16 @@
     <string name="register_user_button">Register User</string>
     <string name="list_user_button">User Management</string>
     <string name="add_user_button">Register User</string>
-    <string name="view_info_user_button">Info</string>
+    <string name="update_user_button">Update User</string>
+    <string name="info">Info</string>
     <string name="edit_user_button">Edit</string>
     <string name="delete_user_button">Delete</string>
     <string name="delete_user_error">Could not delete user</string>
     <string name="flights_button">Flights</string>
     <string name="search_flight_button">Search</string>
     <string name="promo_button">Promos</string>
+    <string name="payment_button">Pay Flight</string>
+    <string name="promo_disclaimer">Active Promos will be applied after the booking is confirmed.</string>
 
 
 </resources>

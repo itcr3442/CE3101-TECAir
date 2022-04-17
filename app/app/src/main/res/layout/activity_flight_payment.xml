@@ -25,10 +25,13 @@
             android:layout_marginEnd="34dp"
             android:layout_marginBottom="16dp"
             android:ems="10"
+            android:hint="@string/cve"
             android:inputType="number|textPersonName|textEmailAddress"
+            android:textColorHint="#757575"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:importantForAutofill="no" />
 
         <EditText
             android:id="@+id/expirationText"
@@ -39,7 +42,10 @@
             android:layout_marginEnd="33dp"
             android:layout_marginBottom="16dp"
             android:ems="10"
+            android:hint="@string/exp_date"
+            android:importantForAutofill="no"
             android:inputType="date|none|datetime"
+            android:textColorHint="#757575"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/CVEText"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +59,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="30dp"
-        android:text="Button"
+        android:text="@string/book"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -66,14 +72,16 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="17dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
+        android:hint="@string/card_number"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:textColorHint="#757575"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/flightIDText"
+        android:id="@+id/flightID"
         android:layout_width="299dp"
         android:layout_height="53dp"
         android:layout_marginStart="56dp"
@@ -81,8 +89,7 @@
         android:layout_marginEnd="56dp"
         android:layout_marginBottom="15dp"
         android:duplicateParentState="false"
-        android:editable="false"
-        android:text="TextView"
+        android:inputType="none"
         app:layout_constraintBottom_toTopOf="@+id/flightInfo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -95,7 +102,7 @@
         android:layout_marginStart="56dp"
         android:layout_marginEnd="56dp"
         android:layout_marginBottom="23dp"
-        android:text="TextView"
+        android:inputType="none"
         app:layout_constraintBottom_toTopOf="@+id/cardNumberText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

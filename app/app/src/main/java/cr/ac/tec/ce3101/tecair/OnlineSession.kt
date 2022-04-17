@@ -1,10 +1,6 @@
 package cr.ac.tec.ce3101.tecair
 
 import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat.startActivity
 import androidx.room.Room
 import retrofit2.Call
 import retrofit2.Callback
@@ -15,54 +11,205 @@ import retrofit2.converter.gson.GsonConverterFactory
 class OnlineSession(
     url: String,
     private val username: String,
-    private val  password: String,
-    private val cx: Context
-    ) : Session {
+    private val password: String,
+    private val cx: Context,
+    private val cache: LocalDB =
+        Room.databaseBuilder(cx.applicationContext, LocalDB::class.java, "cache")
+            .allowMainThreadQueries().build(),
+    private val pendingOps: PendingOpDB =
+        Room.databaseBuilder(cx.applicationContext, PendingOpDB::class.java, "pending-ops")
+            .allowMainThreadQueries().build()
+) : Session {
     private val service: TECAirService
-    private val localDB: LocalDB =
-        Room.databaseBuilder(cx.applicationContext, LocalDB::class.java, "local-data").allowMainThreadQueries().build()
 
-    init{
-        val retrofit = Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build()
+    init {
+        val retrofit =
+            Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create())
+                .build()
         service = retrofit.create(TECAirService::class.java)
     }
 
-    override fun login(auth: (Boolean)-> Unit){
+    override fun getUsername(): String {
+        return username
+    }
 
+    override fun getPassword(): String {
+        return password
+    }
+    private fun synchronize(){
+        //send user changes
+        val userChanges = pendingOps.userOpDao().getAll()
+        userChanges.forEach { change->run {
+            if (change.operation == "INSERT"){
+                registerUser(change.user){}
+            }else if (change.operation == "UPDATE") {
+                editUser(change.user){}
+            }else if (change.operation == "DELETE"){
+                deleteUser(change.user){}
+            }
+        }}
+        //re-validate saved credentials
+        val localUsers = cache.userDao().getAll()
+        //we'll repopulate them after user checks
+        cache.clearAllTables()
+        localUsers.forEach { user -> run{
+            service.checkLogin(user.username, user.password).enqueue(
+                object : Cb<Unit>() {
+                    override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                        if (response.code() == 200) {
+                            cache.userDao().insertAll(user)
+                        }
+                    }
+                }
+            )
+        } }
+
+        //send booking info
+        pendingOps.BookingDao().getAll().forEach { booking: Booking -> run {
+            service.makeBooking(booking).enqueue(
+                object : Cb<Unit>() {
+                    override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                        if (response.code() != 200) {
+                            simpleDialog(cx, cx.getString(R.string.booking_sync_error))
+                        }
+                    }
+                }
+            )
+        } }
+        pendingOps.clearAllTables()
+
+        //update flights
+        service.getFlightList().enqueue(
+            object : Cb<List<Flight>>() {
+                override fun onResponse(
+                    call: Call<List<Flight>>,
+                    response: Response<List<Flight>>
+                ) {
+                    response.body()?.forEach { flight -> cache.flightDao().insertAll(flight) }
+                }
+            }
+        )
+        //update segments
+        service.getSegmentList().enqueue(
+            object : Cb<List<Segment>>() {
+                override fun onResponse(call: Call<List<Segment>>, response: Response<List<Segment>>) {
+                    response.body()?.forEach { segment -> cache.segmentDao().insertAll(segment) }
+                }
+            }
+        )
+        //update promos
+        service.getPromoList().enqueue(
+            object : Cb<List<Promo>>() {
+                override fun onResponse(call: Call<List<Promo>>, response: Response<List<Promo>>) {
+                    response.body()?.forEach { promo -> cache.promoDao().insertAll(promo) }
+                }
+            }
+        )
+    }
+    override fun login(auth: (Boolean) -> Unit) {
         service.checkLogin(username, password).enqueue(
-            object: Cb<Unit>(){
+            object : Cb<Unit>() {
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                     if (response.code() == 200) {
+                        synchronize()
                         auth(true)
-                    }else {
+                    } else {
                         auth(false)
                     }
                 }
             }
         )
     }
-    override fun registerUser(user: User, afterOp: (Boolean)->Unit){
-        TODO()
+
+    override fun registerUser(user: User, afterOp: (Boolean) -> Unit) {
+        service.addUser(user).enqueue(
+            object : Cb<Unit>() {
+                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                    if (response.code() == 200) {
+                        afterOp(true)
+                        cache.userDao().insertAll(user)
+                    }else{
+                        afterOp(false)
+                    }
+                }
+            }
+        )
+    }
+
+    override fun editUser(user: User, afterOp: (Boolean) -> Unit) {
+        service.updateUser(user).enqueue(
+            object : Cb<Unit>() {
+                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                    if (response.code() == 200) {
+                        afterOp(true)
+                        cache.userDao().updateUser(user)
+                    }else{
+                        afterOp(false)
+                    }
+                }
+            }
+        )
     }
 
     override fun deleteUser(user: User, afterOp: (Boolean) -> Unit) {
-        TODO("Not yet implemented")
+        service.updateUser(user).enqueue(
+            object : Cb<Unit>() {
+                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                    if (response.code() == 200) {
+                        afterOp(true)
+                        cache.userDao().delete(user)
+                    }else{
+                        afterOp(false)
+                    }
+                }
+            }
+        )
     }
 
-    override fun getPromoList(): List<Promo> {
-        TODO("Not yet implemented")
+    override fun getPromoList(afterOp: (List<Promo>) -> Unit) {
+        service.getPromoList().enqueue(
+            object : Cb<List<Promo>>() {
+                override fun onResponse(call: Call<List<Promo>>, response: Response<List<Promo>>) {
+                    afterOp(response.body()!!)
+                }
+            }
+        )
     }
 
-    override fun getFlights(): List<Flight> {
-        TODO("Not yet implemented")
+    override fun getFlights(from: String, to: String, afterOp: (List<FlightWithPath>) -> Unit) {
+        service.getFlightsWithPath(from, to).enqueue(
+            object : Cb<List<FlightWithPath>>() {
+                override fun onResponse(call: Call<List<FlightWithPath>>, response: Response<List<FlightWithPath>>) {
+                    afterOp(response.body()!!)
+                }
+            }
+        )
     }
 
     override fun getUserList(): List<User> {
-        TODO()
+        val users =  cache.userDao().getAll()
+        val checkedUsers  = mutableListOf<User>()
+        users.forEach { user: User ->  run {
+            if(service.checkLogin(user.username, user.password).execute().code() == 200){
+                checkedUsers.add(user)
+            }
+        }}
+        //only list users that have logged in in the local app
+        return checkedUsers
     }
 
-    override fun makeReservation(reservation: Reservation, afterOp: (Boolean) -> Unit) {
-        TODO("Not yet implemented")
+    override fun makeBooking(flightID: String, afterOp: (Boolean) -> Unit) {
+        service.makeBooking(Booking(flightID,username)).enqueue(
+            object : Cb<Unit>() {
+                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                    if (response.code() == 200) {
+                        afterOp(true)
+                    }else{
+                        afterOp(false)
+                    }
+                }
+            }
+        )
     }
 
     /**
@@ -71,16 +218,7 @@ class OnlineSession(
      */
     abstract inner class Cb<T> : Callback<T> {
         override fun onFailure(call: Call<T>, err: Throwable) {
-            val builder = AlertDialog.Builder(cx)
-            builder
-                .setCancelable(false)
-                .setMessage("Network error")
-                .setPositiveButton(
-                    "Ok",
-                    DialogInterface.OnClickListener { dialog, which -> Unit }
-                )
-                .create()
-            builder.create().show()
+            simpleDialog(cx, "Network Error")
         }
     }
 

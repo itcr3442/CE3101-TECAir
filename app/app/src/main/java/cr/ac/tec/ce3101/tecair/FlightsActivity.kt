@@ -4,8 +4,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.google.gson.Gson
 
 class FlightsActivity : AppCompatActivity() {
@@ -15,16 +17,47 @@ class FlightsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_flights)
         flightList = findViewById(R.id.flightList)
     }
-    fun applyFilter(view: View){
-        val flights = (application as TECAirApp).session?.getFlights()
-        val from = findViewById<EditText>(R.id.fromText).text
-        val to = findViewById<EditText>(R.id.destinyText).text
-        TODO("Falta aplicar la lógica de filtro")
 
+    fun applyFilter(view: View) {
+        flightList.removeAllViewsInLayout()
+        val from = findViewById<EditText>(R.id.fromText).text.toString()
+        val to = findViewById<EditText>(R.id.destinyText).text.toString()
+        (application as TECAirApp).session?.getFlights(from, to) { flights ->
+            run {
+                flights.forEach { flightInfo ->
+                    val entry = LinearLayout(this).apply {
+                        orientation = LinearLayout.HORIZONTAL
+                        addView(TextView(this.context).apply {
+                            text = flightInfo.flight.no
+                            width = 300
+                            textSize = 18F
+                        })
+                        addView(Button(this.context).apply {
+                            text = getString(R.string.info)
+                            setOnClickListener { _ -> viewInfoFlight(flightInfo) }
+                            textSize = 16F
+                        })
+                        addView(Button(this.context).apply {
+                            text = getString(R.string.payment_button)
+                            setOnClickListener { _ -> openPaymentView(flightInfo) }
+                            textSize = 16F
+                        })
+                    }
+                    flightList.addView(entry)
+                }
+            }
+        }
     }
-    fun openPaymentView(flight: Flight){
+
+    private fun viewInfoFlight(flightInfo: FlightWithPath) {
+        val message = "${getString(R.string.flight_number)}: ${flightInfo.flight.no} \n" +
+                "${getString(R.string.price)}: ${flightInfo.flight.price} \n"
+        simpleDialog(this, message)
+    }
+
+    private fun openPaymentView(flightInfo: FlightWithPath) {
         val intent = Intent(this, FlightPaymentActivity::class.java).apply {
-            putExtra("info", Gson().toJson(flight))
+            putExtra("info", Gson().toJson(flightInfo))
         }
         startActivity(intent)
 
