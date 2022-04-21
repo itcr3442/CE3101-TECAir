@@ -1,6 +1,6 @@
 import { Injectable, ɵisObservable } from '@angular/core';
 import { RepositoryService } from './repository.service';
-import { map, Observable, of, Subscription } from 'rxjs';
+import { map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

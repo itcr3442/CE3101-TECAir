@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', [Validators.required]),
     role: new FormControl(RoleLevels.User, [Validators.required, Validators.min(RoleLevels.User), Validators.max(RoleLevels.Admin)])
   })
+  loginMsg: string = ""
   message: string = ""
   logged: boolean;
   constructor(
@@ -26,6 +27,15 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
   ) {
     this.logged = authService.isLoggedIn()
+  }
+
+  refresh(): void {
+    if (this.router.url === "/login/redirect") {
+      this.router.navigate(['/'])
+    }
+    else {
+      window.location.reload()
+    }
   }
 
   ngOnInit(): void {
@@ -58,7 +68,7 @@ export class LoginComponent implements OnInit {
   logout() {
     this.authService.logout()
     this.logged = false
-    window.location.reload()
+    this.refresh()
   }
   /**
   * Método que se llama para verificar con el servido si los datos introducidos
@@ -71,17 +81,17 @@ export class LoginComponent implements OnInit {
         (res: boolean) => {
           if (res) {
             this.logged = true
-            this.message = ""
-            window.location.reload()
+            this.loginMsg = ""
+            this.refresh()
           }
           else {
-            this.message = "Cédula o contraseña incorrectos";
+            this.loginMsg = "Cédula o contraseña incorrectos";
           }
         }
       )
     }
     else {
-      this.message = "Por favor verifique que ingresó todos los campos correctamente y su cédula solo contiene dígitos";
+      this.loginMsg = "Por favor verifique que ingresó todos los campos correctamente y su cédula solo contiene dígitos";
     }
   }
 }

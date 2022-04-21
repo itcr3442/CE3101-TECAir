@@ -1,0 +1,65 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 loginBox">
+            <h3>Registrar nuevo trabajador</h3>
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                <div class="mb-3 form-group">
+                    <label>Cédula</label>
+                    <input type="text" formControlName="id" class="form-control" placeholder="Cédula del trabajador">
+                </div>
+                <div class="mb-3 form-group">
+                    <label>Nombre</label>
+                    <input type="text" formControlName="nombre" class="form-control"
+                        placeholder="Nombre del trabajador">
+                </div>
+                <div class="mb-3 form-group">
+                    <label>Primer Apellido</label>
+                    <input type="text" formControlName="apellido1" class="form-control"
+                        placeholder="Primer apellido del trabajador">
+                </div>
+                <div class="mb-3 form-group">
+                    <label>Segundo Apellido</label>
+                    <input type="text" formControlName="apellido2" class="form-control"
+                        placeholder="Segundo apellido del trabajador">
+                </div>
+
+                <div class="mb-3 form-group">
+                    <label for="exampleInputPassword1">Contraseña</label>
+                    <input type="password" formControlName="password" class="form-control" placeholder="Contraseña">
+                </div>
+
+                <ng-container *ngIf="this.message">
+                    <p>
+                        {{this.message}}
+                    </p>
+                </ng-container>
+                <button type="submit" class="btn btn-primary">Registrar</button>
+            </form>
+        </div>
+        <div class="col-md-6 col-md-offset-3">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Cédula</th>
+                            <th>Hash</th>
+                            <th>Nombre</th>
+                            <th>Primer Apellido</th>
+                            <th>Segundo Apellido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let worker of worker_list">
+                            <td>{{worker.cedula}}</td>
+                            <td>{{worker.password_hash}}</td>
+                            <td>{{worker.nombre}}</td>
+                            <td>{{worker.primer_apellido}}</td>
+                            <td>{{worker.segundo_apellido}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

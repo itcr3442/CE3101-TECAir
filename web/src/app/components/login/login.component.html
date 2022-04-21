@@ -4,6 +4,13 @@
         <ng-container *ngTemplateOutlet="this.logged ? logoutBlock : loginBlock">
         </ng-container>
     </div>
+    <div>
+        <ng-container *ngIf="this.message">
+            <p class="warning">
+                {{this.message}}
+            </p>
+        </ng-container>
+    </div>
 </div>
 
 
@@ -29,9 +36,9 @@
                     <option [ngValue]=RoleLevels.Admin>Funcionario</option>
                 </select>
             </div>
-            <ng-container *ngIf="this.message">
+            <ng-container *ngIf="this.loginMsg">
                 <p class="warning">
-                    {{this.message}}
+                    {{this.loginMsg}}
                 </p>
             </ng-container>
             <button type="submit" class="btn btn-primary">Ingresar</button>
