@@ -19,10 +19,10 @@ export class WorkerAdminComponent implements OnInit {
     nombre: new FormControl('', [Validators.required]),
     apellido1: new FormControl('', [Validators.required]),
     apellido2: new FormControl('', [Validators.required]),
-    rol: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required])
+    password: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required]),
+    phone: new FormControl('', [Validators.required, Validators.pattern('[0-9]*')])
   })
-  roles = ['admin', 'scan', 'recepcionista', 'embarcador'];
   message: string = ""
 
   constructor(
@@ -50,10 +50,6 @@ export class WorkerAdminComponent implements OnInit {
 
   get password() {
     return this.registerForm.controls['password'].value
-  }
-
-  get role() {
-    return this.registerForm.controls['rol'].value
   }
 
   get name() {
