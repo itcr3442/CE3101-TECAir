@@ -13,6 +13,7 @@ import { RegisterUserComponent } from './components/register-user/register-user.
 import { WorkerAdminComponent } from './components/worker-admin/worker-admin.component';
 import { PromosComponent } from './components/promos/promos.component';
 import { PromosPageComponent } from './components/promos-page/promos-page.component';
+import { FlightSearchComponent } from './components/flight-search/flight-search.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { PromosPageComponent } from './components/promos-page/promos-page.compon
     WorkerAdminComponent,
     PromosComponent,
     PromosPageComponent,
+    FlightSearchComponent,
   ],
   imports: [
     BrowserModule,

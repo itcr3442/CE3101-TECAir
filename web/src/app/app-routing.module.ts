@@ -9,6 +9,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterUserComponent } from './components/register-user/register-user.component';
 import { WorkerAdminComponent } from './components/worker-admin/worker-admin.component';
 import { PromosPageComponent } from './components/promos-page/promos-page.component';
+import { FlightSearchComponent } from './components/flight-search/flight-search.component';
 
 
 const routes: Routes = [
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterUserComponent },
   { path: 'worker_register', component: WorkerAdminComponent, canActivate: [AuthGuard], data: { role: RoleLevels.Admin } },
   { path: 'promos_page', component: PromosPageComponent },
+  { path: 'flight_search', component: FlightSearchComponent },
 ];
 
 @NgModule({
