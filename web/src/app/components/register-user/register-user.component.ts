@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { RoleLevels } from 'src/app/constants/auth.constants';
-import { AuthService } from 'src/app/services/auth.service';
+import { RegisterService } from 'src/app/services/register.service';
 
 @Component({
   selector: 'app-register-user',
@@ -24,7 +24,7 @@ export class RegisterUserComponent implements OnInit {
   isStudent: boolean;
 
   constructor(
-    private authService: AuthService,
+    private registerService: RegisterService,
   ) {
     this.isStudent = false
   }
@@ -58,20 +58,27 @@ export class RegisterUserComponent implements OnInit {
 
     this.isStudent = target.checked
 
+    let studentId = this.registerForm.get('studentId')
+    let university = this.registerForm.get('university')
+
     if (this.isStudent) {
-      let studentId = this.registerForm.get('studentId')
-      let university = this.registerForm.get('university')
       studentId?.setValidators(Validators.required);
       university?.setValidators(Validators.required);
-      studentId?.updateValueAndValidity();
-      university?.updateValueAndValidity();
+
+    }
+    else {
+      studentId?.setValidators(null);
+      university?.setValidators(null);
     }
 
+    studentId?.updateValueAndValidity();
+    university?.updateValueAndValidity();
   }
 
   onSubmit() {
     if (this.registerForm.valid) {
       this.message = ""
+      this.registerService.resetForm(this.registerForm)
     }
     else {
       this.message = "Por favor verifique que ingresó todos los campos correctamente y su cédula y # de tel solo contiene dígitos";

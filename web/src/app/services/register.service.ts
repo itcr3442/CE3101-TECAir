@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { RepositoryService } from './repository.service';
 import { map, of } from 'rxjs';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -53,5 +54,9 @@ export class RegisterService {
     // TODO: cambiar esto a la llamada cuando esté la DB
     return of([])
     // return this.repositoryService.getData(registerUrl)
+  }
+
+  public resetForm = (formGroup: FormGroup) => {
+    Object.values(formGroup.controls).forEach((control) => control.reset())
   }
 }

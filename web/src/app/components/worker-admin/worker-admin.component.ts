@@ -80,7 +80,7 @@ export class WorkerAdminComponent implements OnInit {
         if (success === 1) {
           console.log("Register successful");
           this.message = ""
-
+          this.registerService.resetForm(this.registerForm)
         }
         else if (success === -1) {
           this.message = "La cédula dada ya se encuentra registrada en el sistema.";
