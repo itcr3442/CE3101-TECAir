@@ -1,15 +1,25 @@
 <div class="container">
+    <div class="row align-items-center">
 
-    <div class="col-md-6 col-md-offset-3 loginBox">
-        <ng-container *ngTemplateOutlet="this.logged ? logoutBlock : loginBlock">
-        </ng-container>
-    </div>
-    <div>
-        <ng-container *ngIf="this.message">
-            <p class="warning">
-                {{this.message}}
-            </p>
-        </ng-container>
+        <div class="col-md-6 col-md-offset-3 loginBox">
+            <ng-container *ngTemplateOutlet="this.logged ? logoutBlock : loginBlock">
+            </ng-container>
+            <div>
+                <ng-container *ngIf="this.message">
+                    <p class="warning">
+                        {{this.message}}
+                    </p>
+                </ng-container>
+            </div>
+        </div>
+
+        <div class="col-md-4 mx-auto">
+            <div>
+                <app-promos></app-promos>
+            </div>
+
+        </div>
+
     </div>
 </div>
 

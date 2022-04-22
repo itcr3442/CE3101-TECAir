@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { RoleLevels } from 'src/app/constants/auth.constants'
+import { PromosComponent } from '../promos/promos.component';
 
 @Component({
   selector: 'app-login',
@@ -22,6 +23,7 @@ export class LoginComponent implements OnInit {
   loginMsg: string = ""
   message: string = ""
   logged: boolean;
+
   constructor(
     private router: Router,
     private authService: AuthService,

@@ -11,6 +11,8 @@ import { LoginComponent } from './components/login/login.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { RegisterUserComponent } from './components/register-user/register-user.component';
 import { WorkerAdminComponent } from './components/worker-admin/worker-admin.component';
+import { PromosComponent } from './components/promos/promos.component';
+import { PromosPageComponent } from './components/promos-page/promos-page.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +21,8 @@ import { WorkerAdminComponent } from './components/worker-admin/worker-admin.com
     NavbarComponent,
     RegisterUserComponent,
     WorkerAdminComponent,
+    PromosComponent,
+    PromosPageComponent,
   ],
   imports: [
     BrowserModule,
