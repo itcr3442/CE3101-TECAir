@@ -40,6 +40,7 @@ class ServiceLayer
             FirstName = user.FirstName,
             LastName = user.LastName,
             Phonenumber = user.PhoneNumber,
+            Email = user.Email,
             University = user.University,
             StudentId = user.StudentId,
             Type = user.Type,
@@ -47,6 +48,24 @@ class ServiceLayer
 
         db.Users.Add(row);
         return save() ?? Results.Ok(row.Id);
+    }
+
+    public IResult UpdateUser(Guid id, EditUser edit)
+    {
+        var user = (from u in db.Users where u.Id == id select u).SingleOrDefault();
+        if (user == null)
+        {
+            return Results.NotFound();
+        }
+
+        user.FirstName = edit.FirstName;
+        user.LastName = edit.LastName;
+        user.Phonenumber = edit.PhoneNumber;
+        user.Email = edit.Email;
+        user.University = edit.University;
+        user.StudentId = edit.StudentId;
+
+        return save() ?? Results.Ok();
     }
 
     public IResult DeleteUser(Guid id)
@@ -95,6 +114,17 @@ public class NewUser
     public string Username { get; set; } = null!;
     [Required]
     public string Password { get; set; } = null!;
+    [Required]
+    public string FirstName { get; set; } = null!;
+    public string? LastName { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Email { get; set; }
+    public string? University { get; set; }
+    public string? StudentId { get; set; }
+}
+
+public class EditUser
+{
     [Required]
     public string FirstName { get; set; } = null!;
     public string? LastName { get; set; }

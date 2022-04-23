@@ -40,6 +40,14 @@ app.MapPost("/users", (NewUser user) =>
     }
 });
 
+app.MapPut("/users/{id}", (Guid id, EditUser edit) =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).UpdateUser(id, edit);
+    }
+});
+
 app.MapDelete("/users/{id}", (Guid id) =>
 {
     using (var db = new TecAirContext())
