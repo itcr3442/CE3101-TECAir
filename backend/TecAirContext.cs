@@ -34,7 +34,7 @@ namespace backend
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasPostgresEnum("flight_state", new[] { "booking", "checkin", "closed" })
+            modelBuilder.HasPostgresEnum<FlightState>("flight_state")
                 .HasPostgresEnum<UserType>("user_type")
                 .HasPostgresExtension("uuid-ossp");
 
@@ -225,6 +225,9 @@ namespace backend
                 entity.Property(e => e.No).HasColumnName("no");
 
                 entity.Property(e => e.Price).HasColumnName("price");
+
+                entity.Property(e => e.State)
+                    .HasColumnName("state");
             });
 
             modelBuilder.Entity<Promo>(entity =>

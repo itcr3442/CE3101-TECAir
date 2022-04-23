@@ -16,6 +16,7 @@ namespace backend
         public int No { get; set; }
         public string? Comment { get; set; }
         public decimal Price { get; set; }
+        public FlightState State { get; set; }
 
         public virtual Endpoint Endpoint { get; set; } = null!;
         public virtual ICollection<Bag> Bags { get; set; }

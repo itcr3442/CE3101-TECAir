@@ -74,6 +74,38 @@ class ServiceLayer
         return save() ?? Results.Ok();
     }
 
+    public IResult BookFlight(Guid flightId, NewBooking booking)
+    {
+        var paxId = booking.Pax;
+        var promoId = booking.Promo;
+        var flight = (from f in db.Flights where f.Id == flightId select f).SingleOrDefault();
+        var pax = (from u in db.Users where u.Id == paxId select u).SingleOrDefault();
+
+        if (flight == null || pax == null)
+        {
+            return Results.NotFound();
+        }
+
+        Promo? promo = null;
+        if (promoId != null)
+        {
+            promo = (from p in db.Promos where p.Id == promoId select p).SingleOrDefault();
+            if (promo == null)
+            {
+                return Results.NotFound();
+            }
+            else if (flight.State != FlightState.Booking || promo.Flight != flightId)
+            {
+                return Results.BadRequest();
+            }
+        }
+
+        var total = promo != null ? promo.Price : flight.Price;
+
+        db.Bookings.Add(new Booking { Flight = flightId, Pax = paxId, Promo = promoId });
+        return save() ?? Results.Ok(new Booked { Total = total });
+    }
+
     public IResult DumpFlights()
     {
         return Results.Ok(db.Flights.ToArray());
@@ -132,4 +164,16 @@ public class EditUser
     public string? Email { get; set; }
     public string? University { get; set; }
     public string? StudentId { get; set; }
+}
+
+public class NewBooking
+{
+    [Required]
+    public Guid Pax { get; set; }
+    public Guid? Promo { get; set; }
+}
+
+public class Booked
+{
+    public decimal Total { get; set; }
 }

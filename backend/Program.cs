@@ -56,6 +56,14 @@ app.MapDelete("/users/{id}", (Guid id) =>
     }
 });
 
+app.MapPost("/flights/{id}/book", (Guid id, NewBooking booking) =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).BookFlight(id, booking);
+    }
+});
+
 app.MapGet("/dump/flights", () =>
 {
     using (var db = new TecAirContext())
