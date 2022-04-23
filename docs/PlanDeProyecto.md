@@ -36,7 +36,7 @@ nocite: |
 
 # Plan de Proyecto
 
-## Entregables 
+## Metas de proyecto 
 
 ### 1. Desarrollo de la Base de Datos en PostgreSQL 
 
@@ -79,4 +79,104 @@ José Morales desarrollará la app móvil, la cual tendrá la misma funcionalida
 - **Fecha estimada de entrega:** Abr 15, 2022
 
 
+## Roles y Reglas
 
+![](imgs/roles.png)
+
+![](imgs/ReglasDeTrabajo.png)
+
+## Cronograma
+
+![](imgs/cronograma1.png)
+
+![](imgs/cronograma2.png)
+
+![](imgs/cronograma3.png)
+
+## Minutas de trabajo
+
+
+## Bitácoras
+
+### José  Morales
+
+- 21 MAR
+    
+    + Participé en la reunión de grupo para definir plan de trabajo y otros aspectos de trabajo individual y en equipo
+    + Se divieron los roles de trabajo
+    + Se crean repositorios y otros archivos de trabajo colaborativo
+
+- 25 MAR
+
+    + Colaboré con la creación y revisión del documento entregable que contenía el plan de trabajo inicial
+
+- 4 ABR
+    
+    + Debido a la cercanía con una evaluación fuerte que varios miembros del equipo teníamos, se decide mover un poco las fechas planteadas en el plan de trabajo original
+
+- 6 ABR
+
+    + Investigué sobre desarrollo de aplicaciones de android con Kotlin, pues parece ser la opción sugerida para aplicaciones nuevas.
+    + También empecé una investigación inicial sobre `Room`, una API relativamente nueva la cual es oficialmente recomendada para interacciones con SQLite
+
+- 7 ABR
+    
+    + Se investiga sobre el uso de la biblioteca `Retrofit2` para el consumo de servicios REST.
+    + Se realiza un diseño inicial de la arquitectura de la aplicación móvil a implementar.
+
+- 8 ABR
+
+    + Se crea el proyecto inicial de la app móvil.
+    + Se agregan las activity base al proyecto y programé parcilamente su funcionalidad.
+
+- 9 ABR
+    
+    + Se implementa una primera base de datos en room para comprobar funcionalidad, sin embargo solo está una estructura inicial, no esta en uso aún, es más como una prueba de concepto.
+
+- 11 ABR
+
+    + Agregué mi trabajo hasta este punto al repositorio compartido.
+
+- 12 ABR
+    
+    + Se agregan clases relacionadas al funcionamiento interno de la app móvil tal como las clases para representar los tipos de sesiones (en línea o desconectado).
+    + Se especifican algunos de los endpoints que la app móvil espera estén en la aplicación REST.
+    + Se inicia trabajo en completar la actividad utilizada para registrar nuevos usuarios.
+    + Se implementa una versión inicial de funcionalidad de login en modo offline, lo que también implica la prueba de uso de la funcionalidad de base de datos local implementado con `Room`.
+
+- 13 ABR
+
+    + Se agrega lógica para listar entidades en distintas vistas (Activities, no vistas de base de datos).
+    + Se agrega lógica para registrar nuevos usuarios en base de datos local.
+    + Se agregan uuids como llave primaria para todas las entidades para conservar coherencia.
+    + Se agrega funcionalidad para las vistas de promociones y búsqueda de vuelos, pero están sujetos a cambio.
+    + Se agregan algunos DAO de `Room` para manipulación de datos de las base de datos local en SQLite.
+
+- 14 ABR
+
+    + Se realizan modificaciones a la base de datos local para que sea coherente con el diseño final de la base de datos en el servidor y se agregan algunas entidades faltantes para la base de datos que se usa como caché.
+    + Se diseña una segunda base de datos en room específicamente para almacenar las operaciones que deberán ser sincronizadas una vez se inicie una sesión en línea.
+    + Se implementa funcionalidad de edición de usuarios para sesiones sin conexión al servidor.
+    + Se implementa funcionalidad de eliminar usuarios para sesiones sin conexión al servidor.
+    + Se implementa funcionalidad de búsqueda de vuelos para sesiones sin conexión al servidor.
+    + Se implementa funcionalidad de reservaciones para sesiones sin conexión al servidor.
+    + Se implementa funcionalidad de listado de promociones para sesiones sin conexión al servidor.
+
+- 15 ABR
+
+    + Se agregan las requests faltantes a la interfaz de retrofit2 para comunicarse con el servidor
+    + Se implementa funcionalidad de edición de usuarios para sesiones sin conexión al servidor.
+    + Se implementa método de sincronización con base de datos del servidor.
+    + Se replican las funcionalidades ya implementadas para sesiones sin conexión para las sesiones online. 
+
+- 23 ABR
+    + Se agrega documentación interna a la aplicación móvil.
+    + Se redacta el manual de instalación para las diferentes aplicaciones desarrolladas en grupo.
+    + Se realizan pruebas de integración con la aplicación REST
+
+
+### José Retana
+
+### Ignacio Vargas
+
+### Alejandro Soto
