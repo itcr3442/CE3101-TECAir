@@ -46,20 +46,30 @@ class ServiceLayer
         };
 
         db.Users.Add(row);
+        return save() ?? Results.Ok(row.Id);
+    }
+
+    public IResult DeleteUser(Guid id)
+    {
+        db.Entry(new User { Id = id }).State = EntityState.Deleted;
+        return save() ?? Results.Ok();
+    }
+
+    private TecAirContext db;
+    private Random random = new Random();
+
+    private IResult? save()
+    {
         try
         {
             db.SaveChanges();
+            return null;
         }
         catch (DbUpdateException)
         {
             return Results.BadRequest();
         }
-
-        return Results.Ok(row.Id);
     }
-
-    private TecAirContext db;
-    private Random random = new Random();
 }
 
 public class NewUser
