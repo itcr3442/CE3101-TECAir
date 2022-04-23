@@ -23,7 +23,44 @@
     </div>
     <div class="row mb-3">
         <div class="col-md-4">
-            <button type="search" class="btn btn-primary">Buscar</button>
+            <button type="search" class="btn btn-primary" (click)="onSearch()">Buscar</button>
+        </div>
+        <div class="col-md-4">
+            <ng-container *ngIf="this.message">
+                <p>
+                    {{this.message}}
+                </p>
+            </ng-container>
         </div>
     </div>
+    <div class="row md-6">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Origen</th>
+                        <th>Destino</th>
+                        <th>Avión</th>
+                        <th>Fecha</th>
+                        <th>Hora de Salida</th>
+                        <th>Hora de Llegada</th>
+                        <th>ID de vuelo</th>
+                        <th>Disponibilidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor = "let flight of flights_list" >
+                        <td>{{flight.aeropuerto_origen}}</td>
+                        <td>{{flight.aeropuerto_llegada}}</td>
+                        <td>{{flight.avion}}</td>
+                        <td>{{flight.fecha}}</td>
+                        <td>{{flight.hora_salida}}</td>
+                        <td>{{flight.hora_llegada}}</td>
+                        <td>{{flight.flight_id}}</td>
+                        <td>{{flight.disponibilidad}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div> 
 </div>
