@@ -48,4 +48,28 @@ app.MapDelete("/users/{id}", (Guid id) =>
     }
 });
 
+app.MapGet("/dump/flights", () =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).DumpFlights();
+    }
+});
+
+app.MapGet("/dump/promos", () =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).DumpPromos();
+    }
+});
+
+app.MapGet("/dump/segments", () =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).DumpSegments();
+    }
+});
+
 app.Run();

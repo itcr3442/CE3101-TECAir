@@ -55,6 +55,21 @@ class ServiceLayer
         return save() ?? Results.Ok();
     }
 
+    public IResult DumpFlights()
+    {
+        return Results.Ok(db.Flights.ToArray());
+    }
+
+    public IResult DumpPromos()
+    {
+        return Results.Ok(db.Promos.ToArray());
+    }
+
+    public IResult DumpSegments()
+    {
+        return Results.Ok(db.Segments.ToArray());
+    }
+
     private TecAirContext db;
     private Random random = new Random();
 
