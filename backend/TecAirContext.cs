@@ -11,6 +11,7 @@ namespace backend
         static TecAirContext()
         {
             NpgsqlConnection.GlobalTypeMapper.MapEnum<UserType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<FlightState>();
         }
 
         public virtual DbSet<Aircraft> Aircraft { get; set; } = null!;
