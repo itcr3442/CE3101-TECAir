@@ -28,7 +28,7 @@ namespace backend
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql("Host=/home/ale/vtmp/psql;Database=tecair");
+                optionsBuilder.UseNpgsql("Host=/tmp/kk/psql;Database=tecair");
             }
         }
 
