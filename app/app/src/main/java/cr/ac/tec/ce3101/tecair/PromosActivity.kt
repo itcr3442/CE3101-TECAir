@@ -11,6 +11,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 
+/**
+ * Activity that contains the list of currently active promotions
+ * and allows an user to see the details for each promotion
+ */
 class PromosActivity : AppCompatActivity() {
     private lateinit var promoList: LinearLayout
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +23,11 @@ class PromosActivity : AppCompatActivity() {
         promoList = findViewById(R.id.promoList)
         refreshPromoList()
     }
-
+    /**
+     * Asks the session for all available promo information and 
+     * creates a list with all the available promos and their information
+     * inside a horizontal linear layout
+     */
     private fun refreshPromoList() {
         promoList.removeAllViewsInLayout()
         (application as TECAirApp).session?.getPromoList() { promos ->
@@ -61,7 +69,11 @@ class PromosActivity : AppCompatActivity() {
         }
 
     }
-
+    /**
+     * Opens a dialog with the information of the provided promo.
+     * Intented to be used in the onClick event of the info button
+     * of each promotion
+     */
     private fun viewInfoPromo(promo: Promo) {
         val builder = AlertDialog.Builder(this)
         val message = "${getString(R.string.flight_number)} : ${promo.flight} \n" +

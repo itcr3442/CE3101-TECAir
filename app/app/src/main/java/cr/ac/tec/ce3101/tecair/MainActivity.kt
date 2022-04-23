@@ -8,13 +8,20 @@ import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
 
+/**
+ * Login Screen activity
+ */
 class MainActivity : AppCompatActivity() {
     private var isOffline: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
-
+    
+    /**
+     * Retrieves the login information. Wether an online of offline session is created
+     * is determined by the state of the offlineSwitch widget
+     */
     fun login(view: View) {
         val username = findViewById<EditText>(R.id.loginUsernameText).text.toString()
         val password = findViewById<EditText>(R.id.loginPasswordText).text.toString()
@@ -43,7 +50,10 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-
+    
+    /**
+     * Make visible the textbox that contains the server address in order to edit it 
+     */
     fun showServerSettings(view: View) {
         val serverSettings = findViewById<EditText>(R.id.serverSettingsText)
         if (serverSettings.visibility == View.VISIBLE) {
@@ -53,6 +63,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * React to changes in the offlineSwitch widget
+     */
     fun offlineCheck(view: View) {
         isOffline = findViewById<Switch>(R.id.offlineSwitch).isChecked
     }

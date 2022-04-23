@@ -7,6 +7,9 @@ import android.view.View
 import android.widget.TextView
 import com.google.gson.Gson
 
+/**
+ * Activity in which the user can make a flight reservation request.  
+ */
 class FlightPaymentActivity : AppCompatActivity() {
     private lateinit var flightData: FlightWithPath
     private lateinit var flightID: TextView

@@ -10,6 +10,10 @@ import android.widget.TextView
 import com.google.gson.Gson
 import java.util.*
 
+/**
+ * Activity used for editing user information. 
+ * Expects the user's data to be packed in the intent
+ */
 class EditUserActivity : AppCompatActivity() {
     private lateinit var user: User
     private var isStudent: Boolean = false
@@ -22,10 +26,14 @@ class EditUserActivity : AppCompatActivity() {
     private lateinit var university: EditText
     private lateinit var studentID: EditText
     private lateinit var errorTxt: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_user)
+        //parse user information
         user = Gson().fromJson(intent.getStringExtra("info"), User::class.java)
+        
+        //obtain references to graphical objects
         username = findViewById<EditText>(R.id.editUsernameText)
         password = findViewById<EditText>(R.id.editPasswordText)
         firstname = findViewById<EditText>(R.id.editFirstNameText)
@@ -36,6 +44,7 @@ class EditUserActivity : AppCompatActivity() {
         studentID = findViewById<EditText>(R.id.editStudentIDText)
         errorTxt = findViewById<TextView>(R.id.editUserErrorText)
 
+        //fill the fields with the current user data
         username.setText(user.username)
         password.setText(user.password)
         firstname.setText(user.first_name)
@@ -46,6 +55,10 @@ class EditUserActivity : AppCompatActivity() {
         studentID.setText(user.student_id)
 
     }
+    /**
+     * React to changes in the studentSwitch widget
+     * - If ON, shows the EditTexts neccesary for adding student data
+     */
     fun studentCheck(view: View) {
         isStudent = findViewById<Switch>(R.id.studentSwitch).isChecked
         if (isStudent) {
@@ -56,7 +69,11 @@ class EditUserActivity : AppCompatActivity() {
             findViewById<EditText>(R.id.newStudentIDText).visibility = View.INVISIBLE
         }
     }
-
+    
+    /**
+     * Retrieves the new data values and tries to update the user's entry
+     * In case the edit operation fails shows an error to the user
+     */
     fun editUser(view: View) {
         var isCompleteInfo = verifyEmpty(getString(R.string.empty_error), username, password, firstname, lastname, email, phoneNumber)
         var universityStr: String? = null

@@ -10,6 +10,10 @@ import android.widget.TextView
 import androidx.room.util.UUIDUtil
 import java.util.*
 
+/**
+ * Activity used for providing information to create
+ * a new user
+ */
 class RegisterUserActivity : AppCompatActivity() {
     private var isStudent: Boolean = false
     private lateinit var username: EditText
@@ -25,6 +29,7 @@ class RegisterUserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_user)
+        //obtain references to graphical objects
         username = findViewById<EditText>(R.id.newUsernameText)
         password = findViewById<EditText>(R.id.newPasswordText)
         firstname = findViewById<EditText>(R.id.newFirstNameText)
@@ -36,6 +41,10 @@ class RegisterUserActivity : AppCompatActivity() {
         errorTxt = findViewById<TextView>(R.id.newUserErrorText)
     }
 
+    /**
+     * React to changes in the studentSwitch widget
+     * - If ON, shows the EditTexts neccesary for adding student data
+     */
     fun studentCheck(view: View) {
         isStudent = findViewById<Switch>(R.id.studentSwitch).isChecked
         if (isStudent) {
@@ -47,6 +56,10 @@ class RegisterUserActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Retrieve the new user data from the different textfields and try to create the new user.
+     * In case of failure, will make an error text visible
+     */
     fun registerUser(view: View) {
         var isCompleteInfo = verifyEmpty(getString(R.string.empty_error), username, password, firstname, lastname, email, phoneNumber)
         var universityStr: String? = null

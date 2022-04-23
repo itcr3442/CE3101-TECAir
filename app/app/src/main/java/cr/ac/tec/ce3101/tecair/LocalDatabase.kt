@@ -9,11 +9,16 @@ import java.util.*
  * the SQLite APIs as noted in this article: https://developer.android.com/training/data-storage/room#kts
  */
 
+
+/**
+ * Database intended to store the latest information retrieved from the online
+ * database. Must be synchronized frequently as to mantain a close resemblance
+ * to the Online database because it works as the local database in offline mode
+ */
 @Database(
     entities = [User::class, Flight::class, Segment::class, Promo::class],
     version = 1
 )
-
 abstract class LocalDB : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun flightDao(): FlightDao
@@ -21,6 +26,11 @@ abstract class LocalDB : RoomDatabase() {
     abstract fun promoDao(): PromoDao
 }
 
+/**
+ * Database for storing operations performed in the offline mode. 
+ * During syncronization, it is used to see which operations are pending,
+ * and after resolving them, the database is cleared
+ */
 @Database(entities = [UserOp::class, Booking::class], version = 1)
 abstract class PendingOpDB : RoomDatabase() {
     abstract fun userOpDao(): UserOpDao
@@ -28,7 +38,9 @@ abstract class PendingOpDB : RoomDatabase() {
 
 }
 
-//Operations to be synchronized
+/**
+ * Operations to be synchronized
+ */
 @Entity
 data class UserOp(
     @PrimaryKey val uuid: String,
@@ -37,8 +49,10 @@ data class UserOp(
     val user: User
 )
 
-//Stores only previously logged users, validates credentials again
-//when doing synchronization
+/** 
+ * Stores only previously logged users, must validate credentials again
+ * when doing synchronization
+ */
 @Entity(primaryKeys = ["username", "id"])
 data class User(
     val id: String, //uuid
@@ -52,6 +66,9 @@ data class User(
     val student_id: String?,
 )
 
+/**
+ * Stores flight information
+ */
 @Entity(primaryKeys = ["id", "no"])
 data class Flight(
     val id: String, //uuid
@@ -60,6 +77,9 @@ data class Flight(
     val price: Double
 )
 
+/**
+ * Stores a flight sub-route (segment) information
+ */
 @Entity
 data class Segment(
     @PrimaryKey val id: String,
@@ -71,6 +91,10 @@ data class Segment(
     val to_time: String,
     val aircraft: String,
 )
+
+/**
+ * Stores reservation information
+ */
 @Entity(primaryKeys = ["flight", "pax"])
 data class Booking(
     val flight: String, //uuid
@@ -78,6 +102,9 @@ data class Booking(
     //let server apply promos
 )
 
+/**
+ * Stores information of an available promo
+ */
 @Entity
 data class Promo(
     @PrimaryKey val id: String,
@@ -105,6 +132,10 @@ data class Promo(
     }
 }
 
+/**
+ * Interface to perform sql operations on databases that have 
+ * [UserOp] as a entity
+ */
 @Dao
 interface UserOpDao {
     @Insert
@@ -114,6 +145,10 @@ interface UserOpDao {
     fun getAll(): List<UserOp>
 }
 
+/**
+ * Interface to perform sql operations on databases that have a 
+ * [Booking] entity
+ */
 @Dao
 interface BookingDao {
     @Insert
@@ -127,6 +162,10 @@ interface BookingDao {
 }
 
 
+/**
+ * Interface to perform sql operations on databases that have a 
+ * [User] entity
+ */
 @Dao
 interface UserDao {
     @Insert
@@ -152,12 +191,24 @@ interface UserDao {
     fun findCredentials(username: String, password: String): User?
 }
 
+/**
+ * Interface to perform sql operations on databases that have a 
+ * [Segment] entity
+ */
 @Dao
 interface SegmentDao {
     @Insert
     fun insertAll(vararg segment: Segment)
+    
+    @Query("SELECT * FROM segment WHERE flight = :flightID ORDER BY seq_no DESC")
+    fun getFlightSegments(flightID:String): List<Segment>
 }
-    @Dao
+
+/**
+ * Interface to perform sql operations on databases that have a 
+ * [Promo] entity
+ */
+@Dao
 interface PromoDao {
     @Insert
     fun insertAll(vararg promo: Promo)
@@ -166,6 +217,10 @@ interface PromoDao {
     fun getAll(): List<Promo>
 }
 
+/**
+ * Interface to perform sql operations on databases that have a 
+ * [Flight] entity
+ */
 @Dao
 interface FlightDao {
     @Insert
@@ -176,7 +231,4 @@ interface FlightDao {
 
     @Query("SELECT * FROM flight")
     fun getFromTo(): List<Flight>
-
-    @Query("SELECT * FROM segment WHERE flight = :flightID ORDER BY seq_no DESC")
-    fun getSegments(flightID:String): List<Segment>
 }

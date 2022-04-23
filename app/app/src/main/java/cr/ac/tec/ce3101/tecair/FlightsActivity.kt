@@ -10,6 +10,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.gson.Gson
 
+/**
+ * Activity where the user can search for available flights
+ * based on origin and destiny criteria
+ */
 class FlightsActivity : AppCompatActivity() {
     private lateinit var flightList: LinearLayout
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,7 +21,11 @@ class FlightsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_flights)
         flightList = findViewById(R.id.flightList)
     }
-
+    
+    /**
+     * Retrieves the list of flights that meet the search 
+     * criteria and loads them to a LinearLayout in the activity
+     */
     fun applyFilter(view: View) {
         flightList.removeAllViewsInLayout()
         val from = findViewById<EditText>(R.id.fromText).text.toString()
@@ -48,13 +56,19 @@ class FlightsActivity : AppCompatActivity() {
             }
         }
     }
-
+    /**
+     * Opens a dialog with the information of the provided flight.
+     * Intended to be called from the "info" button of each flight
+     */
     private fun viewInfoFlight(flightInfo: FlightWithPath) {
         val message = "${getString(R.string.flight_number)}: ${flightInfo.flight.no} \n" +
                 "${getString(R.string.price)}: ${flightInfo.flight.price} \n"
         simpleDialog(this, message)
     }
-
+    /**
+     * Opens the FlightPaymentActivity so the user can proceed with the 
+     * reservation of a flight
+     */
     private fun openPaymentView(flightInfo: FlightWithPath) {
         val intent = Intent(this, FlightPaymentActivity::class.java).apply {
             putExtra("info", Gson().toJson(flightInfo))

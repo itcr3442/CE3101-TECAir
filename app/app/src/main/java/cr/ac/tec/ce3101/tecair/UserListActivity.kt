@@ -8,6 +8,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.gson.Gson
 
+/**
+ * This activity allows to view previosly logged user information.
+ * Be aware, the different action buttons provided will only work for the
+ * current user, as it is the one who is authenticated. No user should be able
+ * to edit other's information
+ */
 class UserListActivity : AppCompatActivity() {
     private lateinit var userList: LinearLayout
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,6 +23,11 @@ class UserListActivity : AppCompatActivity() {
         refreshUserList()
     }
 
+    /**
+     * Retrieves the user list for the current session and fills
+     * a Horizontal LinearLayout with the username and buttons to
+     * view the information, edit, or delete an user
+     */
     private fun refreshUserList() {
         userList.removeAllViewsInLayout()
         val users = (application as TECAirApp).session?.getUserList()
@@ -48,7 +59,10 @@ class UserListActivity : AppCompatActivity() {
         }
 
     }
-
+    
+    /**
+     * Displays a dialog message with the information of the provided user
+     */
     private fun viewInfoUser(user: User) {
         var message = "${getString(R.string.login_hint)} : ${user.username} \n" +
                 "${getString(R.string.firstname_hint)} : ${user.first_name} \n" +
@@ -62,7 +76,9 @@ class UserListActivity : AppCompatActivity() {
         }
         simpleDialog(this, message)
     }
-
+    /**
+     * Opens [EditUserActivity] with the selected user's information
+     */
     private fun editUser(user: User) {
         val session = (application as TECAirApp).session
         //will only allow editing the current user
@@ -72,9 +88,14 @@ class UserListActivity : AppCompatActivity() {
             val intent = Intent(this, EditUserActivity::class.java).apply {
                 putExtra("info", Gson().toJson(user))
             }
+            startActivity(intent)
         }
     }
-
+    
+    /**
+     * Delete the provided user. As only the current user can delete itself, it will
+     * automatically destroy the current session.
+     */
     private fun deleteUser(user: User) {
         val session = (application as TECAirApp).session
         //will only allow editing the current user

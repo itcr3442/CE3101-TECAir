@@ -4,6 +4,10 @@ import android.content.Context
 import androidx.room.Room
 import java.util.*
 
+/** 
+ * Session type for user session without connection to the main server
+ * Look into [Session] for documentation on the overriden functions
+ */
 class OfflineSession(
     private val username: String,
     private val password: String,
@@ -74,7 +78,7 @@ class OfflineSession(
         val flights = cache.flightDao().getAll()
         flights.forEach { flight ->
             run {
-                val segments = cache.flightDao().getSegments(flight.id)
+                val segments = cache.segmentDao().getFlightSegments(flight.id)
                 var path = mutableListOf<Segment>()
                 var i = 0
                 while (i < segments.size) {

@@ -8,6 +8,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/** 
+ * Session type for user session with connection to the main server
+ * Look into [Session] for documentation on the overriden functions
+ */
 class OnlineSession(
     url: String,
     private val username: String,
@@ -36,6 +40,10 @@ class OnlineSession(
     override fun getPassword(): String {
         return password
     }
+    /**
+     * Syncrhonization routine. Performs al pending operations and refreshes the local
+     * database cache
+     */
     private fun synchronize(){
         //send user changes
         val userChanges = pendingOps.userOpDao().getAll()
