@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Npgsql;
 
 namespace backend
 {
-    public partial class tecairContext : DbContext
+    public partial class TecAirContext : DbContext
     {
-        public tecairContext()
+        static TecAirContext()
         {
-        }
-
-        public tecairContext(DbContextOptions<tecairContext> options)
-            : base(options)
-        {
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<UserType>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<FlightState>();
         }
 
         public virtual DbSet<Aircraft> Aircraft { get; set; } = null!;
@@ -31,15 +29,14 @@ namespace backend
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql("Host=/;Database=tecair");
+                optionsBuilder.UseNpgsql("Host=/tmp/kk/psql;Database=tecair");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasPostgresEnum("flight_state", new[] { "booking", "checkin", "closed" })
-                .HasPostgresEnum("user_type", new[] { "pax", "manager" })
+            modelBuilder.HasPostgresEnum<FlightState>("flight_state")
+                .HasPostgresEnum<UserType>("user_type")
                 .HasPostgresExtension("uuid-ossp");
 
             modelBuilder.Entity<Aircraft>(entity =>
@@ -229,6 +226,9 @@ namespace backend
                 entity.Property(e => e.No).HasColumnName("no");
 
                 entity.Property(e => e.Price).HasColumnName("price");
+
+                entity.Property(e => e.State)
+                    .HasColumnName("state");
             });
 
             modelBuilder.Entity<Promo>(entity =>
@@ -335,6 +335,9 @@ namespace backend
                 entity.Property(e => e.FirstName)
                     .HasMaxLength(256)
                     .HasColumnName("first_name");
+
+                entity.Property(e => e.Type)
+                    .HasColumnName("type");
 
                 entity.Property(e => e.Hash)
                     .HasMaxLength(32)

@@ -1,1 +1,91 @@
-﻿Console.WriteLine("Hello, World!");
+using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
+using backend;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+                                    builder =>
+                                    {
+                                        builder.WithOrigins("http://localhost:4200", "http://127.0.0.1:4200")
+                                    .AllowAnyHeader()
+                                    .WithMethods("POST", "GET", "DELETE");
+                                    });
+});
+
+
+var app = builder.Build();
+
+app.UseSwagger();
+app.UseSwaggerUI();
+app.UseCors();
+
+app.MapPost("/check_login", (string username, string password) =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).CheckLogin(username, password);
+    }
+});
+
+app.MapPost("/users", (NewUser user) =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).AddUser(user);
+    }
+});
+
+app.MapPut("/users/{id}", (Guid id, EditUser edit) =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).UpdateUser(id, edit);
+    }
+});
+
+app.MapDelete("/users/{id}", (Guid id) =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).DeleteUser(id);
+    }
+});
+
+app.MapPost("/flights/{id}/book", (Guid id, NewBooking booking) =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).BookFlight(id, booking);
+    }
+});
+
+app.MapGet("/dump/flights", () =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).DumpFlights();
+    }
+});
+
+app.MapGet("/dump/promos", () =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).DumpPromos();
+    }
+});
+
+app.MapGet("/dump/segments", () =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).DumpSegments();
+    }
+});
+
+app.Run();

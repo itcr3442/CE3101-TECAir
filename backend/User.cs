@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace backend
 {
@@ -20,6 +21,7 @@ namespace backend
         public string? Email { get; set; }
         public string? University { get; set; }
         public string? StudentId { get; set; }
+        public UserType Type { get; set; }
 
         public virtual ICollection<Bag> Bags { get; set; }
     }
