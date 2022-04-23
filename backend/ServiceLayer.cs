@@ -1,6 +1,8 @@
 namespace backend;
 
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 class ServiceLayer
 {
@@ -21,8 +23,58 @@ class ServiceLayer
         var hash = Convert.FromHexString(user.Hash);
         var challenge = KeyDerivation.Pbkdf2(password, salt, KeyDerivationPrf.HMACSHA256, 1000, 16);
 
-        return hash.SequenceEqual(challenge) ? Results.Ok() : Results.Unauthorized();
+        return hash.SequenceEqual(challenge) ? Results.Ok(user.Id) : Results.Unauthorized();
+    }
+
+    public IResult AddUser(NewUser user)
+    {
+        var salt = new byte[16];
+        random.NextBytes(salt);
+
+        var hash = KeyDerivation.Pbkdf2(user.Password, salt, KeyDerivationPrf.HMACSHA256, 1000, 16);
+        var row = new User
+        {
+            Username = user.Username,
+            Salt = Convert.ToHexString(salt),
+            Hash = Convert.ToHexString(hash),
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Phonenumber = user.PhoneNumber,
+            University = user.University,
+            StudentId = user.StudentId,
+            Type = user.Type,
+        };
+
+        db.Users.Add(row);
+        try
+        {
+            db.SaveChanges();
+        }
+        catch (DbUpdateException)
+        {
+            return Results.BadRequest();
+        }
+
+        return Results.Ok(row.Id);
     }
 
     private TecAirContext db;
+    private Random random = new Random();
+}
+
+public class NewUser
+{
+    [Required]
+    public UserType Type { get; set; }
+    [Required]
+    public string Username { get; set; } = null!;
+    [Required]
+    public string Password { get; set; } = null!;
+    [Required]
+    public string FirstName { get; set; } = null!;
+    public string? LastName { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Email { get; set; }
+    public string? University { get; set; }
+    public string? StudentId { get; set; }
 }

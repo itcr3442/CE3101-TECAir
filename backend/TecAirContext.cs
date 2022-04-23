@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Npgsql;
 
 namespace backend
 {
     public partial class TecAirContext : DbContext
     {
+        static TecAirContext()
+        {
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<UserType>();
+        }
+
         public virtual DbSet<Aircraft> Aircraft { get; set; } = null!;
         public virtual DbSet<Airport> Airports { get; set; } = null!;
         public virtual DbSet<Bag> Bags { get; set; } = null!;
@@ -29,7 +35,7 @@ namespace backend
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasPostgresEnum("flight_state", new[] { "booking", "checkin", "closed" })
-                .HasPostgresEnum("user_type", new[] { "pax", "manager" })
+                .HasPostgresEnum<UserType>("user_type")
                 .HasPostgresExtension("uuid-ossp");
 
             modelBuilder.Entity<Aircraft>(entity =>
@@ -325,6 +331,9 @@ namespace backend
                 entity.Property(e => e.FirstName)
                     .HasMaxLength(256)
                     .HasColumnName("first_name");
+
+                entity.Property(e => e.Type)
+                    .HasColumnName("type");
 
                 entity.Property(e => e.Hash)
                     .HasMaxLength(32)

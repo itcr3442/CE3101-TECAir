@@ -32,4 +32,12 @@ app.MapPost("/check_login", (string username, string password) =>
     }
 });
 
+app.MapPost("/users", (NewUser user) =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).AddUser(user);
+    }
+});
+
 app.Run();
