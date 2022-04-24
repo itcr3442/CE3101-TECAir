@@ -1,66 +1,92 @@
 <div class="container">
+    <ng-container
+    *ngTemplateOutlet="this.isBooking ? FlightBooking : FlightSearch">
+    </ng-container>
+</div>
+
+<ng-template #FlightSearch>
     <div class="row mb-3">
         <h3>Búsqueda de Vuelos</h3>
     </div>
-    <div class="row mb-3">
-        <div class="col mb-4">
-            <label for="Aeropuerto de Origen">Aeropuerto de Origen</label>
-            <select class="form-select" aria-label="Default select example">
-                <option selected>Seleccione el aeropuerto</option>
-                <option value="1">Aeropuerto Juan Santamaría</option>
-                <option value="2">Aeropuerto Libertad de Newark</option>
-                <option value="3">Aeropuerto de Pekín-Capital</option>
-            </select>
+    <form [formGroup]="seachFlightForm" (ngSubmit)="onSearch()">
+        <div class="col mb-4 form-group">
+            <label for="Aeropuerto de Origen">Código de Aeropuerto de Origen</label>
+            <input formControlName="airport_dep" class="form-control" placeholder="Aeropuerto de Origen">
         </div>
-        <div class="col mb-4">
-            <label for="Aeropuerto de Llegada">Aeropuerto de Llegada</label>
-            <select class="form-select" aria-label="Default select example">
-            <option selected>Seleccione el aeropuerto</option>
-            <option value="1">Aeropuerto Juan Santamaría</option>
-            <option value="2">Aeropuerto Libertad de Newark</option>
-            <option value="3">Aeropuerto de Pekín-Capital</option>
-        </select>
-    </div>
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <button type="search" class="btn btn-primary" (click)="onSearch()">Buscar</button>
+        <div class="col mb-4 form-group">
+            <label for="Aeropuerto de Llegada">Código de Aeropuerto de Llegada</label>
+            <input formControlName="airport_arr" class="form-control" placeholder="Aeropuerto de Llegada">
         </div>
         <div class="col-md-4">
-            <ng-container *ngIf="this.message">
-                <p>
-                    {{this.message}}
-                </p>
-            </ng-container>
+            <button type="search" class="btn btn-primary">Buscar</button>
         </div>
+    </form>
+    <div class="row-md-4">
+        <ng-container *ngIf="this.message">
+            <p>
+                {{this.message}}
+            </p>
+        </ng-container>
     </div>
     <div class="row md-6">
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Origen</th>
-                        <th>Destino</th>
-                        <th>Avión</th>
-                        <th>Fecha</th>
-                        <th>Hora de Salida</th>
-                        <th>Hora de Llegada</th>
-                        <th>ID de vuelo</th>
-                        <th>Disponibilidad</th>
+                        <th>ID de Vuelo</th>
+                        <th>Número de Vuelo</th>
+                        <th>Comentario</th>
+                        <th>Precio</th>
+                        <th>Ruta Completa</th>
+                        <th>Seleccionar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor = "let flight of flights_list" >
-                        <td>{{flight.aeropuerto_origen}}</td>
-                        <td>{{flight.aeropuerto_llegada}}</td>
-                        <td>{{flight.avion}}</td>
-                        <td>{{flight.fecha}}</td>
-                        <td>{{flight.hora_salida}}</td>
-                        <td>{{flight.hora_llegada}}</td>
-                        <td>{{flight.flight_id}}</td>
-                        <td>{{flight.disponibilidad}}</td>
+                    <tr *ngFor = "let flight_ of flights_list" >
+                        <td>{{flight_.flight.id}}</td>
+                        <td>{{flight_.flight.no}}</td>
+                        <td>{{flight_.flight.comment}}</td>
+                        <td>{{flight_.flight.price}}</td>
+                        <td>{{flight_.flight.fullRoute}}</td>
+                        <td><button type="reserving" class="btn btn-primary" (click)="onReserve(flight_)">Reservar</button></td>
                     </tr>
                 </tbody>
             </table>
         </div>
+    </div>     
+</ng-template>
+
+<ng-template #FlightBooking>
+    <div class="col-md-4">
+        <button type="GoBack" class="btn btn-primary" (click)="onBack()">Back</button>
+    </div>
+    <div class="row mb-3">
+        <h3>Reservación de Vuelos</h3>
+        <h5>Flight No.: {{this.bookingFlight.flight.no}}</h5>
+        <h5>Price: {{this.bookingFlight.flight.price}}</h5>
+        <h5>Route: {{this.bookingFlight.flight.fullRoute}}</h5> 
+        <h5>Flight No.: {{this.bookingFlight.flight.no}}</h5> 
+        <h5>Promociones activas se aplicarán después de confirmar la reservación</h5> 
     </div> 
-</div>
+    <form [formGroup]="bookFlightForm" (ngSubmit)="onBuy()">
+        <div class="col mb-4 form-group">
+            <label for="Card Number">Número de Tarjeta</label>
+            <input formControlName="cardNum" class="form-control" placeholder="XXXXXXXXXXXXXXXX">
+        </div>
+        <div class="col mb-4 form-group">
+            <label for="Expiration Date">Fecha de Expiración</label>
+            <input formControlName="expDate" class="form-control" placeholder="XX/XX/XX">
+        </div>
+        <div class="col mb-4 form-group">
+            <label for="CVE">CVE</label>
+            <input formControlName="cve" class="form-control" placeholder="XXX">
+        </div>
+        <div class="col mb-4 form-group">
+            <label for="Promo Code">Código de Promoción</label>
+            <input formControlName="promoCode" class="form-control" placeholder="(Opcional)">
+        </div>
+        <div class="col-md-4">
+            <button type="search" class="btn btn-primary">Buscar</button>
+        </div>
+    </form>
+</ng-template>
