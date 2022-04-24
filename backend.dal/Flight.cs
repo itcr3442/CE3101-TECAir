@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 public partial class Flight
 {
@@ -18,8 +19,12 @@ public partial class Flight
     public decimal Price { get; set; }
     public FlightState State { get; set; }
 
+    [JsonIgnore]
     public virtual Endpoint Endpoint { get; set; } = null!;
+    [JsonIgnore]
     public virtual ICollection<Bag> Bags { get; set; }
+    [JsonIgnore]
     public virtual ICollection<Promo> Promos { get; set; }
+    [JsonIgnore]
     public virtual ICollection<Segment> Segments { get; set; }
 }

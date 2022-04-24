@@ -35,7 +35,8 @@ public partial class TecAirContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseNpgsql(configuration.GetConnectionString("TecAir"));
+            optionsBuilder.UseLazyLoadingProxies()
+                .UseNpgsql(configuration.GetConnectionString("TecAir"));
         }
     }
 

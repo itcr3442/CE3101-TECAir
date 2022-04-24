@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 public partial class Airport
 {
@@ -17,8 +18,12 @@ public partial class Airport
     public string Code { get; set; } = null!;
     public string? Comment { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<Endpoint> EndpointFromLocNavigations { get; set; }
+    [JsonIgnore]
     public virtual ICollection<Endpoint> EndpointToLocNavigations { get; set; }
+    [JsonIgnore]
     public virtual ICollection<Segment> SegmentFromLocNavigations { get; set; }
+    [JsonIgnore]
     public virtual ICollection<Segment> SegmentToLocNavigations { get; set; }
 }

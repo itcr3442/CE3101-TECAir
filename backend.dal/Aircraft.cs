@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 public partial class Aircraft
 {
@@ -14,5 +15,6 @@ public partial class Aircraft
     public string Code { get; set; } = null!;
     public int Seats { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<Segment> Segments { get; set; }
 }

@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 public partial class Segment
 {
@@ -14,8 +15,12 @@ public partial class Segment
     public DateTimeOffset ToTime { get; set; }
     public Guid Aircraft { get; set; }
 
+    [JsonIgnore]
     public virtual Aircraft AircraftNavigation { get; set; } = null!;
+    [JsonIgnore]
     public virtual Flight FlightNavigation { get; set; } = null!;
+    [JsonIgnore]
     public virtual Airport FromLocNavigation { get; set; } = null!;
+    [JsonIgnore]
     public virtual Airport ToLocNavigation { get; set; } = null!;
 }

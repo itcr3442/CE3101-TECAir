@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 public partial class User
 {
@@ -23,5 +24,6 @@ public partial class User
     public string? StudentId { get; set; }
     public UserType Type { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<Bag> Bags { get; set; }
 }

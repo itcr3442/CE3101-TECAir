@@ -205,10 +205,10 @@ class ServiceLayer
 
     public IResult DumpSegments(bool filterBooking)
     {
-        IEnumerable<Segment> segments = db.Segments;
+        var segments = db.Segments.ToList();
         if (filterBooking)
         {
-            segments = segments.Where(s => s.FlightNavigation.State == FlightState.Booking);
+            segments = segments.Where(s => s.FlightNavigation.State == FlightState.Booking).ToList();
         }
 
         var tagged = from segment in segments

@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 public partial class Promo
 {
@@ -13,5 +14,6 @@ public partial class Promo
     public DateTime EndTime { get; set; }
     public byte[]? Img { get; set; }
 
+    [JsonIgnore]
     public virtual Flight FlightNavigation { get; set; } = null!;
 }
