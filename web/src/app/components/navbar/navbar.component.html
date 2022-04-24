@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <ng-container
-                    *ngTemplateOutlet="this.logged ?  (this.role === RoleLevels.User ? userBlock  : adminBlock) : unloggedBlock">
+                    *ngTemplateOutlet="this.logged ?  (this.role > RoleLevels.User ? adminBlock  : userBlock ) : unloggedBlock">
                 </ng-container>
             </ul>
         </div>

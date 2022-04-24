@@ -40,13 +40,6 @@
                 <input type="password" id="password" formControlName="password" class="form-control"
                     placeholder="Contraseña">
             </div>
-            <div class="mb-3 form-group">
-                <label for="role">Tipo de ingreso </label>
-                <select class="form-select" formControlName="role" id="role">
-                    <option [ngValue]=RoleLevels.User>Usuario</option>
-                    <option [ngValue]=RoleLevels.Admin>Funcionario</option>
-                </select>
-            </div>
             <ng-container *ngIf="this.loginMsg">
                 <p class="warning">
                     {{this.loginMsg}}

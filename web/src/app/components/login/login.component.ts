@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { RoleLevels } from 'src/app/constants/auth.constants'
 import { PromosComponent } from '../promos/promos.component';
 
 @Component({
@@ -18,7 +17,6 @@ export class LoginComponent implements OnInit {
   loginForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
-    role: new FormControl(RoleLevels.User, [Validators.required, Validators.min(RoleLevels.User), Validators.max(RoleLevels.Admin)])
   })
   loginMsg: string = ""
   message: string = ""
@@ -46,15 +44,6 @@ export class LoginComponent implements OnInit {
     if (this.router.url === "/login/redirect") {
       this.message = "Debe ingresar al sistema para poder acceder a esa página"
     }
-  }
-
-  // Este get es para poder usarlo dentro de template
-  public get RoleLevels(): typeof RoleLevels {
-    return RoleLevels;
-  }
-
-  get role() {
-    return this.loginForm.controls['role'].value
   }
 
   get username() {

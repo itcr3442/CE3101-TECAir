@@ -10,9 +10,12 @@ import { AuthService } from 'src/app/services/auth.service';
 export class NavbarComponent implements OnInit {
 
   logged: boolean;
+  role: number;
 
   constructor(private authService: AuthService) {
     this.logged = authService.isLoggedIn()
+    this.role = 0
+    this.authService.getRole().then(role => this.role = role)
   }
 
   ngOnInit(): void {
@@ -22,10 +25,6 @@ export class NavbarComponent implements OnInit {
   // Este get es para poder usarlo dentro de template
   public get RoleLevels(): typeof RoleLevels {
     return RoleLevels;
-  }
-
-  get role(): number {
-    return this.authService.getRole()
   }
 
 }

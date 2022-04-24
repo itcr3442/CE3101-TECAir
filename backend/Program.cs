@@ -12,7 +12,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
                                     builder =>
                                     {
-                                        builder.WithOrigins("http://localhost:5000", "http://127.0.0.1:5000","http://localhost:4200", "http://127.0.0.1:4200")
+                                        builder.WithOrigins("http://localhost:5000", "http://127.0.0.1:5000", "http://localhost:4200", "http://127.0.0.1:4200")
                                     .AllowAnyHeader()
                                     .WithMethods("POST", "PUT", "GET", "DELETE");
                                     });
@@ -77,7 +77,15 @@ app.MapGet("/flights", () =>
 {
     using (var db = new TecAirContext())
     {
-        return new ServiceLayer(db).DumpFlights();
+        return new ServiceLayer(db).DumpFlights(false);
+    }
+});
+
+app.MapGet("/flights/booking", () =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).DumpFlights(true);
     }
 });
 
@@ -86,6 +94,22 @@ app.MapPost("/flights/{id}/book", (Guid id, NewBooking booking) =>
     using (var db = new TecAirContext())
     {
         return new ServiceLayer(db).BookFlight(id, booking);
+    }
+});
+
+app.MapPost("/flights/{id}/open", (Guid id) =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).OpenFlight(id);
+    }
+});
+
+app.MapPost("/flights/{id}/close", (Guid id) =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).CloseFlight(id);
     }
 });
 
@@ -101,7 +125,15 @@ app.MapGet("/segments", () =>
 {
     using (var db = new TecAirContext())
     {
-        return new ServiceLayer(db).DumpSegments();
+        return new ServiceLayer(db).DumpSegments(false);
+    }
+});
+
+app.MapGet("/segments/booking", () =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).DumpSegments(true);
     }
 });
 
