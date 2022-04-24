@@ -121,7 +121,8 @@ public partial class TecAirContext : DbContext
 
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasNoKey();
+            entity.HasKey(e => new { e.Flight, e.Pax })
+                .HasName("bookings_flight_pax_key");
 
             entity.ToTable("bookings");
 
@@ -154,7 +155,8 @@ public partial class TecAirContext : DbContext
 
         modelBuilder.Entity<Checkin>(entity =>
         {
-            entity.HasNoKey();
+            entity.HasKey(e => new { e.Segment, e.Pax })
+                .HasName("checkins_segment_pax_key");
 
             entity.ToTable("checkins");
 
