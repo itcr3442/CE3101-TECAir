@@ -76,20 +76,20 @@ export class WorkerAdminComponent implements OnInit {
         return
       }
 
-      this.registerService.register_worker(this.id, this.password, this.name, this.apellido1, this.apellido2).subscribe((success: number) => {
-        if (success === 1) {
-          console.log("Register successful");
-          this.message = ""
-          this.registerService.resetForm(this.registerForm)
-        }
-        else if (success === -1) {
-          this.message = "La cédula dada ya se encuentra registrada en el sistema.";
-        } else if (success === -2) {
-          this.message = "El rol seleccionado no es válido.";
-        } else if (success === -3) {
-          this.message = "Usted no cuenta con permisos suficientes para realizar esta acción.";
-        }
-      })
+      // this.registerService.register_worker(this.id, this.password, this.name, this.apellido1, this.apellido2).subscribe((success: number) => {
+      //   if (success === 1) {
+      //     console.log("Register successful");
+      //     this.message = ""
+      //     this.registerService.resetForm(this.registerForm)
+      //   }
+      //   else if (success === -1) {
+      //     this.message = "La cédula dada ya se encuentra registrada en el sistema.";
+      //   } else if (success === -2) {
+      //     this.message = "El rol seleccionado no es válido.";
+      //   } else if (success === -3) {
+      //     this.message = "Usted no cuenta con permisos suficientes para realizar esta acción.";
+      //   }
+      // })
 
 
 

@@ -17,7 +17,7 @@ export class RepositoryService {
    * @returns Observable con datos retornados por el server
    */
   public getData = (route: string) => {
-    return this.http.get(this.createCompleteRoute(route, this.envUrl.urlAddress));
+    return this.http.get(this.createCompleteRoute(route, this.envUrl.urlAddress), { observe: 'response' });
   }
 
   /**
@@ -27,7 +27,7 @@ export class RepositoryService {
    * @returns Observable con datos retornados por el server
    */
   public create = (route: string, body: any) => {
-    return this.http.post(this.createCompleteRoute(route, this.envUrl.urlAddress), body, this.generateHeaders());
+    return this.http.post(this.createCompleteRoute(route, this.envUrl.urlAddress), body, { headers: this.generateHeaders().headers, observe: 'response' });
   }
 
   // Junta el url base del API con la ruta relative de los

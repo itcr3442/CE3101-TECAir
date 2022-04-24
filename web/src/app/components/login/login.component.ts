@@ -16,7 +16,7 @@ import { PromosComponent } from '../promos/promos.component';
 export class LoginComponent implements OnInit {
 
   loginForm = new FormGroup({
-    id: new FormControl('', [Validators.required, Validators.pattern('[0-9]*')]),
+    username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
     role: new FormControl(RoleLevels.User, [Validators.required, Validators.min(RoleLevels.User), Validators.max(RoleLevels.Admin)])
   })
@@ -29,6 +29,7 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
   ) {
     this.logged = authService.isLoggedIn()
+    console.log("Is logged:", this.logged)
   }
 
   refresh(): void {
@@ -56,8 +57,8 @@ export class LoginComponent implements OnInit {
     return this.loginForm.controls['role'].value
   }
 
-  get id() {
-    return this.loginForm.controls['id'].value
+  get username() {
+    return this.loginForm.controls['username'].value
   }
 
   get password() {
@@ -79,8 +80,8 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (this.loginForm.valid) {
 
-      this.authService.login(this.id, this.password, this.role).subscribe(
-        (res: boolean) => {
+      this.authService.login(this.username, this.password).subscribe(
+        (res: any) => {
           if (res) {
             this.logged = true
             this.loginMsg = ""
@@ -89,11 +90,14 @@ export class LoginComponent implements OnInit {
           else {
             this.loginMsg = "Cédula o contraseña incorrectos";
           }
+        },
+        (error: any) => {
+          this.loginMsg = "Cédula o contraseña incorrectos";
         }
       )
     }
     else {
-      this.loginMsg = "Por favor verifique que ingresó todos los campos correctamente y su cédula solo contiene dígitos";
+      this.loginMsg = "Por favor verifique que ingresó todos los campos";
     }
   }
 }

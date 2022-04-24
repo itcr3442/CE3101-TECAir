@@ -10,7 +10,7 @@ import { RegisterService } from 'src/app/services/register.service';
 })
 export class RegisterUserComponent implements OnInit {
   registerForm = new FormGroup({
-    id: new FormControl('', [Validators.required, Validators.pattern('[0-9]*')]),
+    username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
@@ -37,18 +37,30 @@ export class RegisterUserComponent implements OnInit {
     return RoleLevels;
   }
 
-  get id() {
-    return this.registerForm.controls['id'].value
+  get username() {
+    return this.registerForm.controls['username'].value
   }
 
   get password() {
     return this.registerForm.controls['password'].value
   }
 
+  get firstName() {
+    return this.registerForm.controls['firstName'].value
+  }
+  get lastName() {
+    return this.registerForm.controls['lastName'].value
+  }
+  get email() {
+    return this.registerForm.controls['email'].value
+  }
+  get phone() {
+    return this.registerForm.controls['phone'].value
+  }
+
   get university() {
     return this.registerForm.controls['university'].value
   }
-
   get studentId() {
     return this.registerForm.controls['studentId'].value
   }
@@ -78,10 +90,20 @@ export class RegisterUserComponent implements OnInit {
   onSubmit() {
     if (this.registerForm.valid) {
       this.message = ""
-      this.registerService.resetForm(this.registerForm)
+      this.registerService.register_user(this.username, this.password, this.firstName, this.lastName, this.phone, this.email, this.isStudent, this.university, this.studentId).subscribe(
+        (resp: any) => {
+          this.message = "Felicitaciones! Se ha registrado correctamente";
+          this.registerService.resetForm(this.registerForm)
+        },
+        err => {
+          if (err.status == 409) {
+            this.message = "Usuario ya está tomado";
+          }
+        })
+
     }
     else {
-      this.message = "Por favor verifique que ingresó todos los campos correctamente y su cédula y # de tel solo contiene dígitos";
+      this.message = "Por favor verifique que ingresó todos los campos correctamente y su # de tel solo contiene dígitos";
     }
   }
 }

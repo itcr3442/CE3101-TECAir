@@ -14,7 +14,7 @@ builder.Services.AddCors(options =>
                                     {
                                         builder.WithOrigins("http://localhost:5000", "http://127.0.0.1:5000","http://localhost:4200", "http://127.0.0.1:4200")
                                     .AllowAnyHeader()
-                                    .WithMethods("POST", "GET", "DELETE");
+                                    .WithMethods("POST", "PUT", "GET", "DELETE");
                                     });
 });
 
@@ -102,6 +102,14 @@ app.MapGet("/segments", () =>
     using (var db = new TecAirContext())
     {
         return new ServiceLayer(db).DumpSegments();
+    }
+});
+
+app.MapPost("/search", (string fromLoc, string toLoc) =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).SearchFlights(fromLoc, toLoc);
     }
 });
 

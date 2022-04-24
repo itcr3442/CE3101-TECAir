@@ -7,8 +7,9 @@
         <div class="row mb-5">
             <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
                 <div class="mb-3 form-group">
-                    <label for="id">Cédula</label>
-                    <input type="id" id="id" formControlName="id" class="form-control" placeholder="Ingrese su cédula">
+                    <label for="id">Usuario</label>
+                    <input type="id" id="id" formControlName="username" class="form-control"
+                        placeholder="Ingrese su nombre de usuario">
                 </div>
                 <div class="row mb-3 form-group">
                     <label for="fullname">Nombre Completo</label>
@@ -59,7 +60,7 @@
                         {{this.message}}
                     </p>
                 </ng-container>
-                <button type="submit" class="btn btn-primary">Ingresar</button>
+                <button type="submit" class="btn btn-primary">Regístrese</button>
             </form>
         </div>
     </div>

@@ -11,35 +11,49 @@ export class RegisterService {
 
   constructor(private repositoryService: RepositoryService, private authService: AuthService) { }
 
+  public register_user(username: string, password: string, firstName: string, lastName: string, phoneNumber: number, email: string, isStudent: boolean, university: string, studentId: string) {
+
+    let new_user = {
+      "type": 0,
+      username,
+      password,
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      university: isStudent ? university : null,
+      studentId: isStudent ? studentId : null
+    }
+
+    console.log("New user: " + JSON.stringify(new_user))
+
+
+    return this.repositoryService.create(
+      "users", new_user)
+
+  }
+
   // TODO: cambiar los parámetros al modelo de trabajador cuando soto termine la base 
-  public register_worker(id: string, password: string, name: string, apellido1: string, apellido2: string) {
+  public register_worker(username: string, password: string, firstName: string, lastName: string, phoneNumber: number, email: string) {
 
-    let token = this.authService.getCredentials()
-
-    let registerUrl = "trabajadores?cedula=" + token.id + "&password_hash=" + token.password
-
-    let hash = password
     let new_worker = {
-      "cedula": id,
-      "password_hash": hash,
-      "nombre": name,
-      "primer_apellido": apellido1,
-      "segundo_apellido": apellido2,
+      "type": 1,
+      username,
+      password,
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      university: null,
+      studentId: null
     }
 
     console.log("New worker: " + JSON.stringify(new_worker))
 
 
-    console.log("POST url: " + registerUrl)
-    //TODO : también arreglar esto cuando haya DB
-    return of(1)
-    // return this.repositoryService.create(
-    //   registerUrl, new_worker)
-    //   .pipe(map((res: any) => {
-    //     console.log("post result: " + JSON.stringify(res))
-    //     return res.success
-    //   }
-    //   ))
+    return this.repositoryService.create(
+      "users", new_worker)
+
   }
 
   /**
