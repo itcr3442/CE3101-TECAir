@@ -23,15 +23,15 @@ class ServiceLayer
 
         var salt = Convert.FromHexString(user.Salt);
         var hash = Convert.FromHexString(user.Hash);
-        var challenge = hashFor(password, salt);
+        var challenge = HashFor(password, salt);
 
         return hash.SequenceEqual(challenge) ? Results.Ok(user.Id) : Results.Unauthorized();
     }
 
     public IResult AddUser(NewUser user)
     {
-        var salt = randomSalt();
-        var hash = hashFor(user.Password, salt);
+        var salt = RandomSalt();
+        var hash = HashFor(user.Password, salt);
 
         var row = new User
         {
@@ -48,7 +48,7 @@ class ServiceLayer
         };
 
         db.Users.Add(row);
-        return save() ?? Results.Ok(row.Id);
+        return Save() ?? Results.Ok(row.Id);
     }
 
     public IResult GetUser(Guid id)
@@ -78,9 +78,9 @@ class ServiceLayer
         user.Username = edit.Username ?? user.Username;
         if (edit.Password != null)
         {
-            var newSalt = randomSalt();
+            var newSalt = RandomSalt();
             user.Salt = Convert.ToHexString(newSalt);
-            user.Hash = Convert.ToHexString(hashFor(edit.Password, newSalt));
+            user.Hash = Convert.ToHexString(HashFor(edit.Password, newSalt));
         }
         user.FirstName = edit.FirstName ?? user.FirstName;
         user.LastName = edit.LastName ?? user.LastName;
@@ -89,7 +89,7 @@ class ServiceLayer
         user.University = edit.University ?? user.University;
         user.StudentId = edit.StudentId ?? user.StudentId;
 
-        return save() ?? Results.Ok();
+        return Save() ?? Results.Ok();
     }
 
     public IResult DeleteUser(Guid id)
@@ -99,7 +99,7 @@ class ServiceLayer
         db.Checkins.RemoveRange(from c in db.Checkins where c.Pax == id select c);
         db.Entry(new User { Id = id }).State = EntityState.Deleted;
 
-        return save() ?? Results.Ok();
+        return Save() ?? Results.Ok();
     }
 
     public IResult BookFlight(Guid flightId, NewBooking booking)
@@ -135,36 +135,58 @@ class ServiceLayer
         var total = promo != null ? promo.Price : flight.Price;
 
         db.Bookings.Add(new Booking { Flight = flightId, Pax = paxId, Promo = promoId });
-        return save() ?? Results.Ok(new Booked { Total = total });
+        return Save() ?? Results.Ok(new Booked { Total = total });
     }
 
-    public IResult CheckIn(Guid segmentId, CheckIn checkIn)
+    public IResult AddBag(Guid flightId, NewBag bag)
     {
-        var segment = (from s in db.Segments where s.Id == segmentId select s).SingleOrDefault();
-        var pax = (from u in db.Users where u.Id == checkIn.Pax select u).SingleOrDefault();
-
-        if (segment == null || pax == null)
+        var validColor = bag.Color.Length == 7 && bag.Color[0] == '#';
+        if (validColor)
         {
-            return Results.NotFound();
+            try
+            {
+                Convert.FromHexString(bag.Color.Substring(1));
+            }
+            catch (FormatException)
+            {
+                validColor = false;
+            }
         }
 
-        var flight = segment.FlightNavigation;
-        var seats = segment.AircraftNavigation.Seats;
-
-        if (checkIn.Seat < 0 || checkIn.Seat >= seats || flight.State != FlightState.Checkin)
+        if (bag.Weight < 0 || bag.Weight > 1000 || !validColor)
         {
             return Results.BadRequest();
         }
 
-        var row = new Checkin
+        var flight = (from f in db.Flights where f.Id == flightId select f).SingleOrDefault();
+        var pax = (from u in db.Users where u.Id == bag.Owner select u).SingleOrDefault();
+
+        if (flight == null || pax == null)
         {
-            Segment = segmentId,
-            Pax = checkIn.Pax,
-            Seat = checkIn.Seat,
+            return Results.NotFound();
+        }
+
+        var checkins = from checkin in db.Checkins
+                       join segment in db.Segments
+                       on checkin.Segment equals segment.Id
+                       where checkin.Pax == bag.Owner && segment.Flight == flightId
+                       select 1;
+
+        if (checkins.Count() == 0)
+        {
+            return Results.BadRequest();
+        }
+
+        var row = new Bag
+        {
+            Owner = bag.Owner,
+            Flight = flightId,
+            Weight = bag.Weight,
+            Color = bag.Color,
         };
 
-        db.Checkins.Add(row);
-        return save() ?? Results.Ok();
+        db.Bags.Add(row);
+        return Save() ?? Results.Ok(new InsertedBag { Id = row.Id, No = row.No });
     }
 
     public IResult OpenFlight(Guid flightId)
@@ -183,7 +205,7 @@ class ServiceLayer
 
             case FlightState.Booking:
                 flight.State = FlightState.Checkin;
-                return save() ?? Results.Ok();
+                return Save() ?? Results.Ok();
 
             default:
                 return Results.BadRequest();
@@ -206,7 +228,7 @@ class ServiceLayer
 
             case FlightState.Checkin:
                 flight.State = FlightState.Closed;
-                return save() ?? Results.Ok();
+                return Save() ?? Results.Ok();
 
             default:
                 return Results.BadRequest();
@@ -231,7 +253,7 @@ class ServiceLayer
         );
 
         flight.State = FlightState.Booking;
-        return save() ?? Results.Ok();
+        return Save() ?? Results.Ok();
     }
 
     public IResult DumpUsers()
@@ -262,6 +284,17 @@ class ServiceLayer
         return Results.Ok(db.Promos.ToArray());
     }
 
+    public IResult SearchPromo(string code)
+    {
+		var promo = (from p in db.Promos where p.Code == code select p).SingleOrDefault();
+		if (promo == null)
+		{
+			return Results.NotFound();
+		}
+
+		return Results.Ok(promo.Id);
+	}
+
     public IResult DumpSegments(bool filterBooking)
     {
         var segments = db.Segments.ToList();
@@ -286,6 +319,35 @@ class ServiceLayer
         return Results.Ok(tagged.ToArray());
     }
 
+    public IResult CheckIn(Guid segmentId, CheckIn checkIn)
+    {
+        var segment = (from s in db.Segments where s.Id == segmentId select s).SingleOrDefault();
+        var pax = (from u in db.Users where u.Id == checkIn.Pax select u).SingleOrDefault();
+
+        if (segment == null || pax == null)
+        {
+            return Results.NotFound();
+        }
+
+        var flight = segment.FlightNavigation;
+        var seats = segment.AircraftNavigation.Seats;
+
+        if (checkIn.Seat < 0 || checkIn.Seat >= seats || flight.State != FlightState.Checkin)
+        {
+            return Results.BadRequest();
+        }
+
+        var row = new Checkin
+        {
+            Segment = segmentId,
+            Pax = checkIn.Pax,
+            Seat = checkIn.Seat,
+        };
+
+        db.Checkins.Add(row);
+        return Save() ?? Results.Ok();
+    }
+
     public IResult SearchFlights(string fromLoc, string toLoc)
     {
         var fromPort = (from a in db.Airports where a.Code == fromLoc select a).SingleOrDefault();
@@ -305,13 +367,12 @@ class ServiceLayer
                       where fromSeg.SeqNo <= toSeg.SeqNo
                       select fromSeg.FlightNavigation;
 
-        var results = from flight in flights
+        var results = from flight in flights.ToArray()
                       where flight.State == FlightState.Booking
                       select new SearchResult
                       {
                           Flight = flight,
-                          From = flight.Endpoint.FromLocNavigation,
-                          To = flight.Endpoint.ToLocNavigation
+                          Route = FlightRoute(flight),
                       };
 
         return Results.Ok(results.ToArray());
@@ -320,7 +381,34 @@ class ServiceLayer
     private TecAirContext db;
     private Random random = new Random();
 
-    private IResult? save()
+    private Airport[] FlightRoute(Flight flight)
+    {
+        var query = from segment in db.Segments
+                    where segment.Flight == flight.Id
+                    orderby segment.SeqNo
+                    select segment;
+
+        var enumerator = query.ToList().GetEnumerator();
+
+        var valid = enumerator.MoveNext();
+        var route = new List<Airport>();
+
+        while (valid)
+        {
+            var segment = enumerator.Current;
+            route.Add(segment.FromLocNavigation);
+
+            valid = enumerator.MoveNext();
+            if (!valid)
+            {
+                route.Add(segment.ToLocNavigation);
+            }
+        }
+
+        return route.ToArray();
+    }
+
+    private IResult? Save()
     {
         try
         {
@@ -352,14 +440,14 @@ class ServiceLayer
         }
     }
 
-    private byte[] randomSalt()
+    private byte[] RandomSalt()
     {
         var salt = new byte[16];
         random.NextBytes(salt);
         return salt;
     }
 
-    private byte[] hashFor(string password, byte[] salt)
+    private byte[] HashFor(string password, byte[] salt)
     {
         return KeyDerivation.Pbkdf2(password, salt, KeyDerivationPrf.HMACSHA256, 1000, 16);
     }
@@ -412,6 +500,16 @@ public class CheckIn
     public int Seat { get; set; }
 }
 
+public class NewBag
+{
+    [Required]
+    public Guid Owner { get; set; }
+    [Required]
+    public decimal Weight { get; set; }
+    [Required]
+    public string Color { get; set; } = null!;
+}
+
 public class Booked
 {
     public decimal Total { get; set; }
@@ -420,8 +518,7 @@ public class Booked
 public class SearchResult
 {
     public Flight Flight { get; set; } = null!;
-    public Airport From { get; set; } = null!;
-    public Airport To { get; set; } = null!;
+    public Airport[] Route { get; set; } = null!;
 }
 
 public class TaggedSegment
@@ -434,4 +531,10 @@ public class TaggedSegment
     public String ToLoc { get; set; } = null!;
     public DateTimeOffset ToTime { get; set; }
     public Guid Aircraft { get; set; }
+}
+
+public class InsertedBag
+{
+    public Guid Id { get; set; }
+    public int No { get; set; }
 }

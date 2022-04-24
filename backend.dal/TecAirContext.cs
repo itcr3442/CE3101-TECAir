@@ -25,7 +25,6 @@ public partial class TecAirContext : DbContext
     public virtual DbSet<Bag> Bags { get; set; } = null!;
     public virtual DbSet<Booking> Bookings { get; set; } = null!;
     public virtual DbSet<Checkin> Checkins { get; set; } = null!;
-    public virtual DbSet<Endpoint> Endpoints { get; set; } = null!;
     public virtual DbSet<Flight> Flights { get; set; } = null!;
     public virtual DbSet<Promo> Promos { get; set; } = null!;
     public virtual DbSet<Segment> Segments { get; set; } = null!;
@@ -183,40 +182,6 @@ public partial class TecAirContext : DbContext
                 .HasForeignKey(d => d.Segment)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("checkins_segment_fkey");
-        });
-
-        modelBuilder.Entity<Endpoint>(entity =>
-        {
-            entity.HasKey(e => e.Flight)
-                .HasName("endpoints_pkey");
-
-            entity.ToTable("endpoints");
-
-            entity.Property(e => e.Flight)
-                .ValueGeneratedNever()
-                .HasColumnName("flight");
-
-            entity.Property(e => e.FromLoc).HasColumnName("from_loc");
-
-            entity.Property(e => e.ToLoc).HasColumnName("to_loc");
-
-            entity.HasOne(d => d.FlightNavigation)
-                .WithOne(p => p.Endpoint)
-                .HasForeignKey<Endpoint>(d => d.Flight)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("endpoints_flight_fkey");
-
-            entity.HasOne(d => d.FromLocNavigation)
-                .WithMany(p => p.EndpointFromLocNavigations)
-                .HasForeignKey(d => d.FromLoc)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("endpoints_from_loc_fkey");
-
-            entity.HasOne(d => d.ToLocNavigation)
-                .WithMany(p => p.EndpointToLocNavigations)
-                .HasForeignKey(d => d.ToLoc)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("endpoints_to_loc_fkey");
         });
 
         modelBuilder.Entity<Flight>(entity =>

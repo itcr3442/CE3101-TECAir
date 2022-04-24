@@ -38,11 +38,16 @@ interface Session {
      */
     fun getFlights(from: String, to: String, afterOp: (List<FlightWithPath>) -> Unit)
     /**
+     *  Retrieves the information of all particular flight
+     */
+    fun getFlightById(id: String): Flight?
+
+    /**
      *  Retrieves the list of users who have logged into the application in the past
      */
     fun getUserList(forEachUser: (User)-> Unit )
     /**
      *  Process a flight reservation request
      */
-    fun makeBooking(flight: String, afterOp: (Boolean) -> Unit)
+    fun makeBooking(flight: String, promoCode: String, afterOp: (Boolean) -> Unit)
 }

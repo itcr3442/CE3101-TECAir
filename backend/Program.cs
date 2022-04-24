@@ -99,6 +99,14 @@ app.MapPost("/flights/{id}/book", (Guid id, NewBooking booking) =>
     }
 });
 
+app.MapPost("/flights/{id}/bag", (Guid id, NewBag bag) =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).AddBag(id, bag);
+    }
+});
+
 app.MapPost("/flights/{id}/open", (Guid id) =>
 {
     using (var db = new TecAirContext(app))
@@ -128,6 +136,14 @@ app.MapGet("/promos", () =>
     using (var db = new TecAirContext(app))
     {
         return new ServiceLayer(db).DumpPromos();
+    }
+});
+
+app.MapGet("/promos/search", (string code) =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).SearchPromo(code);
     }
 });
 

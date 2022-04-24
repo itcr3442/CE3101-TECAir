@@ -16,6 +16,7 @@ class FlightPaymentActivity : AppCompatActivity() {
     private lateinit var cardNumber: TextView
     private lateinit var cve: TextView
     private lateinit var expiration: TextView
+    private lateinit var promoCode: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_flight_payment)
@@ -24,32 +25,31 @@ class FlightPaymentActivity : AppCompatActivity() {
         cardNumber = findViewById(R.id.cardNumberText)
         cve = findViewById(R.id.CVEText)
         expiration = findViewById(R.id.expirationText)
+        promoCode = findViewById(R.id.promoCode)
 
         flightData = Gson().fromJson(intent.getStringExtra("info"), FlightWithPath::class.java)
-        flightID.setText(flightData.flight.no)
+        flightID.text = "${getString(R.string.flight_number)}: ${flightData.flight.no}"
         var route = "${getString(R.string.route)}:\n"
         flightData.path.forEach { segment ->
             run {
-                val from = (application as TECAirApp)
                 route += "${segment.fromLoc} - ${segment.toLoc}  \n"
             }
         }
         val extra = "${getString(R.string.info)} ${flightData.flight.comment}\n" +
                 "${getString(R.string.price)}: ${flightData.flight.price} \n" + route + getString(R.string.promo_disclaimer)
-        flightInfo.setText(extra)
+        flightInfo.text = extra
     }
 
     fun payAndBook(view: View) {
         //if there was a payment validation system, it would be here
         // ~ Imagine the code block
         // After payment, we process the booking
-        (application as TECAirApp).session?.makeBooking(flightData.flight.id) { success ->
+        (application as TECAirApp).session?.makeBooking(flightData.flight.id, promoCode.text.toString()) { success ->
             run {
                 if (success) {
                     finish()
                 } else {
                     simpleDialog(this, getString(R.string.booking_error))
-
                 }
             }
         }

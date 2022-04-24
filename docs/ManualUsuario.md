@@ -97,8 +97,21 @@ Al presionar en editar usuario se abrirá un formulario similar al de registro e
 
 ![](imgs/movil6.jpg)
 
+## Despliegue de promociones
+
+Al presionar en el botón de promociones del menú principal, se listaran las distintas promociones disponibles junto con su código de oferta. En el botón de información de cada promoción podrá consultar más datos sobre la misma.
+
+![](imgs/movil7.jpg)
+
 ## Búsqueda de vuelos
+
+Para buscar un vuelo que cruze entre dos aeropuertos durante su ruta, seleccione un aeropuerto como el aeropuerto de origen y otro como el de destino. Al presionar el votón de búsqueda se filtraran entre los vuelos disponibles para booking aquellos que tengan una ruta que pase por los puntos dados. Se dará la posibilidad de consultar más información para cada vuelo encontrado, así como un botón para proceder con la reservación.
+
+![](imgs/movil8.jpg)
 
 ## Reservación de vuelos
 
-## Despliegue de promociones
+La pantalla de reservación de vuelos presenta la información del vuelo a ser reservado por el usuario actual. Opcionalmente, el usuario puede agrega un código de promociones. Puesto que es una funcionalidad fuera del scope del proyecto, no se provee una validación del pago real con tarjeta, pero sí se proveen los campos para completar la información que correspondería a una compra.
+
+![](imgs/movil9.jpg)
+

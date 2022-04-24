@@ -109,14 +109,6 @@ CREATE TABLE public.checkins (
 
 
 
-CREATE TABLE public.endpoints (
-    flight uuid NOT NULL,
-    from_loc uuid NOT NULL,
-    to_loc uuid NOT NULL
-);
-
-
-
 CREATE TABLE public.flights (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     no integer NOT NULL,
@@ -212,11 +204,6 @@ ALTER TABLE ONLY public.checkins
 
 
 
-ALTER TABLE ONLY public.endpoints
-    ADD CONSTRAINT endpoints_pkey PRIMARY KEY (flight);
-
-
-
 ALTER TABLE ONLY public.flights
     ADD CONSTRAINT flights_no_key UNIQUE (no);
 
@@ -297,21 +284,6 @@ ALTER TABLE ONLY public.checkins
 
 ALTER TABLE ONLY public.checkins
     ADD CONSTRAINT checkins_segment_fkey FOREIGN KEY (segment) REFERENCES public.segments(id);
-
-
-
-ALTER TABLE ONLY public.endpoints
-    ADD CONSTRAINT endpoints_flight_fkey FOREIGN KEY (flight) REFERENCES public.flights(id);
-
-
-
-ALTER TABLE ONLY public.endpoints
-    ADD CONSTRAINT endpoints_from_loc_fkey FOREIGN KEY (from_loc) REFERENCES public.airports(id);
-
-
-
-ALTER TABLE ONLY public.endpoints
-    ADD CONSTRAINT endpoints_to_loc_fkey FOREIGN KEY (to_loc) REFERENCES public.airports(id);
 
 
 

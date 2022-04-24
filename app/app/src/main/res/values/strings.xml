@@ -2,6 +2,7 @@
     <string name="app_name">TECAir</string>
     <string name="flight_number">Flight No.</string>
     <string name="code">Code</string>
+    <string name="promo_code">Promo code</string>
     <string name="price">Price</string>
     <string name="start">Start</string>
     <string name="end">End</string>
