@@ -91,6 +91,14 @@ app.MapGet("/flights/booking", () =>
     }
 });
 
+app.MapPost("/flights", (NewFlight flight) =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).AddFlight(flight);
+    }
+});
+
 app.MapGet("/flights/{id}", (Guid id) =>
 {
     using (var db = new TecAirContext(app))

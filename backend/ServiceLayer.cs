@@ -113,6 +113,47 @@ class ServiceLayer
         return Save() ?? Results.Ok();
     }
 
+    public IResult AddFlight(NewFlight newFlight)
+    {
+        if (newFlight.Segments.Length == 0 || newFlight.Airports.Length != newFlight.Segments.Length + 1)
+        {
+            return Results.BadRequest();
+        }
+
+        var row = new Flight
+        {
+            No = newFlight.No,
+            Price = newFlight.Price,
+            Comment = newFlight.Comment,
+            State = FlightState.Booking,
+        };
+
+        db.Flights.Add(row);
+        var result = Save();
+        if (result != null)
+        {
+            return result;
+        }
+
+        for (var i = 0; i < newFlight.Segments.Length; ++i)
+        {
+            var segment = new Segment
+            {
+                Flight = row.Id,
+                SeqNo = i,
+                FromLoc = newFlight.Airports[i],
+                FromTime = newFlight.Segments[i].FromTime,
+                ToLoc = newFlight.Airports[i + 1],
+                ToTime = newFlight.Segments[i].ToTime,
+                Aircraft = newFlight.Segments[i].Aircraft,
+            };
+
+            db.Segments.Add(segment);
+        }
+
+        return Save() ?? Results.Ok(row.Id);
+    }
+
     public IResult GetFlight(Guid flightId)
     {
         var flight = db.Flights.Where(f => f.Id == flightId).SingleOrDefault();
@@ -577,6 +618,30 @@ public class NewBag
     public decimal Weight { get; set; }
     [Required]
     public string Color { get; set; } = null!;
+}
+
+public class NewFlight
+{
+    [Required]
+    public int No { get; set; }
+    [Required]
+    public decimal Price { get; set; }
+    [Required]
+    public string? Comment { get; set; } = null!;
+    [Required]
+    public NewSegment[] Segments { get; set; } = null!;
+    [Required]
+    public Guid[] Airports { get; set; } = null!;
+}
+
+public class NewSegment
+{
+    [Required]
+    public Guid Aircraft { get; set; }
+    [Required]
+    public DateTimeOffset FromTime { get; set; }
+    [Required]
+    public DateTimeOffset ToTime { get; set; }
 }
 
 public class Booked
