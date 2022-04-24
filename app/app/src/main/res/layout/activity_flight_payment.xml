@@ -12,8 +12,8 @@
         android:layout_height="88dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="17dp"
-        app:layout_constraintBottom_toTopOf="@+id/paymentButton"
+        android:layout_marginBottom="28dp"
+        app:layout_constraintBottom_toTopOf="@+id/promoCode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -26,12 +26,12 @@
             android:layout_marginBottom="16dp"
             android:ems="10"
             android:hint="@string/cve"
+            android:importantForAutofill="no"
             android:inputType="number|textPersonName|textEmailAddress"
             android:textColorHint="#757575"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:importantForAutofill="no" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/expirationText"
@@ -58,7 +58,8 @@
         android:layout_height="97dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="payAndBook"
         android:text="@string/book"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +71,7 @@
         android:layout_height="56dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="17dp"
+        android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="@string/card_number"
         android:importantForAutofill="no"
@@ -90,6 +91,7 @@
         android:layout_marginBottom="15dp"
         android:duplicateParentState="false"
         android:inputType="none"
+        android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/flightInfo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -103,7 +105,20 @@
         android:layout_marginEnd="56dp"
         android:layout_marginBottom="23dp"
         android:inputType="none"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/cardNumberText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/promoCode"
+        android:layout_width="273dp"
+        android:layout_height="47dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:hint="@string/promo_code"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/paymentButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

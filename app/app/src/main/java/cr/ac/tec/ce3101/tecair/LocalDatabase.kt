@@ -100,7 +100,7 @@ data class Segment(
 data class Booking(
     val flight: String, //uuid
     val pax: String, //uuid
-    val promo: String //uuid
+    val promo: String? //uuid
 )
 
 /**
@@ -112,10 +112,9 @@ data class Promo(
     val code: String,
     val flight: String,
     val price: Double,
-    val startTime: Double,
+    val startTime: String,
     val endTime: String,
-    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
-    val img: ByteArray?,
+    val img: String,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -158,6 +157,9 @@ interface BookingDao {
     @Insert
     fun insertAll(vararg data: Booking)
 
+    @Delete
+    fun delete(booking: Booking)
+
     @Query("SELECT * FROM Booking")
     fun getAll(): List<Booking>
 
@@ -188,9 +190,9 @@ interface UserDao {
     fun getAll(): List<User>
 
     @Query(
-        "SELECT username FROM user WHERE username = :username"
+        "SELECT * FROM user WHERE username = :username"
     )
-    fun findUser(username: String): String?
+    fun findUser(username: String): User?
 
     @Query(
         "SELECT * FROM user WHERE username = :username AND password = :password"
@@ -207,7 +209,7 @@ interface SegmentDao {
     @Insert
     fun insertAll(vararg segment: Segment)
     
-    @Query("SELECT * FROM segment WHERE flight = :flightID ORDER BY seqNo DESC")
+    @Query("SELECT * FROM segment WHERE flight = :flightID ORDER BY seqNo ASC")
     fun getFlightSegments(flightID:String): List<Segment>
 
     @Query("DELETE FROM segment")
@@ -223,8 +225,8 @@ interface PromoDao {
     @Insert
     fun insertAll(vararg promo: Promo)
 
-    @Query("SELECT id from promo where flight = :flightID")
-    fun getForFlight(flightID: String): String?
+    @Query("SELECT id from promo where flight = :flightID AND code = :code")
+    fun getForFlight(flightID: String, code: String): String?
 
     @Query("SELECT * from promo")
     fun getAll(): List<Promo>
@@ -247,6 +249,9 @@ interface FlightDao {
 
     @Query("SELECT * FROM flight")
     fun getFromTo(): List<Flight>
+
+    @Query("SELECT * FROM flight where id = :id ")
+    fun getFlightById(id: String): Flight?
 
     @Query("DELETE FROM flight")
     fun clearTable()

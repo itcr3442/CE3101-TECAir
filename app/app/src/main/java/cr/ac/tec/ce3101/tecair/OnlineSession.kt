@@ -2,6 +2,7 @@ package cr.ac.tec.ce3101.tecair
 
 import android.content.Context
 import androidx.room.Room
+import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,8 +28,9 @@ class OnlineSession(
     private val service: TECAirService
 
     init {
+        val gson = GsonBuilder().serializeNulls().create()
         val retrofit =
-            Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create())
+            Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
         service = retrofit.create(TECAirService::class.java)
     }
@@ -91,14 +93,14 @@ class OnlineSession(
         val userChanges = pendingOps.userOpDao().getAll()
         userChanges.forEach { change ->
             run {
-                if (change.user.username!= username) {
+                if (change.user.username != username) {
                     when (change.operation) {
                         "INSERT" -> registerUser(change.user) {}
                         "UPDATE" -> editUser(change.user) {}
                         "DELETE" -> deleteUser(change.user) {}
                     }
                     pendingOps.userOpDao().delete(change)
-                }else{
+                } else {
                     return false
                 }
             }
@@ -112,13 +114,14 @@ class OnlineSession(
                         override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                             if (response.code() != 200) {
                                 simpleDialog(cx, cx.getString(R.string.booking_sync_error))
+                            }else{
+                                pendingOps.BookingDao().delete(booking)
                             }
                         }
                     }
                 )
             }
         }
-        pendingOps.clearAllTables()
 
         //update flights
         service.getFlightList().enqueue(
@@ -280,17 +283,22 @@ class OnlineSession(
 
                                 val filteredFlights = mutableListOf<FlightWithPath>()
                                 val flights = cache.flightDao().getAll()
-                                flights.forEach { flight ->
+                                flights.forEach lit@{ flight ->
                                     run {
                                         val segments =
                                             cache.segmentDao().getFlightSegments(flight.id)
                                         var path = mutableListOf<Segment>()
                                         var i = 0
+                                        var foundFrom = false
                                         while (i < segments.size) {
                                             if (segments[i].fromLoc == from) {
+                                                foundFrom = true
                                                 break
                                             }
                                             i++
+                                        }
+                                        if (!foundFrom) {
+                                            return@lit
                                         }
                                         path.add(segments[i])
                                         if (segments[i].toLoc == to) {
@@ -310,6 +318,7 @@ class OnlineSession(
                                                 filteredFlights.add(FlightWithPath(flight, path))
                                             }
                                         }
+
                                     }
                                 }
                                 afterOp(filteredFlights.toList())
@@ -320,6 +329,12 @@ class OnlineSession(
             }
         )
     }
+
+
+    override fun getFlightById(id: String): Flight? {
+        return cache.flightDao().getFlightById(id)
+    }
+
 
     override fun getUserList(forEachUser: (User) -> Unit) {
         val users = cache.userDao().getAll()
@@ -341,21 +356,27 @@ class OnlineSession(
         }
     }
 
-    override fun makeBooking(flight: String, afterOp: (Boolean) -> Unit) {
-        var promo = cache.promoDao().getForFlight(flight)
-        if (promo == null)
-            promo = ""
-        service.makeBooking(flight, Booking(flight, username, promo)).enqueue(
-            object : Cb<Unit>() {
-                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                    if (response.code() == 200) {
-                        afterOp(true)
-                    } else {
-                        afterOp(false)
+    override fun makeBooking(flight: String, promoCode: String, afterOp: (Boolean) -> Unit) {
+        val previous = pendingOps.BookingDao().getBooking(username, flight)
+        if (previous != null) {
+            afterOp(false)
+        }else {
+            var promo = cache.promoDao().getForFlight(flight, promoCode)
+            val currentUser = cache.userDao().findUser(username) ?: return
+            val booking = Booking(flight, currentUser.id, promo)
+            service.makeBooking(flight, booking).enqueue(
+                object : Cb<Unit>() {
+                    override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                        if (response.code() == 200) {
+                            afterOp(true)
+                            simpleDialog(cx, "Enjoy your flight")
+                        } else {
+                            afterOp(false)
+                        }
                     }
                 }
-            }
-        )
+            )
+        }
     }
 
     /**

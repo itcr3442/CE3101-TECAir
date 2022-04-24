@@ -76,16 +76,22 @@ class OfflineSession(
     override fun getFlights(from: String, to: String, afterOp: (List<FlightWithPath>) -> Unit){
         val filteredFlights = mutableListOf<FlightWithPath>()
         val flights = cache.flightDao().getAll()
-        flights.forEach { flight ->
+        flights.forEach lit@{ flight ->
             run {
-                val segments = cache.segmentDao().getFlightSegments(flight.id)
+                val segments =
+                    cache.segmentDao().getFlightSegments(flight.id)
                 var path = mutableListOf<Segment>()
                 var i = 0
+                var foundFrom = false
                 while (i < segments.size) {
                     if (segments[i].fromLoc == from) {
+                        foundFrom = true
                         break
                     }
                     i++
+                }
+                if (!foundFrom) {
+                    return@lit
                 }
                 path.add(segments[i])
                 if (segments[i].toLoc == to) {
@@ -101,28 +107,32 @@ class OfflineSession(
                         }
                         i++
                     }
-                    if (success){
+                    if (success) {
                         filteredFlights.add(FlightWithPath(flight, path))
                     }
                 }
+
             }
         }
         afterOp(filteredFlights.toList())
+    }
+
+    override fun getFlightById(id: String): Flight? {
+        return cache.flightDao().getFlightById(id)
     }
 
     override fun getUserList(forEachUser: (User)-> Unit ) {
         cache.userDao().getAll().forEach(forEachUser)
     }
 
-    override fun makeBooking(flight: String, afterOp: (Boolean) -> Unit) {
+    override fun makeBooking(flight: String, promoCode: String, afterOp: (Boolean) -> Unit) {
         val previous = pendingOps.BookingDao().getBooking(username, flight)
         if (previous != null){
             afterOp(false)
         }else{
-            var promo = cache.promoDao().getForFlight(flight)
-            if (promo == null)
-                promo = ""
-            pendingOps.BookingDao().insertAll(Booking(flight, username, promo))
+            var promo = cache.promoDao().getForFlight(flight, promoCode)
+            val currentUser = cache.userDao().findUser(username) ?: return
+            pendingOps.BookingDao().insertAll(Booking(flight, currentUser.id, promo))
             afterOp(true)
         }
     }

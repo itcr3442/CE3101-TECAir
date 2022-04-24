@@ -36,9 +36,9 @@ class FlightsActivity : AppCompatActivity() {
                     val entry = LinearLayout(this).apply {
                         orientation = LinearLayout.HORIZONTAL
                         addView(TextView(this.context).apply {
-                            text = flightInfo.flight.no.toString()
-                            width = 300
-                            textSize = 18F
+                            text = "${getString(R.string.flight_number)}: ${flightInfo.flight.no}"
+                            minWidth = 300
+                            textSize = 16F
                         })
                         addView(Button(this.context).apply {
                             text = getString(R.string.info)
@@ -61,8 +61,16 @@ class FlightsActivity : AppCompatActivity() {
      * Intended to be called from the "info" button of each flight
      */
     private fun viewInfoFlight(flightInfo: FlightWithPath) {
+        var route = "${getString(R.string.route)}:\n"
+        flightInfo.path.forEach { segment ->
+            run {
+                route += "${segment.fromLoc} - ${segment.toLoc}  \n"
+            }
+        }
         val message = "${getString(R.string.flight_number)}: ${flightInfo.flight.no} \n" +
-                "${getString(R.string.price)}: ${flightInfo.flight.price} \n"
+                "${getString(R.string.price)}: ${flightInfo.flight.price} \n"+
+                "$route \n"
+
         simpleDialog(this, message)
     }
     /**
