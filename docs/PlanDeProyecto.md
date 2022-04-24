@@ -180,3 +180,28 @@ José Morales desarrollará la app móvil, la cual tendrá la misma funcionalida
 ### Ignacio Vargas
 
 ### Alejandro Soto
+
+- 21 de marzo: Se definen actividades iniciales y el plan de trabajo.  Se crea
+  el repositorio de trabajo.
+
+- 4 de abril: Montado inicial del backend. Decido utilizar parte del trabajo
+  previo realizado en la Tarea Corta #1.  El backend está escrito en C#. Hoy
+  solamente se inicializa el proyecto y se discute informalmente el desarrollo
+  futuro.
+
+- 6 de abril: A partir de la especificación del proyecto se determinan los
+  modelos conceptual y relacional a utilizar.
+
+- 9 de abril: Intenté instalar EntityFramework Core en mi entorno de trabajo
+  sin mayor éxito debido a problemas de dependencias. Documenté en bitácora
+  actividades realizadas hasta ahora.
+
+- 16 de abril: Creo endpoints para checkin y booking. Parecen funcionar bien
+  según Swagger. También arreglé un bug en el endpoint de editar usuario debido
+  a lazy evaluation que introduje hace poco debido a una limitación de EF.
+
+- 22 de abril: Termino el último endpoint que me solicitan los compañeros de
+  trabajo (para operaciones CRUD sobre promociones).
+
+- 24 de abril: Se documenta el backend. Se revisa que no existan más problemas de
+  integración.
