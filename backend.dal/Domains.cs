@@ -1,4 +1,4 @@
-namespace backend;
+namespace backend.dal;
 
 public enum UserType
 {
