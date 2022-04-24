@@ -108,6 +108,10 @@ class ServiceLayer
         {
             return Results.NotFound();
         }
+        else if (flight.State != FlightState.Booking)
+        {
+            return Results.BadRequest();
+        }
 
         Promo? promo = null;
         if (promoId != null)
