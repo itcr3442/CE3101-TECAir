@@ -284,6 +284,17 @@ class ServiceLayer
         return Results.Ok(db.Promos.ToArray());
     }
 
+    public IResult SearchPromo(string code)
+    {
+		var promo = (from p in db.Promos where p.Code == code select p).SingleOrDefault();
+		if (promo == null)
+		{
+			return Results.NotFound();
+		}
+
+		return Results.Ok(promo.Id);
+	}
+
     public IResult DumpSegments(bool filterBooking)
     {
         var segments = db.Segments.ToList();
