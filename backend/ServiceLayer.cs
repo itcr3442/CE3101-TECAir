@@ -21,17 +21,16 @@ class ServiceLayer
 
         var salt = Convert.FromHexString(user.Salt);
         var hash = Convert.FromHexString(user.Hash);
-        var challenge = KeyDerivation.Pbkdf2(password, salt, KeyDerivationPrf.HMACSHA256, 1000, 16);
+        var challenge = hashFor(password, salt);
 
         return hash.SequenceEqual(challenge) ? Results.Ok(user.Id) : Results.Unauthorized();
     }
 
     public IResult AddUser(NewUser user)
     {
-        var salt = new byte[16];
-        random.NextBytes(salt);
+        var salt = randomSalt();
+        var hash = hashFor(user.Password, salt);
 
-        var hash = KeyDerivation.Pbkdf2(user.Password, salt, KeyDerivationPrf.HMACSHA256, 1000, 16);
         var row = new User
         {
             Username = user.Username,
@@ -71,6 +70,11 @@ class ServiceLayer
             return Results.NotFound();
         }
 
+        var newSalt = randomSalt();
+
+        user.Username = edit.Username;
+        user.Salt = Convert.ToHexString(newSalt);
+        user.Hash = Convert.ToHexString(hashFor(edit.Password, newSalt));
         user.FirstName = edit.FirstName;
         user.LastName = edit.LastName;
         user.Phonenumber = edit.PhoneNumber;
@@ -149,6 +153,18 @@ class ServiceLayer
             return Results.BadRequest();
         }
     }
+
+    private byte[] randomSalt()
+    {
+        var salt = new byte[16];
+        random.NextBytes(salt);
+        return salt;
+    }
+
+    private byte[] hashFor(string password, byte[] salt)
+    {
+        return KeyDerivation.Pbkdf2(password, salt, KeyDerivationPrf.HMACSHA256, 1000, 16);
+    }
 }
 
 public class NewUser
@@ -170,6 +186,10 @@ public class NewUser
 
 public class EditUser
 {
+    [Required]
+    public string Username { get; set; } = null!;
+    [Required]
+    public string Password { get; set; } = null!;
     [Required]
     public string FirstName { get; set; } = null!;
     public string? LastName { get; set; }
