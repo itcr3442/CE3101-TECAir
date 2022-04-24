@@ -97,7 +97,7 @@ export class RegisterUserComponent implements OnInit {
         },
         err => {
           if (err.status == 409) {
-            this.message = "Usuario ya está tomado";
+            this.message = "Nombre de usuario ya está tomado";
           }
         })
 

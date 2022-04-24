@@ -15,13 +15,12 @@ export class WorkerAdminComponent implements OnInit {
   public worker_list!: Worker[];
 
   registerForm = new FormGroup({
-    id: new FormControl('', [Validators.required, Validators.pattern('[0-9]*')]),
-    nombre: new FormControl('', [Validators.required]),
-    apellido1: new FormControl('', [Validators.required]),
-    apellido2: new FormControl('', [Validators.required]),
+    username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
+    firstName: new FormControl('', [Validators.required]),
+    lastName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required]),
-    phone: new FormControl('', [Validators.required, Validators.pattern('[0-9]*')])
+    phone: new FormControl('', [Validators.required, Validators.pattern('[0-9]*')]),
   })
   message: string = ""
 
@@ -44,23 +43,25 @@ export class WorkerAdminComponent implements OnInit {
     )
   }
 
-  get id() {
-    return this.registerForm.controls['id'].value
+  get username() {
+    return this.registerForm.controls['username'].value
   }
 
   get password() {
     return this.registerForm.controls['password'].value
   }
 
-  get name() {
-    return this.registerForm.controls['nombre'].value
+  get firstName() {
+    return this.registerForm.controls['firstName'].value
   }
-
-  get apellido1() {
-    return this.registerForm.controls['apellido1'].value
+  get lastName() {
+    return this.registerForm.controls['lastName'].value
   }
-  get apellido2() {
-    return this.registerForm.controls['apellido2'].value
+  get email() {
+    return this.registerForm.controls['email'].value
+  }
+  get phone() {
+    return this.registerForm.controls['phone'].value
   }
 
   /**
@@ -70,32 +71,21 @@ export class WorkerAdminComponent implements OnInit {
    */
   onSubmit() {
     if (this.registerForm.valid) {
-
-      if (!this.authService.isLoggedIn()) {
-        this.router.navigate(['/login/redirect']);
-        return
-      }
-
-      // this.registerService.register_worker(this.id, this.password, this.name, this.apellido1, this.apellido2).subscribe((success: number) => {
-      //   if (success === 1) {
-      //     console.log("Register successful");
-      //     this.message = ""
-      //     this.registerService.resetForm(this.registerForm)
-      //   }
-      //   else if (success === -1) {
-      //     this.message = "La cédula dada ya se encuentra registrada en el sistema.";
-      //   } else if (success === -2) {
-      //     this.message = "El rol seleccionado no es válido.";
-      //   } else if (success === -3) {
-      //     this.message = "Usted no cuenta con permisos suficientes para realizar esta acción.";
-      //   }
-      // })
-
-
+      this.message = ""
+      this.registerService.register_worker(this.username, this.password, this.firstName, this.lastName, this.phone, this.email).subscribe(
+        (resp: any) => {
+          this.message = "Funcionario registrado correctamente";
+          this.registerService.resetForm(this.registerForm)
+        },
+        err => {
+          if (err.status == 409) {
+            this.message = "Nombre de usuario ya está tomado";
+          }
+        })
 
     }
     else {
-      this.message = "Por favor verifique que ingresó todos los campos, la cédula solo contiene dígitos y escogió un rol";
+      this.message = "Por favor verifique que ingresó todos los campos correctamente y su # de tel solo contiene dígitos";
     }
   }
 
