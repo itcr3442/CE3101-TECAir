@@ -1,44 +1,150 @@
-<div style="text-align:center">
-</div>
-<div class="col-lg-12 seat-container">
-    <h3>
-        Seat Chart Layout
-    </h3>
+<div class="container">
+    <div class="row align-items-center">
 
-    <div *ngFor="let seatrow of seatmap ">
-        <div class="col-12 pricing-label"
-            *ngIf="seatChartConfig?.showRowWisePricing && seatrow.seatPricingInformation != ''">
-            {{seatrow.seatPricingInformation}}</div>
-        <div class="seatrow container">
-            <div *ngIf="seatChartConfig?.showRowsLabel">
-                <div class="row-label"> {{seatrow.seatRowLabel}} </div>
-            </div>
-            <div *ngFor="let seatobj of seatrow.seats">
-                <div class="seat-item seat-space" style="color:white ; background-color:white"
-                    *ngIf="seatobj.seatLabel == ''"> &nbsp; </div>
-                <div placement="top"
-                    [ngClass]="{ 'seat-item' : true , 'seat-available' : seatobj.seatLabel != cart.selectedSeat ,'seat-booked' : seatobj.seatLabel == cart.selectedSeat ,'seat-unavailable' : seatobj.status == 'unavailable' }"
-                    (click)="selectSeat(seatobj)"
-                    *ngIf="(seatobj.status == 'available' || seatobj.status == 'booked' )&& seatobj.seatLabel != ''">
-                    {{seatobj.seatNo}}</div>
+        <div class="col-md-8 col-md-offset-3">
 
-                <div tooltip="Asiento ocupado" placement="top"
-                    [ngClass]="{ 'seat-item' : true , 'seat-unavailable' : true }"
-                    *ngIf="seatobj.status == 'unavailable' && seatobj.seatLabel != ''">{{seatobj.seatNo}}</div>
-            </div>
+
+            <ng-container
+                *ngTemplateOutlet="this.stage== 0  ? pickUserBlock : (this.stage == 1 ? pickFlightBlock : pickSeatBlock)">
+            </ng-container>
+
         </div>
     </div>
 </div>
-<!-- *ngIf="cart?.selectedSeats?.length > 0" -->
-<div class="continaer-fluid">
-    <div class="col-lg-12 summary-bar">
+<ng-template #pickUserBlock>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <!-- <th>UUID</th> -->
+                    <th>Usuario</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Correo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of users_list">
+                    <!-- <td>{{worker.id}}</td> -->
+                    <td>{{user.username}}</td>
+                    <td>{{user.firstName}}</td>
+                    <td>{{user.lastName}}</td>
+                    <td>{{user.email}}</td>
+                    <td>
+                        <div className="container">
 
-        <div class="col-lg-8 selected-seats">
-            <h5>Asiento seleccionado : </h5>
-            <span class="badge badge-primary">{{cart.selectedSeat}}</span>
-        </div>
-        <button [disabled]="cart?.selectedSeat === null" type="button" (click)="processBooking()"
-            class="btn btn-primary">Book Now</button>
+
+                            <div className="d-grid gap-2 col-6 mx-auto">
+                                <button type="button" class="btn btn-secondary" (click)="checkUser(user.id)">
+                                    Checkear
+                                </button>
+                            </div>
+
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+</ng-template>
 
-</div>
+
+<ng-template #pickFlightBlock>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <!-- <th>UUID</th> -->
+                    <th>No. Vuelo</th>
+                    <th>Comentario</th>
+                    <th>Paradas</th>
+                    <th>Escoger segmento</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let flight of userFlights">
+                    <!-- <td>{{worker.id}}</td> -->
+                    <td>{{flight.flight.no}}</td>
+                    <td>{{flight.flight.comment}}</td>
+                    <td>
+                        <div *ngFor="let route of flight.route">{{route.code}}</div>
+                    </td>
+                    <td>
+                        <div className="container">
+
+
+
+                            <div className="d-grid gap-2 col-6 mx-auto">
+                                <select id="{{'segSelect-' + flight.flight.no}}" class="form-select"
+                                    aria-label="Default select example">
+                                    <option selected value="0">0</option>
+                                    <option *ngFor="let segment of flight.segments.slice(1);  let i = index"
+                                        [value]="i+1">
+                                        {{i+1}}
+                                    </option>
+
+                                </select>
+                                <button type="button" class="btn btn-secondary"
+                                    (click)="checkFlight(flight.flight.id, flight.flight.no)">
+                                    Checkear
+                                </button>
+                            </div>
+
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</ng-template>
+
+
+<ng-template #pickSeatBlock>
+    <div class="col-lg-12 seat-container">
+        <h3>
+            Escoja su asiento para el vuelo
+        </h3>
+
+        <div *ngFor="let seatrow of seatmap ">
+            <div class="col-12 pricing-label"
+                *ngIf="seatChartConfig?.showRowWisePricing && seatrow.seatPricingInformation != ''">
+                {{seatrow.seatPricingInformation}}</div>
+            <div class="seatrow container">
+                <div *ngIf="seatChartConfig?.showRowsLabel">
+                    <div class="row-label"> {{seatrow.seatRowLabel}} </div>
+                </div>
+                <div *ngFor="let seatobj of seatrow.seats">
+                    <div class="seat-item seat-space" style="color:white ; background-color:white"
+                        *ngIf="seatobj.seatLabel == ''"> &nbsp; </div>
+                    <div placement="top"
+                        [ngClass]="{ 'seat-item' : true , 'seat-available' : seatobj.seatLabel != cart.selectedSeat ,'seat-booked' : seatobj.seatLabel == cart.selectedSeat ,'seat-unavailable' : seatobj.status == 'unavailable' }"
+                        (click)="selectSeat(seatobj)"
+                        *ngIf="(seatobj.status == 'available' || seatobj.status == 'booked' )&& seatobj.seatLabel != ''">
+                        {{seatobj.seatNo}}</div>
+
+                    <div tooltip="Asiento ocupado" placement="top"
+                        [ngClass]="{ 'seat-item' : true , 'seat-unavailable' : true }"
+                        *ngIf="seatobj.status == 'unavailable' && seatobj.seatLabel != ''">{{seatobj.seatNo}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- *ngIf="cart?.selectedSeats?.length > 0" -->
+    <div class="continaer-fluid">
+        <div class="col-lg-12 summary-bar">
+
+            <div class="col-lg-8 selected-seats">
+                <h5>Asiento seleccionado : </h5>
+                <span class="badge badge-primary">{{cart.selectedSeat != null ?
+                    cart.selectedSeat.split('
+                    ')[1]
+                    :
+                    ""}}</span>
+            </div>
+            <button [disabled]="cart?.selectedSeat === null" type="button" (click)="processBooking()"
+                class="btn btn-primary">Book Now</button>
+        </div>
+
+    </div>
+</ng-template>

@@ -11,4 +11,17 @@ export class FlightsService {
   public flightById(id: string) {
     return this.repo.getData("flights/" + id)
   }
+
+  public checkInSegment(id: string, userId: string, seat: number) {
+    let checkinInfo = {
+      pax: userId,
+      seat
+    }
+
+    return this.repo.create("segments/" + id + "/checkin", checkinInfo)
+  }
+
+  public getUsersBookedFlights(id: string) {
+    return this.repo.getData("users/" + id + "/open")
+  }
 }

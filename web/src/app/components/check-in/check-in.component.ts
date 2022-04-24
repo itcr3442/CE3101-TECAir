@@ -1,4 +1,18 @@
 import { Component, OnInit } from '@angular/core';
+import { PlacementForBs5 } from 'ngx-bootstrap/positioning';
+import { FlightById } from 'src/app/interfaces/flight-by-id';
+import { FlightsService } from 'src/app/services/flights.service';
+import jsPDF from 'jspdf';
+import { AuthService } from 'src/app/services/auth.service';
+import { RegisterService } from 'src/app/services/register.service';
+import { User } from 'src/app/interfaces/user';
+
+
+interface Cart {
+  selectedSeat: string | null,
+  cartId: string,
+  eventId: number
+}
 
 @Component({
   selector: 'app-check-in',
@@ -6,6 +20,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./check-in.component.css']
 })
 export class CheckInComponent implements OnInit {
+  stage: number = 0
+  // 0 = escoger usuario, 1 = escoger vuelo, 2 = escoger asiento
   seatConfig: any = null;
   seatmap = Array<any>();
   seatChartConfig = {
@@ -13,65 +29,158 @@ export class CheckInComponent implements OnInit {
     showRowWisePricing: false,
     newSeatNoForRow: false
   };
-  cart = {
+  cart: Cart = {
     selectedSeat: null,
     cartId: "",
     eventId: 0
   };
 
-  title = "seat-chart-generator";
+  users_list: Array<User> = []
+  selectedUser = ""
+  userFlights: Array<FlightById> = []
 
-  ngOnInit(): void {
-    //Process a simple bus layout
-    this.seatConfig = [
-      {
-        seat_map: [
-          {
-            seat_label: "1",
-            layout: "g_____"
-          },
-          {
-            seat_label: "2",
-            layout: "gg__gg"
-          },
-          {
-            seat_label: "3",
-            layout: "gg__gg"
-          },
-          {
-            seat_label: "4",
-            layout: "gg__gg"
-          },
-          {
-            seat_label: "5",
-            layout: "gg__gg"
-          },
-          {
-            seat_label: "6",
-            layout: "gg__gg"
-          },
-          {
-            seat_label: "7",
-            layout: "gg__gg"
-          },
-          {
-            seat_label: "8",
-            layout: "gggggg"
-          }
-        ]
-      }
-    ];
-    this.processSeatChart(this.seatConfig);
-    this.blockSeats("7_1,7_2");
+  flightInfo = {
+    uuid: "",
+    segment: 0
   }
 
+  constructor(private flightsService: FlightsService, private authService: AuthService, private registerService: RegisterService) { }
+
+  title = "seat-chart-generator";
+
+  checkUser(id: string) {
+    this.selectedUser = id
+    this.stage = 1
+    this.loadFlights()
+  }
+
+  checkFlight(id: string, no: number) {
+    this.flightInfo.uuid = id
+    let segmentSelect: any = document.getElementById('segSelect-' + no);
+    this.flightInfo.segment = +segmentSelect.options[segmentSelect.selectedIndex].value;
+    console.log("Segment:", this.flightInfo)
+    this.loadSeats()
+    this.stage = 2
+
+  }
+
+  loadFlights() {
+    this.flightsService.getUsersBookedFlights(this.selectedUser).subscribe(res => {
+      console.log(res)
+      let flight_ids = res.body as Array<string>
+      for (let flight_id of flight_ids) {
+        this.flightsService.flightById(flight_id).subscribe(res => {
+          let flight = res.body as FlightById
+          this.userFlights.push(flight)
+        })
+      }
+    })
+
+  }
+
+  ngOnInit(): void {
+    this.registerService.getAllUsers().subscribe((res: any) => {
+      console.log(res)
+      let allUsers = res.body as User[]
+      console.log("Users:", allUsers)
+      this.users_list = allUsers;
+    }
+    )
+  }
+
+  public loadSeats() {
+    const seatsPerRow = 6
+
+    this.flightsService.flightById(this.flightInfo.uuid).subscribe(res => {
+      console.log(res)
+      let flight = res.body as FlightById
+      console.log("Flight:", flight)
+      let total_seats = flight.segments[this.flightInfo.segment].seats
+      let rows = Math.floor(total_seats / seatsPerRow)
+      let remainderSeats = total_seats % seatsPerRow
+
+      let seat_map: Array<any> = [];
+      for (let i = 0; i < rows; i++) {
+        seat_map.push({
+          seat_label: "" + i,
+          layout: "ggg_ggg"
+        })
+      }
+      console.log(seat_map)
+
+      if (remainderSeats > 0) {
+        console.log(seat_map)
+
+        let gs = "g".repeat(remainderSeats)
+        let remainderSeatsLayout = gs.slice(0, seatsPerRow / 2) + "_".repeat(7 - remainderSeats) + gs.slice(seatsPerRow / 2)
+        seat_map.push({
+          seat_label: "" + rows,
+          layout: remainderSeatsLayout
+        })
+      }
+      console.log(seat_map)
+
+      //Process a simple bus layout
+      this.seatConfig = [
+        {
+          seat_map
+        }
+      ];
+      this.processSeatChart(this.seatConfig);
+
+      let unavailString = ""
+
+      for (let takenSeat of flight.segments[this.flightInfo.segment].unavail) {
+        let takenRow = Math.floor(takenSeat / seatsPerRow)
+        let takenCol = takenSeat % seatsPerRow
+        unavailString += takenRow + "_" + takenCol + ","
+      }
+
+      this.blockSeats(unavailString);
+    })
+  }
   processBooking() {
+    this.registerService.getUser(this.selectedUser).subscribe(res => {
+      let userInfo = res.body as User
+      this.flightsService.flightById(this.flightInfo.uuid).subscribe(res => {
+        let flight = res.body as FlightById
+        let flightInfo = flight.flight
+        let segmentInfo = flight.segments[this.flightInfo.segment]
+        let seat = this.cart.selectedSeat != null ? +this.cart.selectedSeat.split(' ')[1] : 0
+        this.flightsService.checkInSegment(segmentInfo.id, this.selectedUser, seat)
+          .subscribe(res => {
+            const pdf = new jsPDF();
+            pdf.setFontSize(11)
+            pdf.text("Pasajero: " + userInfo.firstName + " " + userInfo.lastName, 5, 10);
+            // pdf.text("Fecha de emisión: " + day + "/" + month + "/" + year, 5, 15);
+
+            pdf.setFontSize(8)
+            pdf.text("Fecha y hora de partida: " + (new Date(segmentInfo.fromTime)).toString(), 5, 20);
+            pdf.text("Fecha y hora de llegada: " + (new Date(segmentInfo.fromTime)).toString(), 5, 23.5);
+
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            let gateLetter = letters.charAt(Math.floor(Math.random() * letters.length));
+            let gateNumber = Math.floor(Math.random() * letters.length)
+
+            pdf.setFontSize(10)
+            pdf.text("Puerta de abordaje: " + gateLetter + gateNumber, 5, 60)
+            pdf.text("No. Vuelo: " + flightInfo.no, 5, 65)
+            pdf.text("Asiento: " + seat, 5, 70)
+
+            pdf.save("Boarding.pdf");
+
+          }, error => {
+            window.alert("No se pudo realizar el check-in, ocurrió un error en el servidor: " + error.status)
+          })
+
+      })
+    })
 
   }
 
   public processSeatChart(map_data: any[]) {
     if (map_data.length > 0) {
-      var seatNoCounter = 1;
+      var seatNoCounter = 0;
       for (let __counter = 0; __counter < map_data.length; __counter++) {
         var row_label = "";
         var item_map = map_data[__counter].seat_map;
