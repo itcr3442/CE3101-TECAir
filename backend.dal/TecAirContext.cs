@@ -29,7 +29,8 @@ public partial class TecAirContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseNpgsql("Host=/tmp/kk/psql;Database=tecair");
+            //optionsBuilder.UseNpgsql("Host=/tmp/kk/psql;Database=tecair");
+            optionsBuilder.UseNpgsql("Host=localhost;Database=tecair;Username=PGUSER;Password=PGPASSWORD");
         }
     }
 

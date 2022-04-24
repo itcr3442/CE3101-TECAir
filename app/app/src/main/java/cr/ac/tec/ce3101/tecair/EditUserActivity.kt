@@ -57,7 +57,7 @@ class EditUserActivity : AppCompatActivity() {
     }
     /**
      * React to changes in the studentSwitch widget
-     * - If ON, shows the EditTexts neccesary for adding student data
+     * - If ON, shows the EditTexts necessary for adding student data
      */
     fun studentCheck(view: View) {
         isStudent = findViewById<Switch>(R.id.studentSwitch).isChecked
@@ -90,7 +90,7 @@ class EditUserActivity : AppCompatActivity() {
         val newUserInfo =
             User(
                 0,
-                UUID.randomUUID().toString(), //fake uuid
+                user.id,
                 username.text.toString(),
                 password.text.toString(),
                 firstname.text.toString(),
@@ -103,8 +103,9 @@ class EditUserActivity : AppCompatActivity() {
 
         (application as TECAirApp).session?.editUser(newUserInfo) { success ->
             if (success) {
-                val intent = Intent(this, MainMenuActivity::class.java)
+                val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
+                finish()
             } else {
                 errorTxt.visibility = View.VISIBLE
             }

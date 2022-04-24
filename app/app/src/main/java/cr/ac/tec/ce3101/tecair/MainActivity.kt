@@ -70,4 +70,12 @@ class MainActivity : AppCompatActivity() {
     fun offlineCheck(view: View) {
         isOffline = findViewById<Switch>(R.id.offlineSwitch).isChecked
     }
+
+    fun noLoginSync(view: View){
+        OnlineSession(
+            findViewById<EditText>(R.id.serverSettingsText).text.toString(),
+            "", "",
+            this
+        ).synchronize()
+    }
 }

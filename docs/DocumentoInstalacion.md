@@ -38,8 +38,27 @@ linestretch: 1.5
 
 ![](imgs/postgres.png)
 
-2. Ejecute el instalador descargado manteniendo la configuración por defecto.
+2. Ejecute el instalador descargado manteniendo la configuración por defecto. Selecciones la contraseña que desee.
 
+3. Una vez que haya finalizado la instalación, deberá crear un usuario para uso del servicio REST. Se espera esté presente un usuario "tecair\_admin" con contraseña "bases", y que este mismo usuario tenga los permisos necesarios para crear y manipular bases de datos
+
+![](imgs/postgres_usuario.png)
+
+4. Agregue la ruta a las aplicaciones de consola de postgres a la variable de ambiente `PATH`. Esto se logra buscando el programa de edición de variables de ambiente en el menú de búsqueda `->` menú de variables de amebiente `->` Seleccionar PATH y hacer click en editar `->` hacer click en editar y agregar una entrada con la ruta a los ejecutables de postgres.
+
+![](imgs/postgres_pathenv.png)
+
+5. Copie el script de creación de base de datos a una carpeta que le resulte conveniente.
+
+6. Abra una consola de powershell en dicha carpeta y ejecute el siguiente comando:
+
+```Shell
+psql -d tecair -f tecair.sql -U tec_air
+```
+
+7. Ante solicitud de contraseña del comando anterior, ingrese la contraseña "bases".
+
+8. En este punto debería tener ya PostgreSQL configurado correctamente para proseguir con las otras configuraciones. 
 
 # Servidor 
 
