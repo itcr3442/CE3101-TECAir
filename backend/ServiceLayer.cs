@@ -61,6 +61,8 @@ class ServiceLayer
 
         user.Hash = null;
         user.Salt = null;
+        var _ = user.Bags; // Evaluación forzosa
+
         return Results.Ok(user);
     }
 
@@ -180,6 +182,27 @@ class ServiceLayer
             default:
                 return Results.BadRequest();
         }
+    }
+
+    public IResult ResetFlight(Guid flightId)
+    {
+        var flight = (from f in db.Flights where f.Id == flightId select f).SingleOrDefault();
+        if (flight == null)
+        {
+            return Results.NotFound();
+        }
+
+        db.Bookings.RemoveRange(from b in db.Bookings where b.Flight == flightId select b);
+        db.Checkins.RemoveRange(
+            from c in db.Checkins
+            join s in db.Segments
+            on c.Segment equals s.Id
+            where s.Flight == flightId
+            select c
+        );
+
+        flight.State = FlightState.Booking;
+        return save() ?? Results.Ok();
     }
 
     public IResult DumpUsers()
@@ -369,9 +392,9 @@ public class TaggedSegment
     public Guid Id { get; set; }
     public Guid Flight { get; set; }
     public int SeqNo { get; set; }
-    public String FromLoc { get; set; }
+    public String FromLoc { get; set; } = null!;
     public DateTimeOffset FromTime { get; set; }
-    public String ToLoc { get; set; }
+    public String ToLoc { get; set; } = null!;
     public DateTimeOffset ToTime { get; set; }
     public Guid Aircraft { get; set; }
 }

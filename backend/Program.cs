@@ -115,6 +115,14 @@ app.MapPost("/flights/{id}/close", (Guid id) =>
     }
 });
 
+app.MapPost("/flights/{id}/reset", (Guid id) =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).ResetFlight(id);
+    }
+});
+
 app.MapGet("/promos", () =>
 {
     using (var db = new TecAirContext(app))
