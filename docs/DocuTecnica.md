@@ -37,9 +37,11 @@ nocite: |
 
 ## Modelo conceptual
 
+## Justificación de mapeo conceptual-relacional
+
 ## Modelo relacional
 
-### Justificación de mapeo
+![](img/esquema.png)
 
 ## Estructuras de datos desarrolladas
 
