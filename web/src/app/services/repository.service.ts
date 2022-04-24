@@ -39,6 +39,16 @@ export class RepositoryService {
     return this.http.delete(this.createCompleteRoute(route, this.envUrl.urlAddress), { headers: this.generateHeaders().headers, observe: 'response' });
   }
 
+  /**
+ * PUT request
+ * @param route endpoint relativo
+ * @param body contenidos JSON requeridos por endpoint
+ * @returns Observable con datos retornados por el server
+ */
+  public edit = (route: string, body: any) => {
+    return this.http.put(this.createCompleteRoute(route, this.envUrl.urlAddress), body, { headers: this.generateHeaders().headers, observe: 'response' });
+  }
+
   // Junta el url base del API con la ruta relative de los
   private createCompleteRoute = (route: string, envAddress: string) => {
     return `${envAddress}/${route}`;
