@@ -14,7 +14,7 @@ builder.Services.AddCors(options =>
                                     {
                                         builder.WithOrigins("http://localhost:5000", "http://127.0.0.1:5000","http://localhost:4200", "http://127.0.0.1:4200")
                                     .AllowAnyHeader()
-                                    .WithMethods("POST", "GET", "DELETE");
+                                    .WithMethods("POST", "PUT", "GET", "DELETE");
                                     });
 });
 
