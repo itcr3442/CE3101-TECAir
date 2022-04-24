@@ -341,15 +341,35 @@ class ServiceLayer
         {
             // Ya está cerrado
             case FlightState.Closed:
-                return Results.Ok();
+                break;
 
             case FlightState.Checkin:
                 flight.State = FlightState.Closed;
-                return Save() ?? Results.Ok();
+                break;
 
             default:
                 return Results.BadRequest();
         }
+
+        var paxes = from checkin in db.Checkins
+                    join segment in db.Segments
+                    on checkin.Segment equals segment.Id
+                    where segment.Flight == flightId
+                    select checkin.PaxNavigation;
+
+        var close = new List<PaxClose>();
+        foreach (var pax in paxes.Distinct().ToArray())
+        {
+            var paxClose = new PaxClose
+            {
+                Pax = pax.Id,
+                Bags = db.Bags.Where(b => b.Flight == flightId && b.Owner == pax.Id).Count(),
+            };
+
+            close.Add(paxClose);
+        }
+
+        return Save() ?? Results.Ok(close);
     }
 
     public IResult ResetFlight(Guid flightId)
@@ -730,4 +750,10 @@ public class InsertedBag
 {
     public Guid Id { get; set; }
     public int No { get; set; }
+}
+
+public class PaxClose
+{
+    public Guid Pax { get; set; }
+    public int Bags { get; set; }
 }
