@@ -147,6 +147,14 @@ app.MapGet("/segments/booking", () =>
     }
 });
 
+app.MapPost("/segments/{id}/checkin", (Guid id, CheckIn checkIn) =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).CheckIn(id, checkIn);
+    }
+});
+
 app.MapPost("/search", (string fromLoc, string toLoc) =>
 {
     using (var db = new TecAirContext(app))

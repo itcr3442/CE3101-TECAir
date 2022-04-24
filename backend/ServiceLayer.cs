@@ -138,6 +138,35 @@ class ServiceLayer
         return save() ?? Results.Ok(new Booked { Total = total });
     }
 
+    public IResult CheckIn(Guid segmentId, CheckIn checkIn)
+    {
+        var segment = (from s in db.Segments where s.Id == segmentId select s).SingleOrDefault();
+        var pax = (from u in db.Users where u.Id == checkIn.Pax select u).SingleOrDefault();
+
+        if (segment == null || pax == null)
+        {
+            return Results.NotFound();
+        }
+
+        var flight = segment.FlightNavigation;
+        var seats = segment.AircraftNavigation.Seats;
+
+        if (checkIn.Seat < 0 || checkIn.Seat >= seats || flight.State != FlightState.Checkin)
+        {
+            return Results.BadRequest();
+        }
+
+        var row = new Checkin
+        {
+            Segment = segmentId,
+            Pax = checkIn.Pax,
+            Seat = checkIn.Seat,
+        };
+
+        db.Checkins.Add(row);
+        return save() ?? Results.Ok();
+    }
+
     public IResult OpenFlight(Guid flightId)
     {
         var flight = (from f in db.Flights where f.Id == flightId select f).SingleOrDefault();
@@ -373,6 +402,14 @@ public class NewBooking
     [Required]
     public Guid Pax { get; set; }
     public Guid? Promo { get; set; }
+}
+
+public class CheckIn
+{
+    [Required]
+    public Guid Pax { get; set; }
+    [Required]
+    public int Seat { get; set; }
 }
 
 public class Booked
