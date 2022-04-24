@@ -62,8 +62,8 @@ class RegisterUserActivity : AppCompatActivity() {
      */
     fun registerUser(view: View) {
         var isCompleteInfo = verifyEmpty(getString(R.string.empty_error), username, password, firstname, lastname, email, phoneNumber)
-        var universityStr: String? = null
-        var studentIDStr: String? = null
+        var universityStr: String = ""
+        var studentIDStr: String = ""
         if (isStudent) {
             isCompleteInfo = isCompleteInfo  && verifyEmpty(getString(R.string.empty_error),university, studentID)
             universityStr = university.text.toString()
@@ -75,7 +75,8 @@ class RegisterUserActivity : AppCompatActivity() {
         }
         val newUser =
             User(
-                UUID.randomUUID().toString(),
+                0,
+                UUID.randomUUID().toString(), //fake uuid
                 username.text.toString(),
                 password.text.toString(),
                 firstname.text.toString(),
@@ -88,8 +89,7 @@ class RegisterUserActivity : AppCompatActivity() {
 
         (application as TECAirApp).session?.registerUser(newUser) { success ->
             if (success) {
-                val intent = Intent(this, MainMenuActivity::class.java)
-                startActivity(intent)
+                finish()
             } else {
                 errorTxt.visibility = View.VISIBLE
             }

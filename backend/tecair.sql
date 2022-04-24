@@ -41,7 +41,6 @@ CREATE TYPE public.flight_state AS ENUM (
 );
 
 
-ALTER TYPE public.flight_state OWNER TO ale;
 
 --
 -- Name: user_type; Type: TYPE; Schema: public; Owner: ale
@@ -51,9 +50,6 @@ CREATE TYPE public.user_type AS ENUM (
     'pax',
     'manager'
 );
-
-
-ALTER TYPE public.user_type OWNER TO ale;
 
 SET default_tablespace = '';
 
@@ -70,7 +66,6 @@ CREATE TABLE public.aircraft (
 );
 
 
-ALTER TABLE public.aircraft OWNER TO ale;
 
 --
 -- Name: airports; Type: TABLE; Schema: public; Owner: ale
@@ -83,7 +78,6 @@ CREATE TABLE public.airports (
 );
 
 
-ALTER TABLE public.airports OWNER TO ale;
 
 --
 -- Name: bags; Type: TABLE; Schema: public; Owner: ale
@@ -99,7 +93,6 @@ CREATE TABLE public.bags (
 );
 
 
-ALTER TABLE public.bags OWNER TO ale;
 
 --
 -- Name: bags_no_seq; Type: SEQUENCE; Schema: public; Owner: ale
@@ -114,7 +107,6 @@ CREATE SEQUENCE public.bags_no_seq
     CACHE 1;
 
 
-ALTER TABLE public.bags_no_seq OWNER TO ale;
 
 --
 -- Name: bags_no_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ale
@@ -134,7 +126,6 @@ CREATE TABLE public.bookings (
 );
 
 
-ALTER TABLE public.bookings OWNER TO ale;
 
 --
 -- Name: checkins; Type: TABLE; Schema: public; Owner: ale
@@ -147,7 +138,6 @@ CREATE TABLE public.checkins (
 );
 
 
-ALTER TABLE public.checkins OWNER TO ale;
 
 --
 -- Name: endpoints; Type: TABLE; Schema: public; Owner: ale
@@ -160,7 +150,6 @@ CREATE TABLE public.endpoints (
 );
 
 
-ALTER TABLE public.endpoints OWNER TO ale;
 
 --
 -- Name: flights; Type: TABLE; Schema: public; Owner: ale
@@ -175,7 +164,6 @@ CREATE TABLE public.flights (
 );
 
 
-ALTER TABLE public.flights OWNER TO ale;
 
 --
 -- Name: promos; Type: TABLE; Schema: public; Owner: ale
@@ -192,7 +180,6 @@ CREATE TABLE public.promos (
 );
 
 
-ALTER TABLE public.promos OWNER TO ale;
 
 --
 -- Name: segments; Type: TABLE; Schema: public; Owner: ale
@@ -210,7 +197,6 @@ CREATE TABLE public.segments (
 );
 
 
-ALTER TABLE public.segments OWNER TO ale;
 
 --
 -- Name: users; Type: TABLE; Schema: public; Owner: ale
@@ -231,7 +217,6 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO ale;
 
 --
 -- Name: bags no; Type: DEFAULT; Schema: public; Owner: ale

@@ -47,8 +47,7 @@ class FlightPaymentActivity : AppCompatActivity() {
         (application as TECAirApp).session?.makeBooking(flightData.flight.id) { success ->
             run {
                 if (success) {
-                    val intent = Intent(this, MainMenuActivity::class.java)
-                    startActivity(intent)
+                    finish()
                 } else {
                     simpleDialog(this, getString(R.string.booking_error))
 

@@ -16,10 +16,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        (application as TECAirApp).session = null
     }
     
     /**
-     * Retrieves the login information. Wether an online of offline session is created
+     * Retrieves the login information. Whether an online of offline session is created
      * is determined by the state of the offlineSwitch widget
      */
     fun login(view: View) {

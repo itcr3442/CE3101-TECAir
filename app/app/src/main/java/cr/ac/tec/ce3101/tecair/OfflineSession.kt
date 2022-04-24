@@ -110,8 +110,8 @@ class OfflineSession(
         afterOp(filteredFlights.toList())
     }
 
-    override fun getUserList(): List<User> {
-        return cache.userDao().getAll()
+    override fun getUserList(forEachUser: (User)-> Unit ) {
+        cache.userDao().getAll().forEach(forEachUser)
     }
 
     override fun makeBooking(flightId: String, afterOp: (Boolean) -> Unit) {
@@ -119,7 +119,10 @@ class OfflineSession(
         if (previous != null){
             afterOp(false)
         }else{
-            pendingOps.BookingDao().insertAll(Booking(flightId, username))
+            var promo = cache.promoDao().getForFlight(flightId)
+            if (promo == null)
+                promo = ""
+            pendingOps.BookingDao().insertAll(Booking(flightId, username, promo))
             afterOp(true)
         }
     }
