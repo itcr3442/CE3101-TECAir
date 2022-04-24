@@ -14,6 +14,7 @@ import { WorkerAdminComponent } from './components/worker-admin/worker-admin.com
 import { PromosComponent } from './components/promos/promos.component';
 import { PromosPageComponent } from './components/promos-page/promos-page.component';
 import { FlightSearchComponent } from './components/flight-search/flight-search.component';
+import { CheckInComponent } from './components/check-in/check-in.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { FlightSearchComponent } from './components/flight-search/flight-search.
     PromosComponent,
     PromosPageComponent,
     FlightSearchComponent,
+    CheckInComponent,
   ],
   imports: [
     BrowserModule,
