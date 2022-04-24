@@ -61,6 +61,8 @@ class ServiceLayer
 
         user.Hash = null;
         user.Salt = null;
+        var _ = user.Bags; // Evaluación forzosa
+
         return Results.Ok(user);
     }
 
@@ -136,6 +138,35 @@ class ServiceLayer
         return save() ?? Results.Ok(new Booked { Total = total });
     }
 
+    public IResult CheckIn(Guid segmentId, CheckIn checkIn)
+    {
+        var segment = (from s in db.Segments where s.Id == segmentId select s).SingleOrDefault();
+        var pax = (from u in db.Users where u.Id == checkIn.Pax select u).SingleOrDefault();
+
+        if (segment == null || pax == null)
+        {
+            return Results.NotFound();
+        }
+
+        var flight = segment.FlightNavigation;
+        var seats = segment.AircraftNavigation.Seats;
+
+        if (checkIn.Seat < 0 || checkIn.Seat >= seats || flight.State != FlightState.Checkin)
+        {
+            return Results.BadRequest();
+        }
+
+        var row = new Checkin
+        {
+            Segment = segmentId,
+            Pax = checkIn.Pax,
+            Seat = checkIn.Seat,
+        };
+
+        db.Checkins.Add(row);
+        return save() ?? Results.Ok();
+    }
+
     public IResult OpenFlight(Guid flightId)
     {
         var flight = (from f in db.Flights where f.Id == flightId select f).SingleOrDefault();
@@ -182,6 +213,27 @@ class ServiceLayer
         }
     }
 
+    public IResult ResetFlight(Guid flightId)
+    {
+        var flight = (from f in db.Flights where f.Id == flightId select f).SingleOrDefault();
+        if (flight == null)
+        {
+            return Results.NotFound();
+        }
+
+        db.Bookings.RemoveRange(from b in db.Bookings where b.Flight == flightId select b);
+        db.Checkins.RemoveRange(
+            from c in db.Checkins
+            join s in db.Segments
+            on c.Segment equals s.Id
+            where s.Flight == flightId
+            select c
+        );
+
+        flight.State = FlightState.Booking;
+        return save() ?? Results.Ok();
+    }
+
     public IResult DumpUsers()
     {
         var users = db.Users.ToArray();
@@ -221,9 +273,14 @@ class ServiceLayer
         var tagged = from segment in segments
                      select new TaggedSegment
                      {
-                         Segment = segment,
-                         From = segment.FromLocNavigation,
-                         To = segment.ToLocNavigation
+                         Id = segment.Id,
+                         Flight = segment.Flight,
+                         SeqNo = segment.SeqNo,
+                         FromLoc = segment.FromLocNavigation.Code,
+                         FromTime = segment.FromTime,
+                         ToLoc = segment.ToLocNavigation.Code,
+                         ToTime = segment.ToTime,
+                         Aircraft = segment.Aircraft
                      };
 
         return Results.Ok(tagged.ToArray());
@@ -347,6 +404,14 @@ public class NewBooking
     public Guid? Promo { get; set; }
 }
 
+public class CheckIn
+{
+    [Required]
+    public Guid Pax { get; set; }
+    [Required]
+    public int Seat { get; set; }
+}
+
 public class Booked
 {
     public decimal Total { get; set; }
@@ -361,7 +426,12 @@ public class SearchResult
 
 public class TaggedSegment
 {
-    public Segment Segment { get; set; } = null!;
-    public Airport From { get; set; } = null!;
-    public Airport To { get; set; } = null!;
+    public Guid Id { get; set; }
+    public Guid Flight { get; set; }
+    public int SeqNo { get; set; }
+    public String FromLoc { get; set; } = null!;
+    public DateTimeOffset FromTime { get; set; }
+    public String ToLoc { get; set; } = null!;
+    public DateTimeOffset ToTime { get; set; }
+    public Guid Aircraft { get; set; }
 }

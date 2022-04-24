@@ -79,8 +79,8 @@ class PromosActivity : AppCompatActivity() {
         val message = "${getString(R.string.flight_number)} : ${promo.flight} \n" +
                 "${getString(R.string.code)}  : ${promo.code} \n" +
                 "${getString(R.string.price)} : ${promo.price} \n" +
-                "${getString(R.string.start)}  : ${promo.start_time} \n" +
-                "${getString(R.string.end)}  : ${promo.end_time} \n"
+                "${getString(R.string.start)}  : ${promo.startTime} \n" +
+                "${getString(R.string.end)}  : ${promo.endTime} \n"
         builder
             .setCancelable(false)
             .setMessage(message)

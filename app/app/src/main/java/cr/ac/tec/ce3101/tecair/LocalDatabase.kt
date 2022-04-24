@@ -86,9 +86,9 @@ data class Segment(
     @PrimaryKey val id: String,
     val flight: String,
     val seqNo: Int,
-    val fromLoc: String, //uuid
+    val fromLoc: String,
     val fromTime: String,
-    val toLoc: String, //uuid
+    val toLoc: String,
     val toTime: String,
     val aircraft: String,
 )
@@ -100,7 +100,7 @@ data class Segment(
 data class Booking(
     val flight: String, //uuid
     val pax: String, //uuid
-    val promo: String
+    val promo: String //uuid
 )
 
 /**
@@ -112,8 +112,8 @@ data class Promo(
     val code: String,
     val flight: String,
     val price: Double,
-    val start_time: Double,
-    val end_time: String,
+    val startTime: Double,
+    val endTime: String,
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     val img: ByteArray?,
 ) {

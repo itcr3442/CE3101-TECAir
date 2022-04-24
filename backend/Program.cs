@@ -115,6 +115,14 @@ app.MapPost("/flights/{id}/close", (Guid id) =>
     }
 });
 
+app.MapPost("/flights/{id}/reset", (Guid id) =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).ResetFlight(id);
+    }
+});
+
 app.MapGet("/promos", () =>
 {
     using (var db = new TecAirContext(app))
@@ -136,6 +144,14 @@ app.MapGet("/segments/booking", () =>
     using (var db = new TecAirContext(app))
     {
         return new ServiceLayer(db).DumpSegments(true);
+    }
+});
+
+app.MapPost("/segments/{id}/checkin", (Guid id, CheckIn checkIn) =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).CheckIn(id, checkIn);
     }
 });
 
