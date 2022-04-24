@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterUserComponent },
   { path: 'worker_register', component: WorkerAdminComponent, canActivate: [AuthGuard], data: { role: RoleLevels.Admin } },
   { path: 'promos_page', component: PromosPageComponent },
-  { path: 'flight_search', component: FlightSearchComponent },
+  { path: 'flight_search', component: FlightSearchComponent, canActivate: [AuthGuard], data: { role: RoleLevels.User } },
 ];
 
 @NgModule({

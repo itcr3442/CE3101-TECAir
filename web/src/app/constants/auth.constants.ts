@@ -1,4 +1,4 @@
 export enum RoleLevels {
-    User = 1,
+    User = 0,
     Admin
 }

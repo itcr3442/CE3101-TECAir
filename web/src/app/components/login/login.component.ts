@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PromosComponent } from '../promos/promos.component';
+import { RepositoryService } from 'src/app/services/repository.service';
 
 @Component({
   selector: 'app-login',
@@ -25,6 +26,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
+    private repo: RepositoryService
   ) {
     this.logged = authService.isLoggedIn()
     console.log("Is logged:", this.logged)
@@ -74,7 +76,12 @@ export class LoginComponent implements OnInit {
           if (res) {
             this.logged = true
             this.loginMsg = ""
-            this.refresh()
+            this.repo.getData("users/" + res)
+              .subscribe((result: any) => {
+                console.log("ADJJD", result)
+                localStorage.setItem('role', result.body.type)
+                this.refresh()
+              })
           }
           else {
             this.loginMsg = "Cédula o contraseña incorrectos";

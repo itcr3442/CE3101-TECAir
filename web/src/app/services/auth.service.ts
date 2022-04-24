@@ -14,6 +14,7 @@ export class AuthService {
   public logout(): void {
     localStorage.setItem('isLoggedIn', 'false');
     localStorage.removeItem('token');
+    localStorage.removeItem('role');
   }
   /**
    * 
@@ -29,18 +30,11 @@ export class AuthService {
     return false;
   }
 
-  public async getRole(): Promise<number> {
+  public getRole(): number {
     if (localStorage.getItem('isLoggedIn') == "true") {
       let role = localStorage.getItem('role')
       if (role != null) {
         return +role
-      } else {
-        let token = JSON.parse(localStorage.getItem('token') || '{}')
-        return await lastValueFrom(this.repo.getData("users/" + token.uuid))
-          .then((res: any) => {
-            return res.body.type
-          })
-
       }
     }
     return 0;
@@ -67,10 +61,10 @@ export class AuthService {
           localStorage.setItem('isLoggedIn', "true");
           localStorage.setItem('token', JSON.stringify({ username, "password": password, "uuid": res.body }));
 
-
-          return true
-        } else {
-          return false
+          return res.body
+        }
+        else {
+          return null
         }
       })
       )
