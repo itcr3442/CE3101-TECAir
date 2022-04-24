@@ -32,6 +32,14 @@ app.MapPost("/check_login", (string username, string password) =>
     }
 });
 
+app.MapGet("/users", () =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).DumpUsers();
+    }
+});
+
 app.MapPost("/users", (NewUser user) =>
 {
     using (var db = new TecAirContext())
@@ -64,6 +72,14 @@ app.MapDelete("/users/{id}", (Guid id) =>
     }
 });
 
+app.MapGet("/flights", () =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).DumpFlights();
+    }
+});
+
 app.MapPost("/flights/{id}/book", (Guid id, NewBooking booking) =>
 {
     using (var db = new TecAirContext())
@@ -72,23 +88,7 @@ app.MapPost("/flights/{id}/book", (Guid id, NewBooking booking) =>
     }
 });
 
-app.MapGet("/dump/users", () =>
-{
-    using (var db = new TecAirContext())
-    {
-        return new ServiceLayer(db).DumpUsers();
-    }
-});
-
-app.MapGet("/dump/flights", () =>
-{
-    using (var db = new TecAirContext())
-    {
-        return new ServiceLayer(db).DumpFlights();
-    }
-});
-
-app.MapGet("/dump/promos", () =>
+app.MapGet("/promos", () =>
 {
     using (var db = new TecAirContext())
     {
@@ -96,7 +96,7 @@ app.MapGet("/dump/promos", () =>
     }
 });
 
-app.MapGet("/dump/segments", () =>
+app.MapGet("/segments", () =>
 {
     using (var db = new TecAirContext())
     {
