@@ -163,6 +163,7 @@ class ServiceLayer
 
         if (fromPort == null || toPort == null)
         {
+            Console.WriteLine("kk");
             return Results.Ok(new SearchResult[] { });
         }
 
@@ -173,14 +174,18 @@ class ServiceLayer
                       join toSeg in toSegments
                       on fromSeg.Flight equals toSeg.Flight
                       where fromSeg.SeqNo <= toSeg.SeqNo
+                      select fromSeg.FlightNavigation;
+
+        var results = from flight in flights
+                      where flight.State == FlightState.Booking
                       select new SearchResult
                       {
-                          Flight = fromSeg.FlightNavigation,
-                          From = fromSeg.FromLocNavigation,
-                          To = toSeg.ToLocNavigation
+                          Flight = flight,
+                          From = flight.Endpoint.FromLocNavigation,
+                          To = flight.Endpoint.ToLocNavigation
                       };
 
-        return Results.Ok(flights.Where(r => r.Flight.State == FlightState.Booking).ToArray());
+        return Results.Ok(flights.ToArray());
     }
 
     private TecAirContext db;
