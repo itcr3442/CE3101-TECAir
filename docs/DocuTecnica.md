@@ -23,7 +23,7 @@ linestretch: 1.5
 bibliography: bibliografia.bib
 csl: ieee.csl
 nocite: | 
-  @microsoft-2022A, @microsoft-2022B, @microsoft-2020, @google-2021, @google-2022, @elmasri-2016, @unknown-author-2021
+  @microsoft-2022A, @microsoft-2022B, @microsoft-2020, @google-2021, @google-2022, @elmasri-2016, @unknown-author-2021, @android-room
 ...
 
 \maketitle
@@ -44,6 +44,7 @@ nocite: |
 ## Estructuras de datos desarrolladas
 
 ### Servidor
+
 
 ### App móvil
 
@@ -148,9 +149,61 @@ data class Promo(
 
 ![](imgs/diagramaArqui.png)
 
+### Aplicación REST API
+
+Para esta unidad de la arquitectura se tienen 3 elementos principales a notar, los cuales se ven denotados en el diagrama de arquitectura:
+
++ Se despliega la aplicación sobre una máquina virtual con Windows 10 que funciona como servidor de IIS.
++ El computador que funciona como servidor tiene instalado PostgreSQL como base de datos
++ En la capa del servicio en sí, se tiene una aplicación de C# que interactúa con la base de datos del computador utilizando
+  el EntityFramework
+
+El servicio web se ve expuesto en el puerto 5000 del servidor. 
+
+### Aplicación Web
+
+Para la unidad de aplicación web, similar a la REST API la misma es desplegada sobre un servidor de IIS, sin embargo, funcionalmente esto no significa que la app web "reside" en el servidor, sino que funciona como una fuente para enviar los recursos necesarios para construír la página a un usuario. 
+
+Un usuario puede interactuar con dos vistas distintas: Vista de Reservaciones y Vista de Aeropuertos. Algunas partes de la funcionalidad es compartida, sin embargo existen funcionalidades en que son únicas a la Vista de Aeropuertos, esto porque esta "Sub Aplicación" de la aplicación principal tiene como usuario a los trabajadores de la aerolínea, mientras que la vista de reservaciones tiene como usuarios a los clientes. 
+Esta estructura se puede notar en el diagrama de arquitectura, en donde se muestra que los recursos de la app web viven en el mismo servidor de IIS que la REST API, pero las vistas de operación se utilizan desde computadores individuales por aparte.
+
+### Aplicación Móvil
+
+En en caso de la app móvil se puede notar lo siguiente:
+
+- Se hace uso de SQLite para guardar datos persistentes en el dispositivo móvil.
+- La interfaz entre la aplicación y SQLite se da por medio de la biblioteca Room.
+- El dispositivo móvil se conecta a la red, pero antes de conectarse a la red existe un nodo que indica la existencia de un proceso de sincronización durante las interacciones con los recursos de la red.
+
+La arquitectura anterior es producto de los requerimientos de la aplicación móvil, en específico, que a diferencia de la aplicación web, la aplicación móvil debe proveer la funcionalidad de la vista de reservaciones incluso sin conexión a los recursos de red. Es por esto que la misma dispone de sus propias bases de datos locales. El tamaño de los símbolos de base de datos también denota algo adicional - respecto a la base de datos principal, la base de datos local de la aplicación móvil contiene significativamente menor información, puesto que mucha de la información guardada en el servidor principal es irrelevante para la operación de la aplicación móvil.
+
 ## Problemas conocidos
 
 ## Problemas encontrados
+
+### Configuración de variables de ambiente en IIS: 
+
+Para permitir que la REST API se pudiese desplegar en varios sistemas distintos se decidió hacer del connection string un dato provisto en la máquina del cliente. Inicialmente se creyó que las aplicaciones desplegadas en IIS tomarían valores de variables de ambiente del sistema que contiene el IIS, sin embargo esto resultó ser equivoco. 
+
+- Resolución: Se siguieron los pasos indicados por [@unkown-author-2015] para la configuración de variables de ambiente en IIS.
+
+### Solicitudes a HTTP con "clear text"
+
+El problema encontrado consistía en que la aplicación móvil no podía realizar solicitudes al servidor, puesto que se hacía por medio de HTTP, no HTTPS.
+
+- Resolución: Modificar el Android manifest para permitir este tipo de solicitudes de forma explícita:
+
+```xml
+    <application
+        android:name=".TECAirApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.TECAir"
+        android:usesCleartextTraffic="true">
+```
 
 ## Conclusiones
 
@@ -163,4 +216,7 @@ data class Promo(
 
 ## Diagramas de clases
 
-## Anexos 
+![](imgs/diagramaClasesAppServer.png)
+
+![](imgs/diagramaClasesAppMovil.png)
+

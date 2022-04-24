@@ -247,9 +247,6 @@ interface FlightDao {
     @Query("SELECT * FROM flight")
     fun getAll(): List<Flight>
 
-    @Query("SELECT * FROM flight")
-    fun getFromTo(): List<Flight>
-
     @Query("SELECT * FROM flight where id = :id ")
     fun getFlightById(id: String): Flight?
 
