@@ -88,7 +88,11 @@ class ServiceLayer
 
     public IResult DeleteUser(Guid id)
     {
+        db.Bookings.RemoveRange(from b in db.Bookings where b.Pax == id select b);
+        db.Bags.RemoveRange(from b in db.Bags where b.Owner == id select b);
+        db.Checkins.RemoveRange(from c in db.Checkins where c.Pax == id select c);
         db.Entry(new User { Id = id }).State = EntityState.Deleted;
+
         return save() ?? Results.Ok();
     }
 
@@ -151,23 +155,26 @@ class ServiceLayer
         }
         catch (DbUpdateException ex)
         {
-			if(ex.InnerException == null) {
-				throw ex;
-			}
+            var inner = ex.InnerException as PostgresException;
+            if (inner == null)
+            {
+                throw ex;
+            }
 
-			switch((ex.InnerException as PostgresException).Code) {
-				case PostgresErrorCodes.IntegrityConstraintViolation:
-				case PostgresErrorCodes.RestrictViolation:
-				case PostgresErrorCodes.NotNullViolation:
-				case PostgresErrorCodes.ForeignKeyViolation:
-				case PostgresErrorCodes.UniqueViolation:
-				case PostgresErrorCodes.CheckViolation:
-				case PostgresErrorCodes.ExclusionViolation:
-					return Results.Conflict();
+            switch (inner.SqlState)
+            {
+                case PostgresErrorCodes.IntegrityConstraintViolation:
+                case PostgresErrorCodes.RestrictViolation:
+                case PostgresErrorCodes.NotNullViolation:
+                case PostgresErrorCodes.ForeignKeyViolation:
+                case PostgresErrorCodes.UniqueViolation:
+                case PostgresErrorCodes.CheckViolation:
+                case PostgresErrorCodes.ExclusionViolation:
+                    return Results.Conflict();
 
-				default:
-            		return Results.BadRequest();
-			}
+                default:
+                    return Results.BadRequest();
+            }
         }
     }
 
