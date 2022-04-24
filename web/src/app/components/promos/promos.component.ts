@@ -28,6 +28,7 @@ export class PromosComponent implements OnInit {
         flightsService.flightById(promo.flight).subscribe(res => {
           console.log(res)
           let flight = res.body as FlightById
+          console.log("Flight:", flight)
           this.flight_descriptors[i] = flight.route[0].code + " -> " + flight.route[flight.route.length - 1].code
         })
       }

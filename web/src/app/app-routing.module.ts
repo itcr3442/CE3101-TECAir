@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: 'worker_register', component: WorkerAdminComponent, canActivate: [AuthGuard], data: { role: RoleLevels.Admin } },
   { path: 'promos_page', component: PromosPageComponent },
   { path: 'flight_search', component: FlightSearchComponent, canActivate: [AuthGuard], data: { role: RoleLevels.User } },
-  { path: 'check-in', component: CheckInComponent, canActivate: [AuthGuard], data: { role: RoleLevels.Admin } }
+  { path: 'check-in', component: CheckInComponent }//, canActivate: [AuthGuard], data: { role: RoleLevels.Admin } }
 ];
 
 @NgModule({

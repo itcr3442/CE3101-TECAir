@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -33,6 +34,7 @@ import { CheckInComponent } from './components/check-in/check-in.component';
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    TooltipModule
   ],
 
   providers: [AuthGuard],
