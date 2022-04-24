@@ -97,6 +97,22 @@ app.MapPost("/flights/{id}/book", (Guid id, NewBooking booking) =>
     }
 });
 
+app.MapPost("/flights/{id}/open", (Guid id) =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).OpenFlight(id);
+    }
+});
+
+app.MapPost("/flights/{id}/close", (Guid id) =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).CloseFlight(id);
+    }
+});
+
 app.MapGet("/promos", () =>
 {
     using (var db = new TecAirContext())

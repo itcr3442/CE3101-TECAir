@@ -129,6 +129,52 @@ class ServiceLayer
         return save() ?? Results.Ok(new Booked { Total = total });
     }
 
+    public IResult OpenFlight(Guid flightId)
+    {
+        var flight = (from f in db.Flights where f.Id == flightId select f).SingleOrDefault();
+        if (flight == null)
+        {
+            return Results.NotFound();
+        }
+
+        switch (flight.State)
+        {
+            // Ya está abierto
+            case FlightState.Checkin:
+                return Results.Ok();
+
+            case FlightState.Booking:
+                flight.State = FlightState.Checkin;
+                return save() ?? Results.Ok();
+
+            default:
+                return Results.BadRequest();
+        }
+    }
+
+    public IResult CloseFlight(Guid flightId)
+    {
+        var flight = (from f in db.Flights where f.Id == flightId select f).SingleOrDefault();
+        if (flight == null)
+        {
+            return Results.NotFound();
+        }
+
+        switch (flight.State)
+        {
+            // Ya está cerrado
+            case FlightState.Closed:
+                return Results.Ok();
+
+            case FlightState.Checkin:
+                flight.State = FlightState.Closed;
+                return save() ?? Results.Ok();
+
+            default:
+                return Results.BadRequest();
+        }
+    }
+
     public IResult DumpUsers()
     {
         var users = db.Users.ToArray();
