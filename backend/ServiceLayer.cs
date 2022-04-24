@@ -61,6 +61,8 @@ class ServiceLayer
 
         user.Hash = null;
         user.Salt = null;
+		var _ = user.Bags; // Evaluación forzosa
+
         return Results.Ok(user);
     }
 
@@ -369,9 +371,9 @@ public class TaggedSegment
     public Guid Id { get; set; }
     public Guid Flight { get; set; }
     public int SeqNo { get; set; }
-    public String FromLoc { get; set; }
+    public String FromLoc { get; set; } = null!;
     public DateTimeOffset FromTime { get; set; }
-    public String ToLoc { get; set; }
+    public String ToLoc { get; set; } = null!;
     public DateTimeOffset ToTime { get; set; }
     public Guid Aircraft { get; set; }
 }
