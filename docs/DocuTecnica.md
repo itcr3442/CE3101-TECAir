@@ -216,7 +216,12 @@ El problema encontrado consistía en que la aplicación móvil no podía realiza
 
 ## Diagramas de clases
 
+### Backend
+
 ![](imgs/diagramaClasesAppServer.png)
+
+### App móvil
 
 ![](imgs/diagramaClasesAppMovil.png)
 
+## Anexos 
