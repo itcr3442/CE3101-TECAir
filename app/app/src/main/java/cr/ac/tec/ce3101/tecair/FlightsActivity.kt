@@ -36,7 +36,7 @@ class FlightsActivity : AppCompatActivity() {
                     val entry = LinearLayout(this).apply {
                         orientation = LinearLayout.HORIZONTAL
                         addView(TextView(this.context).apply {
-                            text = flightInfo.flight.no
+                            text = flightInfo.flight.no.toString()
                             width = 300
                             textSize = 18F
                         })
