@@ -128,6 +128,18 @@ class ServiceLayer
         return save() ?? Results.Ok(new Booked { Total = total });
     }
 
+    public IResult DumpUsers()
+    {
+        var users = db.Users.ToArray();
+        foreach (var user in users)
+        {
+            user.Hash = null;
+            user.Salt = null;
+        }
+
+        return Results.Ok(users);
+    }
+
     public IResult DumpFlights()
     {
         return Results.Ok(db.Flights.ToArray());
