@@ -70,11 +70,11 @@ data class User(
 /**
  * Stores flight information
  */
-@Entity(primaryKeys = ["id", "no"])
+@Entity(primaryKeys = ["id"])
 data class Flight(
     val id: String, //uuid
-    val no: String,
-    val comment: String?,
+    val no: Int,
+    val comment: String,
     val price: Double
 )
 
@@ -85,11 +85,11 @@ data class Flight(
 data class Segment(
     @PrimaryKey val id: String,
     val flight: String,
-    val seq_no: Int,
-    val from_loc: String, //uuid
-    val from_time: String,
-    val to_loc: String, //uuid
-    val to_time: String,
+    val seqNo: Int,
+    val fromLoc: String, //uuid
+    val fromTime: String,
+    val toLoc: String, //uuid
+    val toTime: String,
     val aircraft: String,
 )
 
@@ -207,7 +207,7 @@ interface SegmentDao {
     @Insert
     fun insertAll(vararg segment: Segment)
     
-    @Query("SELECT * FROM segment WHERE flight = :flightID ORDER BY seq_no DESC")
+    @Query("SELECT * FROM segment WHERE flight = :flightID ORDER BY seqNo DESC")
     fun getFlightSegments(flightID:String): List<Segment>
 
     @Query("DELETE FROM segment")

@@ -82,20 +82,20 @@ class OfflineSession(
                 var path = mutableListOf<Segment>()
                 var i = 0
                 while (i < segments.size) {
-                    if (segments[i].from_loc == from) {
+                    if (segments[i].fromLoc == from) {
                         break
                     }
                     i++
                 }
                 path.add(segments[i])
-                if (segments[i].to_loc == to) {
+                if (segments[i].toLoc == to) {
                     filteredFlights.add(FlightWithPath(flight, path))
                 } else {
                     i++
                     var success = false;
                     while (i < segments.size) {
                         path.add(segments[i])
-                        if (segments[i].to_loc == to) {
+                        if (segments[i].toLoc == to) {
                             success = true
                             break
                         }

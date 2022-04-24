@@ -1,6 +1,5 @@
 package cr.ac.tec.ce3101.tecair
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -32,7 +31,7 @@ class FlightPaymentActivity : AppCompatActivity() {
         flightData.path.forEach { segment ->
             run {
                 val from = (application as TECAirApp)
-                route += "${segment.from_loc} - ${segment.to_loc}  \n"
+                route += "${segment.fromLoc} - ${segment.toLoc}  \n"
             }
         }
         val extra = "${getString(R.string.info)} ${flightData.flight.comment}\n" +

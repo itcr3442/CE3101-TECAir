@@ -54,22 +54,13 @@ interface TECAirService {
     /**
      * Request to get the list of available flights
      */
-    @GET("flights")
+    @GET("flights/booking")
     fun getFlightList(): Call<List<Flight>>
     /**
      * Request to get the list of all active flight segments
      */
-    @GET("segments")
+    @GET("segments/booking")
     fun getSegmentList(): Call<List<Segment>>
-    
-    /**
-     * Request to retrieve the list of active flights with their path
-     */
-    @GET("dump/flights-with-path")
-    fun getFlightsWithPath(
-        @Query("from") from: String,
-        @Query("to") to: String
-    ): Call<List<FlightWithPath>>
 }
 
 data class UserInfo(
