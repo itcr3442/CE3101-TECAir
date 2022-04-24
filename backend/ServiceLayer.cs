@@ -3,6 +3,7 @@ namespace backend;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using Npgsql;
 
 class ServiceLayer
 {
@@ -148,9 +149,25 @@ class ServiceLayer
             db.SaveChanges();
             return null;
         }
-        catch (DbUpdateException)
+        catch (DbUpdateException ex)
         {
-            return Results.BadRequest();
+			if(ex.InnerException == null) {
+				throw ex;
+			}
+
+			switch((ex.InnerException as PostgresException).Code) {
+				case PostgresErrorCodes.IntegrityConstraintViolation:
+				case PostgresErrorCodes.RestrictViolation:
+				case PostgresErrorCodes.NotNullViolation:
+				case PostgresErrorCodes.ForeignKeyViolation:
+				case PostgresErrorCodes.UniqueViolation:
+				case PostgresErrorCodes.CheckViolation:
+				case PostgresErrorCodes.ExclusionViolation:
+					return Results.Conflict();
+
+				default:
+            		return Results.BadRequest();
+			}
         }
     }
 
