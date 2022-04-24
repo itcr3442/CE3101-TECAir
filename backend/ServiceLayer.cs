@@ -111,6 +111,10 @@ class ServiceLayer
         {
             return Results.NotFound();
         }
+        else if (flight.State != FlightState.Booking)
+        {
+            return Results.BadRequest();
+        }
 
         Promo? promo = null;
         if (promoId != null)
@@ -208,10 +212,10 @@ class ServiceLayer
 
     public IResult DumpSegments(bool filterBooking)
     {
-        IEnumerable<Segment> segments = db.Segments;
+        var segments = db.Segments.ToList();
         if (filterBooking)
         {
-            segments = segments.Where(s => s.FlightNavigation.State == FlightState.Booking);
+            segments = segments.Where(s => s.FlightNavigation.State == FlightState.Booking).ToList();
         }
 
         var tagged = from segment in segments
@@ -232,7 +236,6 @@ class ServiceLayer
 
         if (fromPort == null || toPort == null)
         {
-            Console.WriteLine("kk");
             return Results.Ok(new SearchResult[] { });
         }
 
@@ -254,7 +257,7 @@ class ServiceLayer
                           To = flight.Endpoint.ToLocNavigation
                       };
 
-        return Results.Ok(flights.ToArray());
+        return Results.Ok(results.ToArray());
     }
 
     private TecAirContext db;

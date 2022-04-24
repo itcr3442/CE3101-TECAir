@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 public partial class Bag
 {
@@ -12,6 +13,8 @@ public partial class Bag
     public decimal Weight { get; set; }
     public string Color { get; set; } = null!;
 
+    [JsonIgnore]
     public virtual Flight FlightNavigation { get; set; } = null!;
+    [JsonIgnore]
     public virtual User OwnerNavigation { get; set; } = null!;
 }
