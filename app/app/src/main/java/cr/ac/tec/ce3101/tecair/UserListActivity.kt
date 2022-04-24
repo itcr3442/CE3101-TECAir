@@ -81,7 +81,7 @@ class UserListActivity : AppCompatActivity() {
     private fun editUser(user: User) {
         val session = (application as TECAirApp).session
         //will only allow editing the current user
-        if  (session == null || session.getUsername() == user.username || session.getPassword() == user.password){
+        if  (session == null || session.getUsername() != user.username || session.getPassword() != user.password){
             simpleDialog(this, getString(R.string.edit_non_current_user_error))
         }else {
             val intent = Intent(this, EditUserActivity::class.java).apply {

@@ -30,3 +30,75 @@ linestretch: 1.5
 \clearpage
 \pagenumbering{arabic}
 \setcounter{page}{1}
+
+# Servidor
+
+La interacción con el servidor se da por medio de consultas http a la dirección ip del servidor en el puerto 5000. A continuación se describe como llevar a cabo las operaciones solicitadas en la especificación. Puede probar cada una de las operaciones en la aplicación de swagger.
+
+# App Web
+
+## Gestión de usuario
+
+## Búsqueda de vuelos
+
+## Reservación de vuelos
+
+## Despliegue de promociones
+
+## Gestión de promociones
+
+## Chequeo de pasajeros
+
+## Asignación de maletas a un pasajero chequeado
+
+## Gestión de vuelos
+
+## Apertura de vuelos
+
+## Cierre de vuelos
+
+# App Móvil
+
+## Autenticación
+
+Al abrir la aplicación se presenta una pantalla en la que se ingresan los datos de autenticación, se selecciona el modo de operación (Online u Offline) y se puede realizar algunas configuraciones adicionales:
+
+![](imgs/movil1.jpg)
+
+- Uso con conexión: Cada solicitud se coordinará con el la aplicación que administra el servidor. En cada operación la base de datos actualizará el "caché" de datos local que se utilizará en modo offline.
+
+- Uso sin conexión: Cada solicitud en este modo quedará pendiente de sincronización, y será aplicada hasta un nuevo login en modo en línea o una sincronización sin login. 
+
+- Configuración de servidor: En caso de querer editar la dirección web en la que se espera se encuentre el servidor que provee los datos para la aplicación, puede darle click al botón de configuración de servidor y esto habilitará la caja de texto para ingresar la nueva dirección.
+
+- Sincronización sin conexión: Algunas operaciones puede ser conflictivas si se realizan mientras se tiene una sesión activa, por lo cuál se habilita la posibilidad de sincronizar los datos sin necesidad de loggearse en la aplicación.
+
+Una vez autenticado el usuario, se mostrará el menú principal:
+
+![](imgs/movil2.jpg)
+
+## Gestión de usuario
+
+### Agregar usuario: 
+
+Se hace click en la opción de registrar usuario en el menú principal. Esto abrirá un formulario que permite ingresar los datos para el nuevo usuario. En caso de que el usuario sea un estudiante, presiones el switch, lo que habilitará los campos de nombre de universidad y id de estudiante - lo que también los torna obligatorios.
+
+![](imgs/movil3.jpg)
+
+### Otras operaciones de gestión 
+
+Las operaciones de solicitar información, edición y eliminación se ofrecen en la opción de administración de usuario del menú principal. Esta opción abrirá una lista de usuarios con botones para realizar estas distintas operaciones. Debe tomar en cuenta que edición y eliminación solo se permite para el usuario actual
+
+![](imgs/movil4.jpg)
+
+![](imgs/movil5.jpg)
+
+Al presionar en editar usuario se abrirá un formulario similar al de registro en donde se puede editar toda característica del usuario. 
+
+![](imgs/movil6.jpg)
+
+## Búsqueda de vuelos
+
+## Reservación de vuelos
+
+## Despliegue de promociones

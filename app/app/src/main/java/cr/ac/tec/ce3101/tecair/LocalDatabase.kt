@@ -142,6 +142,9 @@ interface UserOpDao {
     @Insert
     fun insertAll(vararg data: UserOp)
 
+    @Delete
+    fun delete(userOp: UserOp)
+
     @Query("SELECT * FROM UserOp")
     fun getAll(): List<UserOp>
 }

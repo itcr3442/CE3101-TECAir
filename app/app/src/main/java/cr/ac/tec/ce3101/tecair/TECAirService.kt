@@ -37,8 +37,8 @@ interface TECAirService {
     /**
      * Request to update user
      */
-    @PUT("users")
-    fun updateUser(@Body user: User): Call<Unit>
+    @PUT("users/{id}")
+    fun updateUser(@Path("id") id: String, @Body user: User): Call<Unit>
 
     /**
      * Request to make a flight reservarion
@@ -49,7 +49,7 @@ interface TECAirService {
     /**
      * Request to get the active promo list
      */
-    @GET("dump/promos")
+    @GET("promos")
     fun getPromoList(): Call<List<Promo>>
     /**
      * Request to get the list of available flights
@@ -59,7 +59,7 @@ interface TECAirService {
     /**
      * Request to get the list of all active flight segments
      */
-    @GET("dump/segments")
+    @GET("segments")
     fun getSegmentList(): Call<List<Segment>>
     
     /**

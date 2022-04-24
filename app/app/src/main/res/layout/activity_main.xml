@@ -71,17 +71,17 @@
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="6dp"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/url_entry"
         android:inputType="textPersonName"
         android:text="@string/default_url"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.628"
-        app:layout_constraintStart_toStartOf="parent"
-        android:autofillHints="" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/serverSettingsButton"
@@ -89,7 +89,7 @@
         android:layout_height="55dp"
         android:layout_marginStart="109dp"
         android:layout_marginEnd="109dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:onClick="showServerSettings"
         android:text="@string/url_button"
         app:layout_constraintBottom_toTopOf="@+id/serverSettingsText"
@@ -101,9 +101,8 @@
         android:layout_width="160dp"
         android:layout_height="50dp"
         android:layout_marginStart="108dp"
-        android:layout_marginTop="18dp"
         android:layout_marginEnd="108dp"
-        android:layout_marginBottom="61dp"
+        android:layout_marginBottom="16dp"
         android:onClick="offlineCheck"
         android:text="@string/offline_switch"
         app:layout_constraintBottom_toTopOf="@+id/serverSettingsButton"
@@ -111,5 +110,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginButton"
         tools:checked="false" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="278dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="noLoginSync"
+        android:text="@string/sync"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

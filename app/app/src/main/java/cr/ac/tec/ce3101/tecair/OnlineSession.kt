@@ -8,7 +8,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-/** 
+/**
  * Session type for user session with connection to the main server
  * Look into [Session] for documentation on the overriden functions
  */
@@ -40,72 +40,84 @@ class OnlineSession(
     override fun getPassword(): String {
         return password
     }
+
     /**
      * Syncrhonization routine. Performs al pending operations and refreshes the local
      * database cache
      */
-    private fun synchronize(){
+    fun synchronize(): Boolean {
         //re-validate saved credentials
         val localUsers = cache.userDao().getAll()
         //we'll repopulate them after user checks
         cache.clearAllTables()
 
-        localUsers.forEach { user -> run{
-            service.checkLogin(user.username, user.password).enqueue(
-                object : Cb<String>() {
-                    override fun onResponse(call: Call<String>, response: Response<String>) {
-                        if (response.code() == 200) {
-                            service.getUserInfo(response.body()!!).enqueue(
-                                object : Cb<UserInfo>() {
-                                    override fun onResponse(
-                                        call: Call<UserInfo>,
-                                        response: Response<UserInfo>
-                                    ) {
-                                        if (response.code() == 200) {
-                                            val userinfo = response.body()!!
-                                            val currentUser = User(
-                                                userinfo.type,
-                                                userinfo.id,
-                                                user.username,
-                                                user.password,
-                                                userinfo.firstName,
-                                                userinfo.lastName,
-                                                userinfo.phonenumber,
-                                                userinfo.email,
-                                                userinfo.university,
-                                                userinfo.studentId
-                                            )
-                                            cache.userDao().insertAll(currentUser)
+        localUsers.forEach { user ->
+            run {
+                service.checkLogin(user.username, user.password).enqueue(
+                    object : Cb<String>() {
+                        override fun onResponse(call: Call<String>, response: Response<String>) {
+                            if (response.code() == 200) {
+                                service.getUserInfo(response.body()!!).enqueue(
+                                    object : Cb<UserInfo>() {
+                                        override fun onResponse(
+                                            call: Call<UserInfo>,
+                                            response: Response<UserInfo>
+                                        ) {
+                                            if (response.code() == 200) {
+                                                val userinfo = response.body()!!
+                                                val currentUser = User(
+                                                    userinfo.type,
+                                                    userinfo.id,
+                                                    user.username,
+                                                    user.password,
+                                                    userinfo.firstName,
+                                                    userinfo.lastName,
+                                                    userinfo.phonenumber,
+                                                    userinfo.email,
+                                                    userinfo.university,
+                                                    userinfo.studentId
+                                                )
+                                                cache.userDao().insertAll(currentUser)
+                                            }
                                         }
-                                    }
-                                })
+                                    })
+                            }
                         }
                     }
-                }
-            )
-        } }
+                )
+            }
+        }
         //send user changes
         val userChanges = pendingOps.userOpDao().getAll()
-        userChanges.forEach { change->run {
-            when (change.operation){
-                "INSERT"-> registerUser(change.user){}
-                "UPDATE"-> editUser(change.user){}
-                "DELETE"-> deleteUser(change.user){}
+        userChanges.forEach { change ->
+            run {
+                if (change.user.username!= username) {
+                    when (change.operation) {
+                        "INSERT" -> registerUser(change.user) {}
+                        "UPDATE" -> editUser(change.user) {}
+                        "DELETE" -> deleteUser(change.user) {}
+                    }
+                    pendingOps.userOpDao().delete(change)
+                }else{
+                    return false
+                }
             }
-        }}
+        }
 
         //send booking info
-        pendingOps.BookingDao().getAll().forEach { booking: Booking -> run {
-            service.makeBooking(booking.flight,booking).enqueue(
-                object : Cb<Unit>() {
-                    override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                        if (response.code() != 200) {
-                            simpleDialog(cx, cx.getString(R.string.booking_sync_error))
+        pendingOps.BookingDao().getAll().forEach { booking: Booking ->
+            run {
+                service.makeBooking(booking.flight, booking).enqueue(
+                    object : Cb<Unit>() {
+                        override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                            if (response.code() != 200) {
+                                simpleDialog(cx, cx.getString(R.string.booking_sync_error))
+                            }
                         }
                     }
-                }
-            )
-        } }
+                )
+            }
+        }
         pendingOps.clearAllTables()
 
         //update flights
@@ -122,7 +134,10 @@ class OnlineSession(
         //update segments
         service.getSegmentList().enqueue(
             object : Cb<List<Segment>>() {
-                override fun onResponse(call: Call<List<Segment>>, response: Response<List<Segment>>) {
+                override fun onResponse(
+                    call: Call<List<Segment>>,
+                    response: Response<List<Segment>>
+                ) {
                     response.body()?.forEach { segment -> cache.segmentDao().insertAll(segment) }
                 }
             }
@@ -135,7 +150,9 @@ class OnlineSession(
                 }
             }
         )
+        return true
     }
+
     override fun login(auth: (Boolean) -> Unit) {
         service.checkLogin(username, password).enqueue(
             object : Cb<String>() {
@@ -164,8 +181,7 @@ class OnlineSession(
                                         )
                                         cache.userDao().deleteByUsername(username)
                                         cache.userDao().insertAll(currentUser)
-                                        synchronize()
-                                        auth(true)
+                                        auth(synchronize())
                                     } else {
                                         auth(false)
                                     }
@@ -188,7 +204,7 @@ class OnlineSession(
                     if (response.code() == 200) {
                         cache.userDao().insertAll(swapUserID(user, response.body()!!))
                         afterOp(true)
-                    }else{
+                    } else {
                         afterOp(false)
                     }
                 }
@@ -197,13 +213,13 @@ class OnlineSession(
     }
 
     override fun editUser(user: User, afterOp: (Boolean) -> Unit) {
-        service.updateUser(user).enqueue(
+        service.updateUser(user.id, user).enqueue(
             object : Cb<Unit>() {
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                     if (response.code() == 200) {
                         afterOp(true)
                         cache.userDao().updateUser(user)
-                    }else{
+                    } else {
                         afterOp(false)
                     }
                 }
@@ -218,7 +234,7 @@ class OnlineSession(
                     if (response.code() == 200) {
                         afterOp(true)
                         cache.userDao().delete(user)
-                    }else{
+                    } else {
                         afterOp(false)
                     }
                 }
@@ -242,47 +258,99 @@ class OnlineSession(
     }
 
     override fun getFlights(from: String, to: String, afterOp: (List<FlightWithPath>) -> Unit) {
-        service.getFlightsWithPath(from, to).enqueue(
-            object : Cb<List<FlightWithPath>>() {
-                override fun onResponse(call: Call<List<FlightWithPath>>, response: Response<List<FlightWithPath>>) {
-                    cache.flightDao().clearTable()
-                    cache.segmentDao().clearTable()
-                    val flights = response.body()!!
-                    flights.forEach { flight ->
-                        cache.flightDao().insertAll(flight.flight)
-                        flight.path.forEach { segment -> cache.segmentDao().insertAll(segment) }
-                    }
-                    afterOp(response.body()!!)
+        cache.flightDao().clearTable()
+        cache.segmentDao().clearTable()
+        //update flights
+        service.getFlightList().enqueue(
+            object : Cb<List<Flight>>() {
+                override fun onResponse(
+                    call: Call<List<Flight>>,
+                    response: Response<List<Flight>>
+                ) {
+                    response.body()?.forEach { flight -> cache.flightDao().insertAll(flight) }
+                    //update segments
+                    service.getSegmentList().enqueue(
+                        object : Cb<List<Segment>>() {
+                            override fun onResponse(
+                                call: Call<List<Segment>>,
+                                response: Response<List<Segment>>
+                            ) {
+                                response.body()
+                                    ?.forEach { segment -> cache.segmentDao().insertAll(segment) }
+
+                                val filteredFlights = mutableListOf<FlightWithPath>()
+                                val flights = cache.flightDao().getAll()
+                                flights.forEach { flight ->
+                                    run {
+                                        val segments =
+                                            cache.segmentDao().getFlightSegments(flight.id)
+                                        var path = mutableListOf<Segment>()
+                                        var i = 0
+                                        while (i < segments.size) {
+                                            if (segments[i].from_loc == from) {
+                                                break
+                                            }
+                                            i++
+                                        }
+                                        path.add(segments[i])
+                                        if (segments[i].to_loc == to) {
+                                            filteredFlights.add(FlightWithPath(flight, path))
+                                        } else {
+                                            i++
+                                            var success = false;
+                                            while (i < segments.size) {
+                                                path.add(segments[i])
+                                                if (segments[i].to_loc == to) {
+                                                    success = true
+                                                    break
+                                                }
+                                                i++
+                                            }
+                                            if (success) {
+                                                filteredFlights.add(FlightWithPath(flight, path))
+                                            }
+                                        }
+                                    }
+                                }
+                                afterOp(filteredFlights.toList())
+                            }
+                        }
+                    )
                 }
             }
         )
     }
 
-    override fun getUserList(forEachUser: (User)-> Unit ){
-        val users =  cache.userDao().getAll()
-        users.forEach { user: User ->  run {
-            service.checkLogin(user.username, user.password).enqueue(
-                object : Cb<String>() {
-                    override fun onResponse(call: Call<String>, response: Response<String>) {
-                        if (response.code() == 200) {
-                           forEachUser(user)
+    override fun getUserList(forEachUser: (User) -> Unit) {
+        val users = cache.userDao().getAll()
+        users.forEach { user: User ->
+            run {
+                service.checkLogin(user.username, user.password).enqueue(
+                    object : Cb<String>() {
+                        override fun onResponse(call: Call<String>, response: Response<String>) {
+                            if (response.code() == 200) {
+                                forEachUser(user)
+                            } else {
+                                //user information removed as is no longer valid
+                                cache.userDao().delete(user)
+                            }
                         }
                     }
-                }
-            )
-        }}
+                )
+            }
+        }
     }
 
-    override fun makeBooking(flightId: String, afterOp: (Boolean) -> Unit) {
-        var promo = cache.promoDao().getForFlight(flightId)
+    override fun makeBooking(flight: String, afterOp: (Boolean) -> Unit) {
+        var promo = cache.promoDao().getForFlight(flight)
         if (promo == null)
             promo = ""
-        service.makeBooking(flightId, Booking(flightId,username, promo)).enqueue(
+        service.makeBooking(flight, Booking(flight, username, promo)).enqueue(
             object : Cb<Unit>() {
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                     if (response.code() == 200) {
                         afterOp(true)
-                    }else{
+                    } else {
                         afterOp(false)
                     }
                 }

@@ -114,15 +114,15 @@ class OfflineSession(
         cache.userDao().getAll().forEach(forEachUser)
     }
 
-    override fun makeBooking(flightId: String, afterOp: (Boolean) -> Unit) {
-        val previous = pendingOps.BookingDao().getBooking(username, flightId)
+    override fun makeBooking(flight: String, afterOp: (Boolean) -> Unit) {
+        val previous = pendingOps.BookingDao().getBooking(username, flight)
         if (previous != null){
             afterOp(false)
         }else{
-            var promo = cache.promoDao().getForFlight(flightId)
+            var promo = cache.promoDao().getForFlight(flight)
             if (promo == null)
                 promo = ""
-            pendingOps.BookingDao().insertAll(Booking(flightId, username, promo))
+            pendingOps.BookingDao().insertAll(Booking(flight, username, promo))
             afterOp(true)
         }
     }
