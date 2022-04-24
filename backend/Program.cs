@@ -171,6 +171,14 @@ app.MapGet("/promos/search", (string code) =>
     }
 });
 
+app.MapDelete("/promos/{id}", (Guid id) =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).DeletePromo(id);
+    }
+});
+
 app.MapGet("/segments", () =>
 {
     using (var db = new TecAirContext(app))

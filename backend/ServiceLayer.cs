@@ -397,6 +397,23 @@ class ServiceLayer
         return Results.Ok(promo.Id);
     }
 
+    public IResult DeletePromo(Guid promoId)
+    {
+        var promo = db.Promos.Where(p => p.Id == promoId).SingleOrDefault();
+        if (promo == null)
+        {
+            return Results.NotFound();
+        }
+
+		foreach (var booking in db.Bookings.Where(b => b.Promo == promoId))
+		{
+			booking.Promo = null;
+		}
+
+		db.Promos.Remove(promo);
+		return Save() ?? Results.Ok();
+	}
+
     public IResult DumpSegments(bool filterBooking)
     {
         var segments = db.Segments.ToList();
