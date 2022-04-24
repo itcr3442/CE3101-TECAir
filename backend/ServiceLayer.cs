@@ -229,7 +229,6 @@ class ServiceLayer
 
         if (fromPort == null || toPort == null)
         {
-            Console.WriteLine("kk");
             return Results.Ok(new SearchResult[] { });
         }
 

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 using Npgsql;
 
 public partial class TecAirContext : DbContext
@@ -12,6 +13,11 @@ public partial class TecAirContext : DbContext
     {
         NpgsqlConnection.GlobalTypeMapper.MapEnum<UserType>();
         NpgsqlConnection.GlobalTypeMapper.MapEnum<FlightState>();
+    }
+
+    public TecAirContext(WebApplication app)
+    {
+        configuration = app.Configuration;
     }
 
     public virtual DbSet<Aircraft> Aircraft { get; set; } = null!;
@@ -29,8 +35,7 @@ public partial class TecAirContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseNpgsql("Host=/tmp/kk/psql;Database=tecair");
-            //optionsBuilder.UseNpgsql("Host=localhost;Database=tecair;Username=PGUSER;Password=PGPASSWORD");
+            optionsBuilder.UseNpgsql(configuration.GetConnectionString("TecAir"));
         }
     }
 
@@ -375,4 +380,6 @@ public partial class TecAirContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    private IConfiguration configuration;
 }
