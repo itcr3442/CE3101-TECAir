@@ -139,6 +139,14 @@ app.MapGet("/promos", () =>
     }
 });
 
+app.MapGet("/promos/search", (string code) =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).SearchPromo(code);
+    }
+});
+
 app.MapGet("/segments", () =>
 {
     using (var db = new TecAirContext(app))

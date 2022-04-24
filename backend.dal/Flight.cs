@@ -20,8 +20,6 @@ public partial class Flight
     public FlightState State { get; set; }
 
     [JsonIgnore]
-    public virtual Endpoint Endpoint { get; set; } = null!;
-    [JsonIgnore]
     public virtual ICollection<Bag> Bags { get; set; }
     [JsonIgnore]
     public virtual ICollection<Promo> Promos { get; set; }
