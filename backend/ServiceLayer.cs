@@ -113,6 +113,78 @@ class ServiceLayer
         return Save() ?? Results.Ok();
     }
 
+    public IResult GetOpenFlights(Guid paxId)
+    {
+        var user = db.Users.Where(u => u.Id == paxId).SingleOrDefault();
+        if (user == null)
+        {
+            return Results.NotFound();
+        }
+
+        var ids = from booking in db.Bookings
+                  where booking.Pax == paxId && booking.FlightNavigation.State == FlightState.Checkin
+                  select booking.FlightNavigation.Id;
+
+        return Results.Ok(ids.ToArray());
+    }
+
+    public IResult AddFlight(NewFlight newFlight)
+    {
+        if (newFlight.Segments.Length == 0 || newFlight.Airports.Length != newFlight.Segments.Length + 1)
+        {
+            return Results.BadRequest();
+        }
+
+        foreach (var airport in newFlight.Airports)
+        {
+            if (db.Airports.Where(a => a.Id == airport).SingleOrDefault() == null)
+            {
+                return Results.NotFound();
+            }
+        }
+
+        foreach (var segment in newFlight.Segments)
+        {
+            if (db.Aircraft.Where(a => a.Id == segment.Aircraft).SingleOrDefault() == null)
+            {
+                return Results.NotFound();
+            }
+        }
+
+        var row = new Flight
+        {
+            No = newFlight.No,
+            Price = newFlight.Price,
+            Comment = newFlight.Comment,
+            State = FlightState.Booking,
+        };
+
+        db.Flights.Add(row);
+        var result = Save();
+        if (result != null)
+        {
+            return result;
+        }
+
+        for (var i = 0; i < newFlight.Segments.Length; ++i)
+        {
+            var segment = new Segment
+            {
+                Flight = row.Id,
+                SeqNo = i,
+                FromLoc = newFlight.Airports[i],
+                FromTime = newFlight.Segments[i].FromTime,
+                ToLoc = newFlight.Airports[i + 1],
+                ToTime = newFlight.Segments[i].ToTime,
+                Aircraft = newFlight.Segments[i].Aircraft,
+            };
+
+            db.Segments.Add(segment);
+        }
+
+        return Save() ?? Results.Ok(row.Id);
+    }
+
     public IResult GetFlight(Guid flightId)
     {
         var flight = db.Flights.Where(f => f.Id == flightId).SingleOrDefault();
@@ -269,15 +341,35 @@ class ServiceLayer
         {
             // Ya está cerrado
             case FlightState.Closed:
-                return Results.Ok();
+                break;
 
             case FlightState.Checkin:
                 flight.State = FlightState.Closed;
-                return Save() ?? Results.Ok();
+                break;
 
             default:
                 return Results.BadRequest();
         }
+
+        var paxes = from checkin in db.Checkins
+                    join segment in db.Segments
+                    on checkin.Segment equals segment.Id
+                    where segment.Flight == flightId
+                    select checkin.PaxNavigation;
+
+        var close = new List<PaxClose>();
+        foreach (var pax in paxes.Distinct().ToArray())
+        {
+            var paxClose = new PaxClose
+            {
+                Pax = pax.Id,
+                Bags = db.Bags.Where(b => b.Flight == flightId && b.Owner == pax.Id).Count(),
+            };
+
+            close.Add(paxClose);
+        }
+
+        return Save() ?? Results.Ok(close);
     }
 
     public IResult ResetFlight(Guid flightId)
@@ -338,6 +430,23 @@ class ServiceLayer
         }
 
         return Results.Ok(promo.Id);
+    }
+
+    public IResult DeletePromo(Guid promoId)
+    {
+        var promo = db.Promos.Where(p => p.Id == promoId).SingleOrDefault();
+        if (promo == null)
+        {
+            return Results.NotFound();
+        }
+
+        foreach (var booking in db.Bookings.Where(b => b.Promo == promoId))
+        {
+            booking.Promo = null;
+        }
+
+        db.Promos.Remove(promo);
+        return Save() ?? Results.Ok();
     }
 
     public IResult DumpSegments(bool filterBooking)
@@ -579,6 +688,30 @@ public class NewBag
     public string Color { get; set; } = null!;
 }
 
+public class NewFlight
+{
+    [Required]
+    public int No { get; set; }
+    [Required]
+    public decimal Price { get; set; }
+    [Required]
+    public string? Comment { get; set; } = null!;
+    [Required]
+    public NewSegment[] Segments { get; set; } = null!;
+    [Required]
+    public Guid[] Airports { get; set; } = null!;
+}
+
+public class NewSegment
+{
+    [Required]
+    public Guid Aircraft { get; set; }
+    [Required]
+    public DateTimeOffset FromTime { get; set; }
+    [Required]
+    public DateTimeOffset ToTime { get; set; }
+}
+
 public class Booked
 {
     public decimal Total { get; set; }
@@ -617,4 +750,10 @@ public class InsertedBag
 {
     public Guid Id { get; set; }
     public int No { get; set; }
+}
+
+public class PaxClose
+{
+    public Guid Pax { get; set; }
+    public int Bags { get; set; }
 }

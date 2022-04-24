@@ -75,6 +75,14 @@ app.MapDelete("/users/{id}", (Guid id) =>
     }
 });
 
+app.MapGet("/users/{id}/open", (Guid id) =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).GetOpenFlights(id);
+    }
+});
+
 app.MapGet("/flights", () =>
 {
     using (var db = new TecAirContext(app))
@@ -88,6 +96,14 @@ app.MapGet("/flights/booking", () =>
     using (var db = new TecAirContext(app))
     {
         return new ServiceLayer(db).DumpFlights(true);
+    }
+});
+
+app.MapPost("/flights", (NewFlight flight) =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).AddFlight(flight);
     }
 });
 
@@ -160,6 +176,14 @@ app.MapGet("/promos/search", (string code) =>
     using (var db = new TecAirContext(app))
     {
         return new ServiceLayer(db).SearchPromo(code);
+    }
+});
+
+app.MapDelete("/promos/{id}", (Guid id) =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).DeletePromo(id);
     }
 });
 
