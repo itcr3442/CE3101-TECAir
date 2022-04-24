@@ -432,14 +432,27 @@ class ServiceLayer
         var enumerator = query.ToList().GetEnumerator();
 
         var route = new List<Airport>();
-        var segments = new List<Segment>();
+        var segments = new List<SegmentSeats>();
 
         var valid = enumerator.MoveNext();
         while (valid)
         {
             var segment = enumerator.Current;
+            var unavail = from checkin in db.Checkins
+                          where checkin.Segment == segment.Id
+                          select checkin.Seat;
 
-            segments.Add(segment);
+            var segmentSeatInfo = new SegmentSeats
+            {
+                Unavail = unavail.ToArray(),
+                Id = segment.Id,
+                FromTime = segment.FromTime,
+                ToTime = segment.ToTime,
+                AircraftCode = segment.AircraftNavigation.Code,
+                Seats = segment.AircraftNavigation.Seats,
+            };
+
+            segments.Add(segmentSeatInfo);
             route.Add(segment.FromLocNavigation);
 
             valid = enumerator.MoveNext();
@@ -575,7 +588,7 @@ public class SearchResult
 {
     public Flight Flight { get; set; } = null!;
     public Airport[] Route { get; set; } = null!;
-    public Segment[] Segments { get; set; } = null!;
+    public SegmentSeats[] Segments { get; set; } = null!;
 }
 
 public class TaggedSegment
@@ -588,6 +601,16 @@ public class TaggedSegment
     public String ToLoc { get; set; } = null!;
     public DateTimeOffset ToTime { get; set; }
     public Guid Aircraft { get; set; }
+}
+
+public class SegmentSeats
+{
+    public Guid Id { get; set; }
+    public DateTimeOffset FromTime { get; set; }
+    public DateTimeOffset ToTime { get; set; }
+    public string AircraftCode { get; set; } = null!;
+    public int Seats { get; set; }
+    public int[] Unavail { get; set; } = null!;
 }
 
 public class InsertedBag
