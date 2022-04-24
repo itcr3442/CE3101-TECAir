@@ -11,13 +11,6 @@
                 <ng-container
                     *ngTemplateOutlet="this.logged ?  (this.role === RoleLevels.User ? userBlock  : adminBlock) : unloggedBlock">
                 </ng-container>
-                <li class="nav-item">
-                    <a class="nav-link" href="promos_page">Promociones</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="flight_search">Búsqueda de Vuelos</a>
-                </li>
-                
             </ul>
         </div>
     </div>
@@ -29,12 +22,18 @@
 
 <ng-template #userBlock>
     <li class="nav-item">
-        <a class="nav-link" href="bag_creation">Registrar Maletas</a>
+        <a class="nav-link" href="flight_search">Búsqueda de Vuelos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="promos_page">Promociones</a>
     </li>
 </ng-template>
 
 <ng-template #adminBlock>
     <li class="nav-item">
         <a class="nav-link" href="worker_register">Gestión de Funcionarios</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="flight_search">Búsqueda de Vuelos</a>
     </li>
 </ng-template>

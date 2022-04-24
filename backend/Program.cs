@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using backend;
+using backend.dal;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
@@ -29,6 +30,14 @@ app.MapPost("/check_login", (string username, string password) =>
     using (var db = new TecAirContext())
     {
         return new ServiceLayer(db).CheckLogin(username, password);
+    }
+});
+
+app.MapGet("/users", () =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).DumpUsers();
     }
 });
 
@@ -64,6 +73,14 @@ app.MapDelete("/users/{id}", (Guid id) =>
     }
 });
 
+app.MapGet("/flights", () =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).DumpFlights();
+    }
+});
+
 app.MapPost("/flights/{id}/book", (Guid id, NewBooking booking) =>
 {
     using (var db = new TecAirContext())
@@ -72,15 +89,7 @@ app.MapPost("/flights/{id}/book", (Guid id, NewBooking booking) =>
     }
 });
 
-app.MapGet("/dump/flights", () =>
-{
-    using (var db = new TecAirContext())
-    {
-        return new ServiceLayer(db).DumpFlights();
-    }
-});
-
-app.MapGet("/dump/promos", () =>
+app.MapGet("/promos", () =>
 {
     using (var db = new TecAirContext())
     {
@@ -88,7 +97,7 @@ app.MapGet("/dump/promos", () =>
     }
 });
 
-app.MapGet("/dump/segments", () =>
+app.MapGet("/segments", () =>
 {
     using (var db = new TecAirContext())
     {
