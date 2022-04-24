@@ -1,6 +1,6 @@
 import { Injectable, ɵisObservable } from '@angular/core';
 import { RepositoryService } from './repository.service';
-import { catchError, EMPTY, map, of } from 'rxjs';
+import { catchError, EMPTY, lastValueFrom, map, of, take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -29,10 +29,19 @@ export class AuthService {
     return false;
   }
 
-  public getRole(): number {
+  public async getRole(): Promise<number> {
     if (localStorage.getItem('isLoggedIn') == "true") {
-      let token = JSON.parse(localStorage.getItem('token') || '{}')
-      return token.role
+      let role = localStorage.getItem('role')
+      if (role != null) {
+        return +role
+      } else {
+        let token = JSON.parse(localStorage.getItem('token') || '{}')
+        return await lastValueFrom(this.repo.getData("users/" + token.uuid))
+          .then((res: any) => {
+            return res.body.type
+          })
+
+      }
     }
     return 0;
   }
@@ -57,6 +66,7 @@ export class AuthService {
           console.log("Login successful");
           localStorage.setItem('isLoggedIn', "true");
           localStorage.setItem('token', JSON.stringify({ username, "password": password, "uuid": res.body }));
+
 
           return true
         } else {
