@@ -121,20 +121,8 @@ class ServiceLayer
             return Results.NotFound();
         }
 
-        var plain = new SearchResult
-        {
-            Route = FlightRoute(flight),
-            Flight = new Flight
-            {
-                Id = flight.Id,
-                No = flight.No,
-                State = flight.State,
-                Comment = flight.Comment,
-                Price = flight.Price,
-            },
-        };
-
-        return flight != null ? Results.Ok(plain) : Results.NotFound();
+        var result = FlightRoute(flight);
+        return flight != null ? Results.Ok(result) : Results.NotFound();
     }
 
     public IResult DeleteFlight(Guid flightId)
@@ -426,11 +414,7 @@ class ServiceLayer
 
         var results = from flight in flights.ToArray()
                       where flight.State == FlightState.Booking
-                      select new SearchResult
-                      {
-                          Flight = flight,
-                          Route = FlightRoute(flight),
-                      };
+                      select FlightRoute(flight);
 
         return Results.Ok(results.ToArray());
     }
@@ -438,7 +422,7 @@ class ServiceLayer
     private TecAirContext db;
     private Random random = new Random();
 
-    private Airport[] FlightRoute(Flight flight)
+    private SearchResult FlightRoute(Flight flight)
     {
         var query = from segment in db.Segments
                     where segment.Flight == flight.Id
@@ -447,12 +431,28 @@ class ServiceLayer
 
         var enumerator = query.ToList().GetEnumerator();
 
-        var valid = enumerator.MoveNext();
         var route = new List<Airport>();
+        var segments = new List<SegmentSeats>();
 
+        var valid = enumerator.MoveNext();
         while (valid)
         {
             var segment = enumerator.Current;
+            var unavail = from checkin in db.Checkins
+                          where checkin.Segment == segment.Id
+                          select checkin.Seat;
+
+            var segmentSeatInfo = new SegmentSeats
+            {
+                Unavail = unavail.ToArray(),
+                Id = segment.Id,
+                FromTime = segment.FromTime,
+                ToTime = segment.ToTime,
+                AircraftCode = segment.AircraftNavigation.Code,
+                Seats = segment.AircraftNavigation.Seats,
+            };
+
+            segments.Add(segmentSeatInfo);
             route.Add(segment.FromLocNavigation);
 
             valid = enumerator.MoveNext();
@@ -462,7 +462,19 @@ class ServiceLayer
             }
         }
 
-        return route.ToArray();
+        return new SearchResult
+        {
+            Flight = new Flight
+            {
+                Id = flight.Id,
+                No = flight.No,
+                State = flight.State,
+                Comment = flight.Comment,
+                Price = flight.Price,
+            },
+            Route = route.ToArray(),
+            Segments = segments.ToArray(),
+        };
     }
 
     private IResult? Save()
@@ -576,6 +588,7 @@ public class SearchResult
 {
     public Flight Flight { get; set; } = null!;
     public Airport[] Route { get; set; } = null!;
+    public SegmentSeats[] Segments { get; set; } = null!;
 }
 
 public class TaggedSegment
@@ -588,6 +601,16 @@ public class TaggedSegment
     public String ToLoc { get; set; } = null!;
     public DateTimeOffset ToTime { get; set; }
     public Guid Aircraft { get; set; }
+}
+
+public class SegmentSeats
+{
+    public Guid Id { get; set; }
+    public DateTimeOffset FromTime { get; set; }
+    public DateTimeOffset ToTime { get; set; }
+    public string AircraftCode { get; set; } = null!;
+    public int Seats { get; set; }
+    public int[] Unavail { get; set; } = null!;
 }
 
 public class InsertedBag
