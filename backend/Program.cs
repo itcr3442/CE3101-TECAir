@@ -75,6 +75,14 @@ app.MapDelete("/users/{id}", (Guid id) =>
     }
 });
 
+app.MapGet("/users/{id}/open", (Guid id) =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).GetOpenFlights(id);
+    }
+});
+
 app.MapGet("/flights", () =>
 {
     using (var db = new TecAirContext(app))

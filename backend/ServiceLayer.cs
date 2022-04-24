@@ -113,6 +113,21 @@ class ServiceLayer
         return Save() ?? Results.Ok();
     }
 
+    public IResult GetOpenFlights(Guid paxId)
+    {
+        var user = db.Users.Where(u => u.Id == paxId).SingleOrDefault();
+        if (user == null)
+        {
+            return Results.NotFound();
+        }
+
+        var ids = from booking in db.Bookings
+                  where booking.Pax == paxId && booking.FlightNavigation.State == FlightState.Checkin
+                  select booking.FlightNavigation.Id;
+
+        return Results.Ok(ids.ToArray());
+    }
+
     public IResult AddFlight(NewFlight newFlight)
     {
         if (newFlight.Segments.Length == 0 || newFlight.Airports.Length != newFlight.Segments.Length + 1)
@@ -405,14 +420,14 @@ class ServiceLayer
             return Results.NotFound();
         }
 
-		foreach (var booking in db.Bookings.Where(b => b.Promo == promoId))
-		{
-			booking.Promo = null;
-		}
+        foreach (var booking in db.Bookings.Where(b => b.Promo == promoId))
+        {
+            booking.Promo = null;
+        }
 
-		db.Promos.Remove(promo);
-		return Save() ?? Results.Ok();
-	}
+        db.Promos.Remove(promo);
+        return Save() ?? Results.Ok();
+    }
 
     public IResult DumpSegments(bool filterBooking)
     {
