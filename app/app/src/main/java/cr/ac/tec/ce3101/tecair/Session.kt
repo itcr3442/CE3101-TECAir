@@ -40,7 +40,7 @@ interface Session {
     /**
      *  Retrieves the list of users who have logged into the application in the past
      */
-    fun getUserList(): List<User>
+    fun getUserList(forEachUser: (User)-> Unit )
     /**
      *  Process a flight reservation request
      */

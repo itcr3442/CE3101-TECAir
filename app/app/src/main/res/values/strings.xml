@@ -30,7 +30,7 @@
     <string name="delete_non_current_user_error">Only current user can be deleted</string>
     <string name="empty_error">Field must have a value</string>
     <string name="url_entry">Custom airline address</string>
-    <string name="default_url">https://192.168.0.114:5000</string>
+    <string name="default_url">http://192.168.0.115:5000</string>
     <string name="url_button">Server Settings</string>
     <string name="offline_switch">Offline Mode</string>
     <string name="student_switch">User is a student</string>

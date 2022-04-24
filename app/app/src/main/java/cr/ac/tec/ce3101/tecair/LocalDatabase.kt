@@ -55,15 +55,16 @@ data class UserOp(
  */
 @Entity(primaryKeys = ["username", "id"])
 data class User(
+    val type: Int = 0,
     val id: String, //uuid
     val username: String,
     val password: String,
-    val first_name: String,
-    val last_name: String,
-    val phonenumber: String,
+    val firstName: String,
+    val lastName: String,
+    val phoneNumber: String,
     val email: String,
-    val university: String?,
-    val student_id: String?,
+    val university: String,
+    val studentId: String,
 )
 
 /**
@@ -99,7 +100,7 @@ data class Segment(
 data class Booking(
     val flight: String, //uuid
     val pax: String, //uuid
-    //let server apply promos
+    val promo: String
 )
 
 /**
@@ -177,6 +178,9 @@ interface UserDao {
     @Update
     fun updateUser(user: User)
 
+    @Query("DELETE FROM user where username = :username")
+    fun deleteByUsername(username: String)
+
     @Query("SELECT * FROM user")
     fun getAll(): List<User>
 
@@ -202,6 +206,9 @@ interface SegmentDao {
     
     @Query("SELECT * FROM segment WHERE flight = :flightID ORDER BY seq_no DESC")
     fun getFlightSegments(flightID:String): List<Segment>
+
+    @Query("DELETE FROM segment")
+    fun clearTable()
 }
 
 /**
@@ -213,8 +220,14 @@ interface PromoDao {
     @Insert
     fun insertAll(vararg promo: Promo)
 
+    @Query("SELECT id from promo where flight = :flightID")
+    fun getForFlight(flightID: String): String?
+
     @Query("SELECT * from promo")
     fun getAll(): List<Promo>
+
+    @Query("DELETE FROM promo")
+    fun clearTable()
 }
 
 /**
@@ -231,4 +244,7 @@ interface FlightDao {
 
     @Query("SELECT * FROM flight")
     fun getFromTo(): List<Flight>
+
+    @Query("DELETE FROM flight")
+    fun clearTable()
 }

@@ -30,8 +30,7 @@ class UserListActivity : AppCompatActivity() {
      */
     private fun refreshUserList() {
         userList.removeAllViewsInLayout()
-        val users = (application as TECAirApp).session?.getUserList()
-        users?.forEach { user ->
+        (application as TECAirApp).session?.getUserList { user ->
             var entry = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
                 addView(TextView(this.context).apply {
@@ -65,13 +64,13 @@ class UserListActivity : AppCompatActivity() {
      */
     private fun viewInfoUser(user: User) {
         var message = "${getString(R.string.login_hint)} : ${user.username} \n" +
-                "${getString(R.string.firstname_hint)} : ${user.first_name} \n" +
-                "${getString(R.string.lastname_hint)} : ${user.last_name} \n" +
-                "${getString(R.string.phone_hint)} : ${user.phonenumber} \n" +
+                "${getString(R.string.firstname_hint)} : ${user.firstName} \n" +
+                "${getString(R.string.lastname_hint)} : ${user.lastName} \n" +
+                "${getString(R.string.phone_hint)} : ${user.phoneNumber} \n" +
                 "${getString(R.string.email_hint)} : ${user.email} \n"
         if (user.university != null) {
             message += "${getString(R.string.university_hint)} : ${user.university} \n" +
-                    "${getString(R.string.student_id_hint)} : ${user.student_id} \n"
+                    "${getString(R.string.student_id_hint)} : ${user.studentId} \n"
 
         }
         simpleDialog(this, message)
@@ -99,15 +98,15 @@ class UserListActivity : AppCompatActivity() {
     private fun deleteUser(user: User) {
         val session = (application as TECAirApp).session
         //will only allow editing the current user
-        if  (session == null || session.getUsername() == user.username || session.getPassword() == user.password){
+        if  (session == null || session.getUsername() != user.username || session.getPassword() != user.password){
             simpleDialog(this, getString(R.string.delete_non_current_user_error))
         }else {
             (application as TECAirApp).session?.deleteUser(user) { success ->
                 run {
                     if (success) {
                         val intent = Intent(this, MainActivity::class.java)
-                        (application as TECAirApp).session = null
                         startActivity(intent)
+                        finish()
                     } else {
                         simpleDialog(this, getString(R.string.delete_user_error))
                     }

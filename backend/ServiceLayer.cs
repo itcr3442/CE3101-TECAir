@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using Npgsql;
+using backend.dal;
 
 class ServiceLayer
 {
@@ -128,6 +129,18 @@ class ServiceLayer
         return save() ?? Results.Ok(new Booked { Total = total });
     }
 
+    public IResult DumpUsers()
+    {
+        var users = db.Users.ToArray();
+        foreach (var user in users)
+        {
+            user.Hash = null;
+            user.Salt = null;
+        }
+
+        return Results.Ok(users);
+    }
+
     public IResult DumpFlights()
     {
         return Results.Ok(db.Flights.ToArray());
@@ -141,6 +154,33 @@ class ServiceLayer
     public IResult DumpSegments()
     {
         return Results.Ok(db.Segments.ToArray());
+    }
+
+    public IResult SearchFlights(string fromLoc, string toLoc)
+    {
+        var fromPort = (from a in db.Airports where a.Code == fromLoc select a).SingleOrDefault();
+        var toPort = (from a in db.Airports where a.Code == toLoc select a).SingleOrDefault();
+
+        if (fromPort == null || toPort == null)
+        {
+            return Results.Ok(new SearchResult[] { });
+        }
+
+        var fromSegments = from s in db.Segments where s.FromLoc == fromPort.Id select s;
+        var toSegments = from s in db.Segments where s.ToLoc == toPort.Id select s;
+
+        var flights = from fromSeg in fromSegments
+                      join toSeg in toSegments
+                      on fromSeg.Flight equals toSeg.Flight
+                      where fromSeg.SeqNo <= toSeg.SeqNo
+                      select new SearchResult
+                      {
+                          Flight = fromSeg.FlightNavigation,
+                          From = fromSeg.FromLocNavigation,
+                          To = toSeg.ToLocNavigation
+                      };
+
+        return Results.Ok(flights.Where(r => r.Flight.State == FlightState.Booking).ToArray());
     }
 
     private TecAirContext db;
@@ -233,4 +273,11 @@ public class NewBooking
 public class Booked
 {
     public decimal Total { get; set; }
+}
+
+public class SearchResult
+{
+    public Flight Flight { get; set; } = null!;
+    public Airport From { get; set; } = null!;
+    public Airport To { get; set; } = null!;
 }

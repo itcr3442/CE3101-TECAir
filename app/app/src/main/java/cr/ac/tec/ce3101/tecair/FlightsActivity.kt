@@ -74,6 +74,5 @@ class FlightsActivity : AppCompatActivity() {
             putExtra("info", Gson().toJson(flightInfo))
         }
         startActivity(intent)
-
     }
 }

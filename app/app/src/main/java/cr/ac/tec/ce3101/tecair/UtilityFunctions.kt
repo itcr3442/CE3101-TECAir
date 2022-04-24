@@ -36,6 +36,21 @@ fun simpleDialog(context: Context, message: String){
         .create()
     builder.create().show()
 }
+fun swapUserID(user:User, newId: String): User{
+    return User(
+        user.type,
+        newId,
+        user.username,
+        user.password,
+        user.firstName,
+        user.lastName,
+        user.phoneNumber,
+        user.email,
+        user.university,
+        user.studentId
+
+    )
+}
 
 /**
  * Simple data class to store a flight an its segments

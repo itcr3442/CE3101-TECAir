@@ -47,12 +47,12 @@ class EditUserActivity : AppCompatActivity() {
         //fill the fields with the current user data
         username.setText(user.username)
         password.setText(user.password)
-        firstname.setText(user.first_name)
-        lastname.setText(user.last_name)
+        firstname.setText(user.firstName)
+        lastname.setText(user.lastName)
         email.setText(user.email)
-        phoneNumber.setText(user.phonenumber)
+        phoneNumber.setText(user.phoneNumber)
         university.setText(user.university)
-        studentID.setText(user.student_id)
+        studentID.setText(user.studentId)
 
     }
     /**
@@ -76,8 +76,8 @@ class EditUserActivity : AppCompatActivity() {
      */
     fun editUser(view: View) {
         var isCompleteInfo = verifyEmpty(getString(R.string.empty_error), username, password, firstname, lastname, email, phoneNumber)
-        var universityStr: String? = null
-        var studentIDStr: String? = null
+        var universityStr: String = ""
+        var studentIDStr: String  = ""
         if (isStudent) {
             isCompleteInfo = isCompleteInfo  && verifyEmpty(getString(R.string.empty_error),university, studentID)
             universityStr = university.text.toString()
@@ -89,7 +89,8 @@ class EditUserActivity : AppCompatActivity() {
         }
         val newUserInfo =
             User(
-                UUID.randomUUID().toString(),
+                0,
+                UUID.randomUUID().toString(), //fake uuid
                 username.text.toString(),
                 password.text.toString(),
                 firstname.text.toString(),
