@@ -61,6 +61,24 @@ export class RegisterService {
       "users/" + id)
   }
 
+  public edit_user(id: string, username: string, password: string, firstName: string, lastName: string, phoneNumber: number, email: string, university: string | null, studentId: string | null) {
+    {
+      let user = {
+        username,
+        password,
+        firstName,
+        lastName,
+        phoneNumber,
+        email,
+        university,
+        studentId
+      }
+
+      return this.repositoryService.edit(
+        "users/" + id, user)
+    }
+  }
+
   /**
  * Método que realiza el request al servidor para obtener todos
  * los trabajadores para mostrarlos en la lista correspondiente.
