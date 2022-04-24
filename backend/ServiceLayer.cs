@@ -120,6 +120,22 @@ class ServiceLayer
             return Results.BadRequest();
         }
 
+        foreach (var airport in newFlight.Airports)
+        {
+            if (db.Airports.Where(a => a.Id == airport).SingleOrDefault() == null)
+            {
+                return Results.NotFound();
+            }
+        }
+
+        foreach (var segment in newFlight.Segments)
+        {
+            if (db.Aircraft.Where(a => a.Id == segment.Aircraft).SingleOrDefault() == null)
+            {
+                return Results.NotFound();
+            }
+        }
+
         var row = new Flight
         {
             No = newFlight.No,
