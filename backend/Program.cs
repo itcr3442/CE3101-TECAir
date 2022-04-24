@@ -109,7 +109,15 @@ app.MapGet("/segments", () =>
 {
     using (var db = new TecAirContext())
     {
-        return new ServiceLayer(db).DumpSegments();
+        return new ServiceLayer(db).DumpSegments(false);
+    }
+});
+
+app.MapGet("/segments/booking", () =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).DumpSegments(true);
     }
 });
 

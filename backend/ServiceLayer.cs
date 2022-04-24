@@ -157,9 +157,15 @@ class ServiceLayer
         return Results.Ok(db.Promos.ToArray());
     }
 
-    public IResult DumpSegments()
+    public IResult DumpSegments(bool filterBooking)
     {
-        return Results.Ok(db.Segments.ToArray());
+        IEnumerable<Segment> segments = db.Segments;
+        if (filterBooking)
+        {
+            segments = segments.Where(s => s.FlightNavigation.State == FlightState.Booking);
+        }
+
+        return Results.Ok(segments.ToArray());
     }
 
     public IResult SearchFlights(string fromLoc, string toLoc)
