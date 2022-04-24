@@ -28,7 +28,7 @@ export class WorkerAdminComponent implements OnInit {
   })
   message: string = ""
   editing: boolean
-  current_user: User | null
+  current_user_id: string | null
   formTitle: string
 
   constructor(
@@ -38,7 +38,7 @@ export class WorkerAdminComponent implements OnInit {
   ) {
     this.formTitle = registerTitle
     this.editing = false
-    this.current_user = null // usuario que se está editando, etc...
+    this.current_user_id = null // usuario que se está editando, etc...
 
   }
 
@@ -77,6 +77,7 @@ export class WorkerAdminComponent implements OnInit {
 
     this.formTitle = editTitle
     this.editing = true
+    this.current_user_id = id
 
     let passwordField = this.registerForm.get('password')
 
@@ -85,10 +86,10 @@ export class WorkerAdminComponent implements OnInit {
     this.registerService.resetForm(this.registerForm)
 
     this.registerService.getUser(id).subscribe((user: any) => {
-      this.current_user = user.body as User
-      console.log("Current user:", this.current_user)
+      let r_user = user.body as User
+      console.log("Current user:", r_user)
 
-      let any_user: any = this.current_user
+      let any_user: any = r_user
       Object.entries(this.registerForm.controls).forEach(([key, control]) => control.setValue(any_user[key]))
     })
 
@@ -100,7 +101,7 @@ export class WorkerAdminComponent implements OnInit {
     this.formTitle = registerTitle
     let passwordField = this.registerForm.get('password')
     passwordField?.setValidators(Validators.required);
-    this.current_user = null
+    this.current_user_id = null
   }
 
 
@@ -122,7 +123,7 @@ export class WorkerAdminComponent implements OnInit {
     return this.registerForm.controls['email'].value
   }
   get phone() {
-    return this.registerForm.controls['phone'].value
+    return this.registerForm.controls['phonenumber'].value
   }
 
   /**
@@ -134,15 +135,26 @@ export class WorkerAdminComponent implements OnInit {
 
     if (this.registerForm.valid) {
       this.message = ""
-      console.log("Valud")
+      console.log("mik")
 
       if (this.editing) {
-        console.log("EDITIng :D")
+        console.log("edtandoouu")
+
+        this.registerService.edit_user(this.current_user_id ?? "", this.username, this.password, this.firstName, this.lastName, this.phone, this.email, null, null).subscribe(
+          (resp: any) => {
+            this.registerService.resetForm(this.registerForm)
+            this.refreshUsers()
+          },
+          err => {
+            if (err.status == 409) {
+              this.message = "Nombre de usuario ya está tomado";
+            }
+          })
+
       }
       else { // registering new user
         this.registerService.register_worker(this.username, this.password, this.firstName, this.lastName, this.phone, this.email).subscribe(
           (resp: any) => {
-            this.message = "Funcionario registrado correctamente";
             this.registerService.resetForm(this.registerForm)
             this.refreshUsers()
           },
