@@ -121,13 +121,14 @@ class ServiceLayer
             return Results.NotFound();
         }
 
-        var plain = new Flight
+        var plain = new FlightWithRoute
         {
             Id = flight.Id,
             No = flight.No,
             State = flight.State,
             Comment = flight.Comment,
             Price = flight.Price,
+            Route = FlightRoute(flight),
         };
 
         return flight != null ? Results.Ok(plain) : Results.NotFound();
@@ -590,4 +591,14 @@ public class InsertedBag
 {
     public Guid Id { get; set; }
     public int No { get; set; }
+}
+
+public class FlightWithRoute
+{
+    public Guid Id { get; set; }
+    public int No { get; set; }
+    public string? Comment { get; set; }
+    public decimal Price { get; set; }
+    public FlightState State { get; set; }
+    public Airport[] Route { get; set; } = null!;
 }
