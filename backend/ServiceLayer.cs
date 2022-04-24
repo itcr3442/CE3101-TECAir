@@ -59,9 +59,20 @@ class ServiceLayer
             return Results.NotFound();
         }
 
-        user.Hash = null;
-        user.Salt = null;
-        var _ = user.Bags; // Evaluación forzosa
+        var plain = new User
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Hash = null,
+            Salt = null,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Phonenumber = user.Phonenumber,
+            Email = user.Email,
+            University = user.University,
+            StudentId = user.StudentId,
+            Type = user.Type,
+        };
 
         return Results.Ok(user);
     }
@@ -100,6 +111,26 @@ class ServiceLayer
         db.Entry(new User { Id = id }).State = EntityState.Deleted;
 
         return Save() ?? Results.Ok();
+    }
+
+    public IResult GetFlight(Guid flightId)
+    {
+        var flight = db.Flights.Where(f => f.Id == flightId).SingleOrDefault();
+        if (flight == null)
+        {
+            return Results.NotFound();
+        }
+
+        var plain = new Flight
+        {
+            Id = flight.Id,
+            No = flight.No,
+            State = flight.State,
+            Comment = flight.Comment,
+            Price = flight.Price,
+        };
+
+        return flight != null ? Results.Ok(plain) : Results.NotFound();
     }
 
     public IResult BookFlight(Guid flightId, NewBooking booking)
@@ -286,14 +317,14 @@ class ServiceLayer
 
     public IResult SearchPromo(string code)
     {
-		var promo = (from p in db.Promos where p.Code == code select p).SingleOrDefault();
-		if (promo == null)
-		{
-			return Results.NotFound();
-		}
+        var promo = (from p in db.Promos where p.Code == code select p).SingleOrDefault();
+        if (promo == null)
+        {
+            return Results.NotFound();
+        }
 
-		return Results.Ok(promo.Id);
-	}
+        return Results.Ok(promo.Id);
+    }
 
     public IResult DumpSegments(bool filterBooking)
     {
