@@ -211,7 +211,15 @@ class ServiceLayer
             segments = segments.Where(s => s.FlightNavigation.State == FlightState.Booking);
         }
 
-        return Results.Ok(segments.ToArray());
+        var tagged = from segment in segments
+                     select new TaggedSegment
+                     {
+                         Segment = segment,
+                         From = segment.FromLocNavigation,
+                         To = segment.ToLocNavigation
+                     };
+
+        return Results.Ok(tagged.ToArray());
     }
 
     public IResult SearchFlights(string fromLoc, string toLoc)
@@ -341,6 +349,13 @@ public class Booked
 public class SearchResult
 {
     public Flight Flight { get; set; } = null!;
+    public Airport From { get; set; } = null!;
+    public Airport To { get; set; } = null!;
+}
+
+public class TaggedSegment
+{
+    public Segment Segment { get; set; } = null!;
     public Airport From { get; set; } = null!;
     public Airport To { get; set; } = null!;
 }
