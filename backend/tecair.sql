@@ -178,6 +178,11 @@ ALTER TABLE ONLY public.aircraft
 
 
 ALTER TABLE ONLY public.airports
+    ADD CONSTRAINT airports_code_key UNIQUE (code);
+
+
+
+ALTER TABLE ONLY public.airports
     ADD CONSTRAINT airports_pkey PRIMARY KEY (id);
 
 
