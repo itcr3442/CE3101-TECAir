@@ -50,6 +50,19 @@ class ServiceLayer
         return save() ?? Results.Ok(row.Id);
     }
 
+    public IResult GetUser(Guid id)
+    {
+        var user = (from u in db.Users where u.Id == id select u).SingleOrDefault();
+        if (user == null)
+        {
+            return Results.NotFound();
+        }
+
+        user.Hash = null;
+        user.Salt = null;
+        return Results.Ok(user);
+    }
+
     public IResult UpdateUser(Guid id, EditUser edit)
     {
         var user = (from u in db.Users where u.Id == id select u).SingleOrDefault();
