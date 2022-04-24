@@ -221,9 +221,14 @@ class ServiceLayer
         var tagged = from segment in segments
                      select new TaggedSegment
                      {
-                         Segment = segment,
-                         From = segment.FromLocNavigation,
-                         To = segment.ToLocNavigation
+                         Id = segment.Id,
+                         Flight = segment.Flight,
+                         SeqNo = segment.SeqNo,
+                         FromLoc = segment.FromLocNavigation.Code,
+                         FromTime = segment.FromTime,
+                         ToLoc = segment.ToLocNavigation.Code,
+                         ToTime = segment.ToTime,
+                         Aircraft = segment.Aircraft
                      };
 
         return Results.Ok(tagged.ToArray());
@@ -361,7 +366,12 @@ public class SearchResult
 
 public class TaggedSegment
 {
-    public Segment Segment { get; set; } = null!;
-    public Airport From { get; set; } = null!;
-    public Airport To { get; set; } = null!;
+    public Guid Id { get; set; }
+    public Guid Flight { get; set; }
+    public int SeqNo { get; set; }
+    public String FromLoc { get; set; }
+    public DateTimeOffset FromTime { get; set; }
+    public String ToLoc { get; set; }
+    public DateTimeOffset ToTime { get; set; }
+    public Guid Aircraft { get; set; }
 }
