@@ -141,9 +141,15 @@ class ServiceLayer
         return Results.Ok(users);
     }
 
-    public IResult DumpFlights()
+    public IResult DumpFlights(bool filterBooking)
     {
-        return Results.Ok(db.Flights.ToArray());
+        IEnumerable<Flight> flights = db.Flights;
+        if (filterBooking)
+        {
+            flights = flights.Where(f => f.State == FlightState.Booking);
+        }
+
+        return Results.Ok(flights.ToArray());
     }
 
     public IResult DumpPromos()

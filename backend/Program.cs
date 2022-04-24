@@ -77,7 +77,15 @@ app.MapGet("/flights", () =>
 {
     using (var db = new TecAirContext())
     {
-        return new ServiceLayer(db).DumpFlights();
+        return new ServiceLayer(db).DumpFlights(false);
+    }
+});
+
+app.MapGet("/flights/booking", () =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).DumpFlights(true);
     }
 });
 
