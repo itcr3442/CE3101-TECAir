@@ -1,6 +1,6 @@
 import { Injectable, ɵisObservable } from '@angular/core';
 import { RepositoryService } from './repository.service';
-import { map, of } from 'rxjs';
+import { catchError, EMPTY, map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,7 @@ export class AuthService {
   public isLoggedIn(): boolean {
     if (localStorage.getItem('isLoggedIn') == "true") {
       let token = JSON.parse(localStorage.getItem('token') || '{}')
-      if (token.hasOwnProperty('id') && token.hasOwnProperty('password')) {
+      if (token.hasOwnProperty('username') && token.hasOwnProperty('uuid')) {
         return true;
       }
     }
@@ -45,26 +45,24 @@ export class AuthService {
     return JSON.parse(localStorage.getItem('token') || '{}')
   }
 
-  public login(id: string, password: string, role: number) {
+  public login(username: string, password: string) {
 
-    let hash = password
-    let loginUrl = "check_login?cedula=" + id.trim() + "&password_hash=" + hash
+    let loginUrl = "check_login?username=" + username.trim() + "&password=" + password
 
-    // TODO: descomentar esto cuando esté el servidor 
-    // return this.repo.getData(
-    //   loginUrl)
-    return of({ success: true }) // y comentar esto
+    return this.repo.create(
+      loginUrl, {})
       .pipe(map((res: any) => {
-        if (res.success) {
+        if (res.status == 200) {
+
           console.log("Login successful");
           localStorage.setItem('isLoggedIn', "true");
-          localStorage.setItem('token', JSON.stringify({ id, "password": hash, role }));
-          // this.logged = true
-          // this.message = ""
+          localStorage.setItem('token', JSON.stringify({ username, "password": password, "uuid": res.body }));
+
           return true
+        } else {
+          return false
         }
-        return false
-      }
-      ))
+      })
+      )
   }
 }
