@@ -30,6 +30,15 @@ export class RepositoryService {
     return this.http.post(this.createCompleteRoute(route, this.envUrl.urlAddress), body, { headers: this.generateHeaders().headers, observe: 'response' });
   }
 
+  /**
+   * DELETE request
+   * @param route endpoint relativo
+   * @returns Observable con datos retornados por el server
+   */
+  public delete = (route: string) => {
+    return this.http.delete(this.createCompleteRoute(route, this.envUrl.urlAddress), { headers: this.generateHeaders().headers, observe: 'response' });
+  }
+
   // Junta el url base del API con la ruta relative de los
   private createCompleteRoute = (route: string, envAddress: string) => {
     return `${envAddress}/${route}`;

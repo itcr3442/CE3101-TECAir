@@ -56,18 +56,23 @@ export class RegisterService {
 
   }
 
+  public delete_user(id: string) {
+    return this.repositoryService.delete(
+      "users/" + id)
+  }
+
   /**
  * Método que realiza el request al servidor para obtener todos
  * los trabajadores para mostrarlos en la lista correspondiente.
  */
-  public getAllWorkers = () => {
-    let token = this.authService.getCredentials()
-    let registerUrl = "trabajadores?cedula_admin=" + token.id + "&password_hash=" + token.password
-    console.log(registerUrl);
+  public getAllUsers = () => {
 
-    // TODO: cambiar esto a la llamada cuando esté la DB
-    return of([])
-    // return this.repositoryService.getData(registerUrl)
+    return this.repositoryService.getData("users")
+  }
+
+  public getUser = (id: string) => {
+
+    return this.repositoryService.getData("users/" + id)
   }
 
   public resetForm = (formGroup: FormGroup) => {

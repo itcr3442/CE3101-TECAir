@@ -17,9 +17,7 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.logged = this.authService.isLoggedIn()
-    console.log("Current role:", this.role)
-    console.log("User role:", RoleLevels.User)
-    console.log(this.logged ? (this.role === RoleLevels.User ? "userBlock" : "adminBlock") : "unloggedBlock")
+    // console.log(this.logged ? (this.role === RoleLevels.User ? "userBlock" : "adminBlock") : "unloggedBlock")
 
   }
 

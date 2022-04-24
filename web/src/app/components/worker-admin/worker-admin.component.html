@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6 col-md-offset-3 loginBox">
-            <h3>Registrar nuevo trabajador</h3>
+            <h3>{{this.formTitle}}</h3>
             <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
                 <div class="mb-3 form-group">
                     <label for="id">Usuario</label>
@@ -25,20 +25,31 @@
                 </div>
                 <div class="mb-3 form-group">
                     <label for="phone">Teléfono</label>
-                    <input type="phone" id="phone" formControlName="phone" class="form-control" placeholder="# de tel">
+                    <input type="phone" id="phone" formControlName="phonenumber" class="form-control"
+                        placeholder="# de tel">
                 </div>
-                <div class="mb-3 form-group">
-                    <label for="password">Contraseña</label>
-                    <input type="password" id="password" formControlName="password" class="form-control"
-                        placeholder="Contraseña">
-                </div>
+                <ng-container *ngIf="!this.editing">
+                    <div class="mb-3 form-group">
+                        <label for="1">Contraseña</label>
+                        <input type="password" id="password" formControlName="password" class="form-control"
+                            placeholder="Contraseña">
+                    </div>
+                </ng-container>
 
                 <ng-container *ngIf="this.message">
                     <p>
                         {{this.message}}
                     </p>
                 </ng-container>
-                <button type="submit" class="btn btn-primary">Registrar</button>
+                <div class="row g-2">
+                    <button type="submit" class="btn btn-primary">{{this.editing? "Editar" : "Registrar"}}</button>
+
+                    <ng-container *ngIf="this.editing">
+                        <button class="btn btn-danger" type="reset" (click)="cancelForm()">
+                            Cancelar
+                        </button>
+                    </ng-container>
+                </div>
             </form>
         </div>
         <div class="col-md-6 col-md-offset-3">
@@ -46,20 +57,39 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Cédula</th>
-                            <th>Hash</th>
+                            <!-- <th>UUID</th> -->
+                            <th>Usuario</th>
                             <th>Nombre</th>
-                            <th>Primer Apellido</th>
-                            <th>Segundo Apellido</th>
+                            <th>Apellido</th>
+                            <th>Teléfono</th>
+                            <th>Correo</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let worker of worker_list">
-                            <td>{{worker.cedula}}</td>
-                            <td>{{worker.password_hash}}</td>
-                            <td>{{worker.nombre}}</td>
-                            <td>{{worker.primer_apellido}}</td>
-                            <td>{{worker.segundo_apellido}}</td>
+                            <!-- <td>{{worker.id}}</td> -->
+                            <td>{{worker.username}}</td>
+                            <td>{{worker.firstName}}</td>
+                            <td>{{worker.lastName}}</td>
+                            <td>{{worker.phonenumber}}</td>
+                            <td>{{worker.email}}</td>
+                            <td>
+                                <div className="container">
+
+
+                                    <div className="d-grid gap-2 col-6 mx-auto">
+                                        <button type="button" class="btn btn-secondary"
+                                            (click)="activateEditing(worker.id)">
+                                            Editar
+                                        </button>
+                                        <button type="button" class="btn btn-danger"
+                                            (click)="deleteUserSubmit(worker.id)">
+                                            Eliminar
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

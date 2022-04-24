@@ -72,17 +72,20 @@ class ServiceLayer
             return Results.NotFound();
         }
 
-        var newSalt = randomSalt();
 
-        user.Username = edit.Username;
-        user.Salt = Convert.ToHexString(newSalt);
-        user.Hash = Convert.ToHexString(hashFor(edit.Password, newSalt));
-        user.FirstName = edit.FirstName;
-        user.LastName = edit.LastName;
-        user.Phonenumber = edit.PhoneNumber;
-        user.Email = edit.Email;
-        user.University = edit.University;
-        user.StudentId = edit.StudentId;
+        user.Username = edit.Username ?? user.Username;
+        if (edit.Password != null)
+        {
+            var newSalt = randomSalt();
+            user.Salt = Convert.ToHexString(newSalt);
+            user.Hash = Convert.ToHexString(hashFor(edit.Password, newSalt));
+        }
+        user.FirstName = edit.FirstName ?? user.FirstName;
+        user.LastName = edit.LastName ?? user.LastName;
+        user.Phonenumber = edit.PhoneNumber ?? user.Phonenumber;
+        user.Email = edit.Email ?? user.Email;
+        user.University = edit.University ?? user.University;
+        user.StudentId = edit.StudentId ?? user.StudentId;
 
         return save() ?? Results.Ok();
     }
