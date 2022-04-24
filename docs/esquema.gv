@@ -1,0 +1,139 @@
+/*
+ * Graphviz of '<_io.TextIOWrapper name='<stdin>' mode='r' encoding='utf-8'>', created 2022-04-24 16:26:33.816806
+ * Generated from https://github.com/rm-hull/sql_graphviz
+ */
+digraph g { graph [ rankdir = "LR" ];
+
+    "public.aircraft" [
+    shape=none
+    label=<
+      <table border="0" cellspacing="0" cellborder="1">
+        <tr><td bgcolor="lightblue2" colspan="2"><font face="Times-bold" point-size="20"> public.aircraft </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="id"> PK <font face="Times-bold"> <u>id</u> </font></td><td align="left" port="id_right"><font color="#535353"> uuid DEFAULT public.uuid_generate_v4 () NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="code"><font face="Times-bold"> code </font></td><td align="left" port="code_right"><font color="#535353"> character varying (32) NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="seats"><font face="Times-bold"> seats </font></td><td align="left" port="seats_right"><font color="#535353"> integer NOT NULL </font></td></tr>
+      </table>
+    >];
+
+    "public.airports" [
+    shape=none
+    label=<
+      <table border="0" cellspacing="0" cellborder="1">
+        <tr><td bgcolor="lightblue2" colspan="2"><font face="Times-bold" point-size="20"> public.airports </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="id"> PK <font face="Times-bold"> <u>id</u> </font></td><td align="left" port="id_right"><font color="#535353"> uuid DEFAULT public.uuid_generate_v4 () NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="code"><font face="Times-bold"> code </font></td><td align="left" port="code_right"><font color="#535353"> character varying (8) NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="comment"><font face="Times-bold"> comment </font></td><td align="left" port="comment_right"><font color="#535353"> text </font></td></tr>
+      </table>
+    >];
+
+    "public.bags" [
+    shape=none
+    label=<
+      <table border="0" cellspacing="0" cellborder="1">
+        <tr><td bgcolor="lightblue2" colspan="2"><font face="Times-bold" point-size="20"> public.bags </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="id"> PK <font face="Times-bold"> <u>id</u> </font></td><td align="left" port="id_right"><font color="#535353"> uuid DEFAULT public.uuid_generate_v4 () NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="owner"> FK <font face="Times-bold"> owner </font></td><td align="left" port="owner_right"><font color="#535353"> uuid NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="flight"> FK <font face="Times-bold"> flight </font></td><td align="left" port="flight_right"><font color="#535353"> uuid NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="no"><font face="Times-bold"> no </font></td><td align="left" port="no_right"><font color="#535353"> integer NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="weight"><font face="Times-bold"> weight </font></td><td align="left" port="weight_right"><font color="#535353"> numeric NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="color"><font face="Times-bold"> color </font></td><td align="left" port="color_right"><font color="#535353"> character (7) NOT NULL </font></td></tr>
+      </table>
+    >];
+
+    "public.bookings" [
+    shape=none
+    label=<
+      <table border="0" cellspacing="0" cellborder="1">
+        <tr><td bgcolor="lightblue2" colspan="2"><font face="Times-bold" point-size="20"> public.bookings </font></td></tr>
+        <tr><td bgcolor="grey70" align="left" port="flight"> FK <font face="Times-bold"> flight </font></td><td align="left" port="flight_right"><font color="#535353"> uuid NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey70" align="left" port="pax"> FK <font face="Times-bold"> pax </font></td><td align="left" port="pax_right"><font color="#535353"> uuid NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="promo"> FK <font face="Times-bold"> promo </font></td><td align="left" port="promo_right"><font color="#535353"> uuid </font></td></tr>
+      </table>
+    >];
+
+    "public.checkins" [
+    shape=none
+    label=<
+      <table border="0" cellspacing="0" cellborder="1">
+        <tr><td bgcolor="lightblue2" colspan="2"><font face="Times-bold" point-size="20"> public.checkins </font></td></tr>
+        <tr><td bgcolor="grey70" align="left" port="segment"> FK <font face="Times-bold"> segment </font></td><td align="left" port="segment_right"><font color="#535353"> uuid NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="pax"> FK <font face="Times-bold"> pax </font></td><td align="left" port="pax_right"><font color="#535353"> uuid NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey70" align="left" port="seat"><font face="Times-bold"> seat </font></td><td align="left" port="seat_right"><font color="#535353"> integer NOT NULL </font></td></tr>
+      </table>
+    >];
+
+    "public.flights" [
+    shape=none
+    label=<
+      <table border="0" cellspacing="0" cellborder="1">
+        <tr><td bgcolor="lightblue2" colspan="2"><font face="Times-bold" point-size="20"> public.flights </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="id"> PK <font face="Times-bold"> <u>id</u> </font></td><td align="left" port="id_right"><font color="#535353"> uuid DEFAULT public.uuid_generate_v4 () NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="no"><font face="Times-bold"> no </font></td><td align="left" port="no_right"><font color="#535353"> integer NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="state"><font face="Times-bold"> state </font></td><td align="left" port="state_right"><font color="#535353"> public.flight_state NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="comment"><font face="Times-bold"> comment </font></td><td align="left" port="comment_right"><font color="#535353"> text </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="price"><font face="Times-bold"> price </font></td><td align="left" port="price_right"><font color="#535353"> numeric NOT NULL </font></td></tr>
+      </table>
+    >];
+
+    "public.promos" [
+    shape=none
+    label=<
+      <table border="0" cellspacing="0" cellborder="1">
+        <tr><td bgcolor="lightblue2" colspan="2"><font face="Times-bold" point-size="20"> public.promos </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="id"> PK <font face="Times-bold"> <u>id</u> </font></td><td align="left" port="id_right"><font color="#535353"> uuid DEFAULT public.uuid_generate_v4 () NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="code"><font face="Times-bold"> code </font></td><td align="left" port="code_right"><font color="#535353"> character varying (16) NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="flight"> FK <font face="Times-bold"> flight </font></td><td align="left" port="flight_right"><font color="#535353"> uuid NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="price"><font face="Times-bold"> price </font></td><td align="left" port="price_right"><font color="#535353"> numeric NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="start_time"><font face="Times-bold"> start_time </font></td><td align="left" port="start_time_right"><font color="#535353"> timestamp with time zone NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="end_time"><font face="Times-bold"> end_time </font></td><td align="left" port="end_time_right"><font color="#535353"> timestamp with time zone NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="img"><font face="Times-bold"> img </font></td><td align="left" port="img_right"><font color="#535353"> bytea </font></td></tr>
+      </table>
+    >];
+
+    "public.segments" [
+    shape=none
+    label=<
+      <table border="0" cellspacing="0" cellborder="1">
+        <tr><td bgcolor="lightblue2" colspan="2"><font face="Times-bold" point-size="20"> public.segments </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="id"> PK <font face="Times-bold"> <u>id</u> </font></td><td align="left" port="id_right"><font color="#535353"> uuid DEFAULT public.uuid_generate_v4 () NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="flight"> FK <font face="Times-bold"> flight </font></td><td align="left" port="flight_right"><font color="#535353"> uuid NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="seq_no"><font face="Times-bold"> seq_no </font></td><td align="left" port="seq_no_right"><font color="#535353"> integer NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="from_loc"> FK <font face="Times-bold"> from_loc </font></td><td align="left" port="from_loc_right"><font color="#535353"> uuid NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="from_time"><font face="Times-bold"> from_time </font></td><td align="left" port="from_time_right"><font color="#535353"> time with time zone NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="to_loc"> FK <font face="Times-bold"> to_loc </font></td><td align="left" port="to_loc_right"><font color="#535353"> uuid NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="to_time"><font face="Times-bold"> to_time </font></td><td align="left" port="to_time_right"><font color="#535353"> time with time zone NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="aircraft"> FK <font face="Times-bold"> aircraft </font></td><td align="left" port="aircraft_right"><font color="#535353"> uuid NOT NULL </font></td></tr>
+      </table>
+    >];
+
+    "public.users" [
+    shape=none
+    label=<
+      <table border="0" cellspacing="0" cellborder="1">
+        <tr><td bgcolor="lightblue2" colspan="2"><font face="Times-bold" point-size="20"> public.users </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="id"> PK <font face="Times-bold"> <u>id</u> </font></td><td align="left" port="id_right"><font color="#535353"> uuid DEFAULT public.uuid_generate_v4 () NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="username"><font face="Times-bold"> username </font></td><td align="left" port="username_right"><font color="#535353"> character varying (64) NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="hash"><font face="Times-bold"> hash </font></td><td align="left" port="hash_right"><font color="#535353"> character (32) </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="salt"><font face="Times-bold"> salt </font></td><td align="left" port="salt_right"><font color="#535353"> character (32) </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="first_name"><font face="Times-bold"> first_name </font></td><td align="left" port="first_name_right"><font color="#535353"> character varying (256) NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="last_name"><font face="Times-bold"> last_name </font></td><td align="left" port="last_name_right"><font color="#535353"> character varying (256) </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="phonenumber"><font face="Times-bold"> phonenumber </font></td><td align="left" port="phonenumber_right"><font color="#535353"> character varying (32) </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="email"><font face="Times-bold"> email </font></td><td align="left" port="email_right"><font color="#535353"> character varying (256) </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="university"><font face="Times-bold"> university </font></td><td align="left" port="university_right"><font color="#535353"> character varying (256) </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="student_id"><font face="Times-bold"> student_id </font></td><td align="left" port="student_id_right"><font color="#535353"> character varying (64) </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="type"><font face="Times-bold"> type </font></td><td align="left" port="type_right"><font color="#535353"> public.user_type NOT NULL </font></td></tr>
+      </table>
+    >];
+  "public.bags":flight_right -> "public.flights":id
+  "public.bags":owner_right -> "public.users":id
+  "public.bookings":flight_right -> "public.flights":id
+  "public.bookings":pax_right -> "public.users":id
+  "public.bookings":promo_right -> "public.promos":id
+  "public.checkins":pax_right -> "public.users":id
+  "public.checkins":segment_right -> "public.segments":id
+  "public.promos":flight_right -> "public.flights":id
+  "public.segments":aircraft_right -> "public.aircraft":id
+  "public.segments":flight_right -> "public.flights":id
+  "public.segments":from_loc_right -> "public.airports":id
+  "public.segments":to_loc_right -> "public.airports":id
+}

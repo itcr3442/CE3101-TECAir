@@ -421,6 +421,16 @@ class ServiceLayer
         return Results.Ok(db.Promos.ToArray());
     }
 
+    public IResult DumpAirports()
+    {
+        return Results.Ok(db.Airports.ToArray());
+    }
+
+    public IResult DumpAircraft()
+    {
+        return Results.Ok(db.Aircraft.ToArray());
+    }
+
     public IResult SearchPromo(string code)
     {
         var promo = (from p in db.Promos where p.Code == code select p).SingleOrDefault();

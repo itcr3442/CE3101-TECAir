@@ -219,4 +219,20 @@ app.MapPost("/search", (string fromLoc, string toLoc) =>
     }
 });
 
+app.MapGet("/airports", () =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).DumpAirports();
+    }
+});
+
+app.MapGet("/aircraft", () =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).DumpAircraft();
+    }
+});
+
 app.Run();
