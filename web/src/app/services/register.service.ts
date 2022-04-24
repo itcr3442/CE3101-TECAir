@@ -61,7 +61,7 @@ export class RegisterService {
       "users/" + id)
   }
 
-  public edit_user(id: string, username: string, password: string, firstName: string, lastName: string, phoneNumber: number, email: string, university: string | null, studentId: string | null) {
+  public edit_user(id: string, username: string, password: string, firstName: string, lastName: string, phoneNumber: number, email: string, isStudent: boolean, university: string, studentId: string) {
     {
       let user = {
         username,
@@ -70,8 +70,8 @@ export class RegisterService {
         lastName,
         phoneNumber,
         email,
-        university,
-        studentId
+        university: isStudent ? university : null,
+        studentId: isStudent ? studentId : null
       }
 
       return this.repositoryService.edit(

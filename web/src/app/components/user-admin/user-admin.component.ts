@@ -1,22 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { RoleLevels } from 'src/app/constants/auth.constants';
+import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { RegisterService } from 'src/app/services/register.service';
-import { User } from 'src/app/interfaces/user';
-import { RoleLevels } from 'src/app/constants/auth.constants';
 
-const registerTitle = "Registrar nuevo trabajador"
-const editTitle = "Editando a funcionario existente"
+
+const registerTitle = "Registrar nuevo usuario"
+const editTitle = "Editando a usuario existente"
 
 @Component({
-  selector: 'app-worker-admin',
-  templateUrl: './worker-admin.component.html',
-  styleUrls: ['./worker-admin.component.css']
+  selector: 'app-user-admin',
+  templateUrl: './user-admin.component.html',
+  styleUrls: ['./user-admin.component.css']
 })
-export class WorkerAdminComponent implements OnInit {
-
+export class UserAdminComponent implements OnInit {
   public worker_list!: User[];
+
+  isStudent: boolean = false;
 
   registerForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
@@ -25,6 +27,9 @@ export class WorkerAdminComponent implements OnInit {
     lastName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required]),
     phonenumber: new FormControl('', [Validators.required, Validators.pattern('[0-9]*')]),
+    isStudent: new FormControl(''),
+    university: new FormControl(''),
+    studentId: new FormControl('')
   })
   message: string = ""
   editing: boolean
@@ -55,7 +60,7 @@ export class WorkerAdminComponent implements OnInit {
       console.log(res)
       let allUsers = res.body as User[]
       console.log("Users:", allUsers)
-      let allWorkers = allUsers.filter((user) => { return user.type === RoleLevels.Admin })
+      let allWorkers = allUsers.filter((user) => { return user.type === RoleLevels.User })
       console.log("Get all workers res:", allWorkers);
       this.worker_list = allWorkers;
     }
@@ -91,6 +96,10 @@ export class WorkerAdminComponent implements OnInit {
 
       let any_user: any = r_user
       Object.entries(this.registerForm.controls).forEach(([key, control]) => control.setValue(any_user[key]))
+      let studentBool = this.studentId === null || this.studentId == "" ? false : true
+      this.registerForm.controls['isStudent'].setValue(studentBool)
+      this.isStudent = studentBool
+      this.updateFormStudent()
     })
 
   }
@@ -102,6 +111,32 @@ export class WorkerAdminComponent implements OnInit {
     let passwordField = this.registerForm.get('password')
     passwordField?.setValidators(Validators.required);
     this.current_user_id = null
+  }
+
+  onStudentChange(event: Event) {
+    let target = event.target as HTMLInputElement
+
+    this.isStudent = target.checked
+    this.updateFormStudent()
+  }
+
+  updateFormStudent() {
+
+    let studentId = this.registerForm.get('studentId')
+    let university = this.registerForm.get('university')
+
+    if (this.isStudent) {
+      studentId?.setValidators(Validators.required);
+      university?.setValidators(Validators.required);
+
+    }
+    else {
+      studentId?.setValidators(null);
+      university?.setValidators(null);
+    }
+
+    studentId?.updateValueAndValidity();
+    university?.updateValueAndValidity();
   }
 
 
@@ -125,6 +160,14 @@ export class WorkerAdminComponent implements OnInit {
   get phone() {
     return this.registerForm.controls['phonenumber'].value
   }
+  get university() {
+    return this.registerForm.controls['university'].value
+
+  }
+  get studentId() {
+    return this.registerForm.controls['studentId'].value
+
+  }
 
   /**
    * Método que se ejecuta al apretar el botón registrar.
@@ -140,7 +183,7 @@ export class WorkerAdminComponent implements OnInit {
       if (this.editing) {
         console.log("edtandoouu")
 
-        this.registerService.edit_user(this.current_user_id ?? "", this.username, this.password, this.firstName, this.lastName, this.phone, this.email, false, "", "").subscribe(
+        this.registerService.edit_user(this.current_user_id ?? "", this.username, this.password, this.firstName, this.lastName, this.phone, this.email, this.isStudent, this.university, this.studentId).subscribe(
           (resp: any) => {
             this.registerService.resetForm(this.registerForm)
             this.refreshUsers()
@@ -153,7 +196,7 @@ export class WorkerAdminComponent implements OnInit {
 
       }
       else { // registering new user
-        this.registerService.register_worker(this.username, this.password, this.firstName, this.lastName, this.phone, this.email).subscribe(
+        this.registerService.register_user(this.username, this.password, this.firstName, this.lastName, this.phone, this.email, this.isStudent, this.university, this.studentId).subscribe(
           (resp: any) => {
             this.registerService.resetForm(this.registerForm)
             this.refreshUsers()
@@ -173,4 +216,5 @@ export class WorkerAdminComponent implements OnInit {
 
 
   }
+
 }

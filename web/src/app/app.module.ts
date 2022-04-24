@@ -16,6 +16,7 @@ import { PromosComponent } from './components/promos/promos.component';
 import { PromosPageComponent } from './components/promos-page/promos-page.component';
 import { FlightSearchComponent } from './components/flight-search/flight-search.component';
 import { CheckInComponent } from './components/check-in/check-in.component';
+import { UserAdminComponent } from './components/user-admin/user-admin.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { CheckInComponent } from './components/check-in/check-in.component';
     PromosPageComponent,
     FlightSearchComponent,
     CheckInComponent,
+    UserAdminComponent,
   ],
   imports: [
     BrowserModule,

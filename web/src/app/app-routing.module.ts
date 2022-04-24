@@ -11,6 +11,7 @@ import { WorkerAdminComponent } from './components/worker-admin/worker-admin.com
 import { PromosPageComponent } from './components/promos-page/promos-page.component';
 import { FlightSearchComponent } from './components/flight-search/flight-search.component';
 import { CheckInComponent } from './components/check-in/check-in.component';
+import { UserAdminComponent } from './components/user-admin/user-admin.component';
 
 
 const routes: Routes = [
@@ -18,9 +19,10 @@ const routes: Routes = [
   { path: 'login/redirect', component: LoginComponent },
   { path: 'register', component: RegisterUserComponent },
   { path: 'worker_register', component: WorkerAdminComponent, canActivate: [AuthGuard], data: { role: RoleLevels.Admin } },
+  { path: 'user_register', component: UserAdminComponent, canActivate: [AuthGuard], data: { role: RoleLevels.Admin } },
   { path: 'promos_page', component: PromosPageComponent },
   { path: 'flight_search', component: FlightSearchComponent, canActivate: [AuthGuard], data: { role: RoleLevels.User } },
-  { path: 'check-in', component: CheckInComponent }//, canActivate: [AuthGuard], data: { role: RoleLevels.Admin } }
+  { path: 'check-in', component: CheckInComponent, canActivate: [AuthGuard], data: { role: RoleLevels.Admin } }
 ];
 
 @NgModule({
