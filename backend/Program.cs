@@ -99,6 +99,14 @@ app.MapGet("/flights/{id}", (Guid id) =>
     }
 });
 
+app.MapDelete("/flights/{id}", (Guid id) =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).DeleteFlight(id);
+    }
+});
+
 app.MapPost("/flights/{id}/book", (Guid id, NewBooking booking) =>
 {
     using (var db = new TecAirContext(app))

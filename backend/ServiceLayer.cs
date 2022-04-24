@@ -133,6 +133,28 @@ class ServiceLayer
         return flight != null ? Results.Ok(plain) : Results.NotFound();
     }
 
+    public IResult DeleteFlight(Guid flightId)
+    {
+        var flight = db.Flights.Where(f => f.Id == flightId).SingleOrDefault();
+        if (flight == null)
+        {
+            return Results.NotFound();
+        }
+
+        db.Bookings.RemoveRange(db.Bookings.Where(b => b.Flight == flightId));
+        db.Bags.RemoveRange(db.Bags.Where(b => b.Flight == flightId));
+        db.Promos.RemoveRange(db.Promos.Where(p => p.Flight == flightId));
+
+        foreach (var segment in db.Segments.Where(s => s.Flight == flightId).ToArray())
+        {
+            db.Checkins.RemoveRange(db.Checkins.Where(c => c.Segment == segment.Id));
+            db.Segments.Remove(segment);
+        }
+
+        db.Flights.Remove(flight);
+        return Save() ?? Results.Ok();
+    }
+
     public IResult BookFlight(Guid flightId, NewBooking booking)
     {
         var paxId = booking.Pax;
