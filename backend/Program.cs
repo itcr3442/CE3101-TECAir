@@ -105,4 +105,12 @@ app.MapGet("/segments", () =>
     }
 });
 
+app.MapPost("/search", (string fromLoc, string toLoc) =>
+{
+    using (var db = new TecAirContext())
+    {
+        return new ServiceLayer(db).SearchFlights(fromLoc, toLoc);
+    }
+});
+
 app.Run();
