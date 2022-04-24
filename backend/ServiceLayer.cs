@@ -74,7 +74,7 @@ class ServiceLayer
             Type = user.Type,
         };
 
-        return Results.Ok(user);
+        return Results.Ok(plain);
     }
 
     public IResult UpdateUser(Guid id, EditUser edit)
