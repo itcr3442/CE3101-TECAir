@@ -250,7 +250,7 @@ class ServiceLayer
                           To = flight.Endpoint.ToLocNavigation
                       };
 
-        return Results.Ok(flights.ToArray());
+        return Results.Ok(results.ToArray());
     }
 
     private TecAirContext db;
