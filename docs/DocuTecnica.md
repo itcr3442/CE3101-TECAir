@@ -1,7 +1,7 @@
 ---
 title:
   Instituto Tecnológico de Costa Rica\endgraf\bigskip \endgraf\bigskip\bigskip\
-  TecAir Proyecto 1: TECAir \endgraf\bigskip\bigskip\bigskip\bigskip
+  Proyecto 1 - TECAir \endgraf\bigskip\bigskip\bigskip\bigskip
 author:
   - José Morales Vargas, carné 2019024270
   - Alejandro Soto Chacón, carné 2019008164
@@ -37,11 +37,45 @@ nocite: |
 
 ## Modelo conceptual
 
+![](img/er.png)
+
 ## Justificación de mapeo conceptual-relacional
+
+# UUID
+Para este proyecto se utilizaron en la mayoría de relaciones/entidades UUID o Identificadores Únicos Universales como las llaves de sus erespectivas relaciones, esto se realizó con el objetivo de poder lograr la correcta sincronización entre el app mobil y app web, y para así lograr que el sistema responda bien a cambios incluso si ocurren conflictos entre versiones de la base de datos.
+
+# Mapeo de entidad Vuelo
+
+Esta entidad fuerte se convierte en una relación de tal manera que se mantienen sus atributos simples. Se utiliza un uuid llamada "id" como llave primaria de esta relación
+
+# Mapeo de entidad Usuario
+
+Similarmente a la entidad "vuelo", la entidad "usuario" se convierte en una relación, de manera que se mapeen todos sus atributos en esta relación, separando los atributos compuestos nombres completos y las identidades estudiantiles en sus distintos componentes. Se utiliza un uuid llamada "id" como llave primaria de esta relación
+
+# Mapeo de entidad Aeronave
+
+Para la entidad fuerte "aeronave" se pasa a una relación, incluyendo todos sus atributos simples. Se utiliza un uuid llamada "id" como llave primaria de esta relación
+
+# Mapeo de entidad Aeropuertos
+
+Para la entidad fuerte "aeropuertos" se pasa a una relación, donde se incluyen todos sus atributos simples. Se utiliza un uuid llamada "id" como llave primaria de esta relación.
+
+# Mapeo de entidad Maleta y relación "asigna"
+
+Para la entidad fuerte "maleta" se pasa a una relación, donde se incluyen todos sus atributos simples y se utiliza un uuid llamada "id" como llave primaria de esta relación. Este está relacionado con usuario y con vuelo por medio de la relación "asigna" de tipo N:1, lo cual implica que en maleta (el lado N de la relación) se inncluyen como llaves foráneas el uuid del usuario llamado "dueño" y el uuid del vuelo llamado "flight".
+
+# Mapeo de Promos y relaciónes "usa" y "aplica"
+
+Para la entidad fuerte "promos" se pasa a una relación, donde se incluyen todos sus atributos simples y se utiliza un uuid llamada "id" como llave primaria de esta relación. Este está relacionado con vuelo y con usuario por medio de las relación "usa" de tipo N:M y aplica de tipo N:1. Para su simplificación se simplifica las relaciones en una nueva relación llamada "bookings" donde se tienen tres llaves primarias, todas de tipo uuid, "flight" la id de los vuelos, "pax" siendo la de los usuarios y "promo" siendo la de las promos.
+
+# Mapeo de Segments y relaciónes "chequea", "origen", "detino", "vuela con" y "recorre"
+
+Para la entidad fuerte "segmento" se pasa a una relación, donde se incluyen todos sus atributos simples y se utiliza un uuid llamada "id" como llave primaria de esta relación. Para la relaciónes de segmento, se tiene "recorre" de tipo N:1 con vuelo,para las relaciones "origen" y "destino" de tipo N:1 con aeropuerto, la relación "vuela con" con aeronave de tipo N:1. Para cada una de estas, se incluye una llave foránea en Segments, para así mantener la conexión entre todas estas relaciones.Para la relación con usuario de "chequea", al ser de tipo N:M, se crea una relación adicional llamado "checkins" el cual tiene como llave primaria la uuid "pax" de usuarios y la uuid "segment" para los segmentos, junto con el atributo de la relación "seat".
+
 
 ## Modelo relacional
 
-![](img/esquema.png)
+![](imgs/esquema.png)
 
 ## Estructuras de datos desarrolladas
 
@@ -147,6 +181,8 @@ data class Promo(
 
 ## Descripción detallada de la arquitectura desarrollada
 
+
+
 ### Diagrama de arquitectura
 
 ![](imgs/diagramaArqui.png)
@@ -187,7 +223,7 @@ La arquitectura anterior es producto de los requerimientos de la aplicación mó
 
 Para permitir que la REST API se pudiese desplegar en varios sistemas distintos se decidió hacer del connection string un dato provisto en la máquina del cliente. Inicialmente se creyó que las aplicaciones desplegadas en IIS tomarían valores de variables de ambiente del sistema que contiene el IIS, sin embargo esto resultó ser equivoco. 
 
-- Resolución: Se siguieron los pasos indicados por [@unkown-author-2015] para la configuración de variables de ambiente en IIS.
+- Resolución: Se siguieron los pasos indicados por [@unknown-author-2015] para la configuración de variables de ambiente en IIS.
 
 ### Solicitudes a HTTP con "clear text"
 
@@ -209,7 +245,31 @@ El problema encontrado consistía en que la aplicación móvil no podía realiza
 
 ## Conclusiones
 
+- Se aplicaron los conocimiento adquiridos en el curso sobre modelos conceptuales y relacionales de bases de datos.
+
+- Se desarrolló exitosamente un servicio REST API en C# usando el Entity Framework.
+
+- Se hizo uso de SQLite como base de datos empotrada para una aplicación móvil.
+
+- Se utilizaron exitosamente tecnologías para el desarrollo de aplicaciones web tales como HTML5, CSS, Boostrap y Angular. Las aplicaciones exponen correctamente las funcionalidades solicitadas a los usuarios. 
+
+- Para servicios REST minimalistas, el flujo de trabajo con ASP.NET Core y las herramientas de OpenApi/Swagger facilitan una implementación rápida y eficiente, sin pérdida en desempeño o en mantenibilidad.
+
+- De querer tener un servicio web corriendo en una máquina de Windows y que el mismo sea accesible desde computadoras exteriores, IIS es una herramienta que se puede utilizr para lograr este objetivo.
+
+- Se cumplió con la solicitud de documentación para usuario final, es decir, se confeccionaron tanto manuales de instalación como manuales de operación para los usuarios finales.
+
 ## Recomendaciones
+
+- Utilizar room como interfaz para manipular bases de datos en SQLite, puesto que permite chequear que las queries sean correctas a tiempo de compilación, ventaja que no se tiene al usar las APIs base. 
+
+- Usar el EntityFramework para interacción con bases de datos en C# 
+
+- Usar Npgsql para la programación de 
+
+- Si se desea usar Windows como sistema operativo de servidor, se recomeinda utilizar las herramientas de IIS. 
+
+- Se recomiendo el uso de herramientas de control de versiones pues facilitan fuertemente la colaboración en grupo.
 
 ## Bibliografía
 
@@ -218,12 +278,12 @@ El problema encontrado consistía en que la aplicación móvil no podía realiza
 
 ## Diagramas de clases
 
-### Backend
+### REST API
 
-![](imgs/diagramaClasesAppServer.png)
+![](imgs/diagramaClasesServer.png)
 
 ### App móvil
 
 ![](imgs/diagramaClasesAppMovil.png)
 
-## Anexos 
+### APP Web

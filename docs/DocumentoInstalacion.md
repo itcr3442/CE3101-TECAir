@@ -53,7 +53,7 @@ linestretch: 1.5
 6. Abra una consola de powershell en dicha carpeta y ejecute el siguiente comando:
 
 ```Shell
-psql -d tecair -f tecair.sql -U tec_air
+psql -d tecair -f tecair.sql -U tecair_admin
 ```
 
 7. Ante solicitud de contraseña del comando anterior, ingrese la contraseña "bases".

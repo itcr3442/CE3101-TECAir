@@ -93,9 +93,9 @@ export class FlightSearchComponent implements OnInit {
           .subscribe(res => {
           promoUUID = res;
         },
-      err => {
-        this.message2 = "Código de Promoción Inválida";
-      })
+        err => {
+          this.message2 = "Código de Promoción Inválida";
+        })
         bookingPackage = {pax: this.authRepo.getCredentials().uuid, promo: promoUUID}
       }else{
         console.log("no promo code added...")
@@ -109,7 +109,7 @@ export class FlightSearchComponent implements OnInit {
         console.log("going back to flight seach...");
       },
       err => {
-        this.message = "FATAL_ERROR";
+        this.message2 = "FATAL_ERROR";
       })
     }else{
       this.message = "Por favor ingrese correctamente todos los campos solicitados"

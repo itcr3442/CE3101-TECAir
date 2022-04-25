@@ -1,3 +1,6 @@
+/* Punto de entrada de la aplicación.
+ */
+
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using backend;
@@ -26,6 +29,10 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseCors();
+
+/*
+ * Endpoints, ver ServiceLayer.cs para descripción de cada uno.
+ */
 
 app.MapPost("/check_login", (string username, string password) =>
 {

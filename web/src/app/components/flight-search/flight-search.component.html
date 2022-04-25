@@ -89,4 +89,12 @@
             <button type="search" class="btn btn-primary">Buscar</button>
         </div>
     </form>
+    <div class="row-md-4">
+        <ng-container *ngIf="this.message2">
+            <p>
+                {{this.message2}}
+            </p>
+        </ng-container>
+    </div>
+    
 </ng-template>

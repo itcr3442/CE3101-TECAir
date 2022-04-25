@@ -95,6 +95,15 @@ José Morales desarrollará la app móvil, la cual tendrá la misma funcionalida
 
 ## Minutas de trabajo
 
+![](imgs/minuta1.png)
+
+![](imgs/minuta2.png)
+
+![](imgs/minuta3.png)
+
+![](imgs/minuta4.png)
+
+![](imgs/minuta5.png)
 
 ## Bitácoras
 
@@ -109,6 +118,11 @@ José Morales desarrollará la app móvil, la cual tendrá la misma funcionalida
 - 25 MAR
 
     + Colaboré con la creación y revisión del documento entregable que contenía el plan de trabajo inicial
+    + El equipo se reunió para tomar ciertas decisiones sobre aspectos operativos de grupo pues varios presentan dificultades con fechas de entrega estimada debido a exámenes de cursos exigentes en las fechas cercanas
+
+- 1 ABR
+
+    + Se realiza una reunión para discutir los avances hasta el momento de forma que se puedan incluír en el reporte ejecutivo 1.
 
 - 4 ABR
     
@@ -123,6 +137,7 @@ José Morales desarrollará la app móvil, la cual tendrá la misma funcionalida
     
     + Se investiga sobre el uso de la biblioteca `Retrofit2` para el consumo de servicios REST.
     + Se realiza un diseño inicial de la arquitectura de la aplicación móvil a implementar.
+    + Se realiza una reunión para discutir los avances hasta el momento de forma que se puedan incluír en el reporte ejecutivo 2.
 
 - 8 ABR
 
@@ -174,34 +189,79 @@ José Morales desarrollará la app móvil, la cual tendrá la misma funcionalida
     + Se redacta el manual de instalación para las diferentes aplicaciones desarrolladas en grupo.
     + Se realizan pruebas de integración con la aplicación REST
 
+- 24 ABR
+
+    + Se realizan pruebas de funcionamiento de sistema.
+    + Se completa documentación faltante.
+    + Se agregan correciones a App Web basados en resultados de pruebas de todo el sistema en conjunto.
+    + Se realiza la entrega final del proyecto.
 
 ### José Retana
 
+- 21 Marzo: Se atiende a la reunión inicial para la definición de las actividad a realizar, los roles, reglas y demás
+
+- 25 Marzo: Se realiza una reeunión de trabajo para discutir mover las entregas del grupo de trabajo, ya que se presentó una evaluación importante a ciertos integrantes, que les complicaba realizar normalmente el trabajo designado. 
+
+- 01 Abril: Se crea una reunión para generar el reporte ejecutivo 1, y así discutir lo que se ha realizado por cada estudiante hasta el momento.
+
+-6  Abril: A partir de los inicios del app web planteados por Ignacio, se empieza a montar un mockup de la página de búsqueda de los viajes disponibles. En este se muestran los espacios para escribir los códigos ed los aeropuertos y la tabla vacía con nombres de filas según lo estipulado por Alejandro Soto en el modelo relacional.
+
+-7  Abril: Se crea una reunión para generar el reporte ejecutivo 2, y así discutir lo que se ha realizado por cada estudiante hasta el momento.
+
+-10 Abril: Se crea un mockup no funcional de la reservaciones de vuelos, donde se incluyen los espacios para tarjeta, código de promoción y demás.
+
+-17 Abril: Una vez implementados los endpoints de Alejandro Soto, se Implementa la funcionalidad a la página de búsqueda de vuelos.
+
+-19 Abril: Se hace la funcionalidad de la página de reservaciones de vuelos o de "booking". No se implementa la parte de promociones, ya que falta este endpoint.
+
+-23 Abril: Se implementan las promociones en la página de booking/reservaciones de vuelos.
+
+-24 abril: Se ayuda a terminal el trabajo escrito, los manuales de ususario y las pruebas de funcionalidad. Se realiza una reunión general para realizar las pruebas finales de funcionalidad y lo que falta de documentación de errores y problemas incompletos, para así poder realizar la entrega final.
 ### Ignacio Vargas
+
+- 21/03: Se hace una primera reunión general para discutir las especificaciones del proyecto, y así de una empezar con las partes y labores más administrativas, como la repartición de roles, actividades, reglas, etc.
+
+- 25/03: Se hace una reunión debido a que tengo un examen muy dificil y complicado que va a consumir una gran parte de mi tiempo, por lo que no se va a poder llevar a cabo a tiempo varias de las actividades planeadas.
+
+- 01/04: Se hace la reunión para crear el reporte ejecutivo 1. Se indica las cosas en las que se atrasó el desarrollo del proecto y en lo que se pudo trabajar.
+
+- 05/04: Se crea las bases iniciales y el setup de angular y bootstrap y se empizan a crear templates iniciales para el navbar, servicios, interfaces, etc.
+
+- 06/04: Se empieza un prototipo del login y del registro de usuarios, con sus respectivos campos y botones no funcionales.
+
+- 07/04: Se asiste a la reunión del reporte ejecutivo 2. Al igual que el primero, se indica en lo que se atrasó y en lo que se pudo trabajar.
+
+- 12/04: Se crean los prototipos del chequeo y se investiga como mostrar los asientos a la hora de hacer este proceso. Se termina utilizando css para crear los "asientos", pero se tiene que seguir trabajadno en eso.
+
+- 19/04: Con los endpoints iniciales de Alejandro, se puede ya implementar todo el login, registro y los inicios del registro de usuarios y trabajadores.
+
+- 20/04: Se completa todo lo relacionado con el registro de usuarios. Se empiza a terminar e implementar el chequeo de usuarios, para que se muestre correctamente los vuelos con la cantidad de segmentos de vuelo correspondiente y adecuado, los usuario que se puede chequear y demás.
+
+- 22/04: Se empieza y termina la gestión de apertura y cierre de vuelos.
+
+- 23/04: Se empieza y termina la gestión de vuelos, así copmo se inicia la asignación de maletas.
+
+- 24/04: Se termina la asignación de maletas. Se hace una reunión para ya terminar la parte escrita y poder revisar bien los casos que tenemos listos y funcionales.
+
 
 ### Alejandro Soto
 
-- 21 de marzo: Se definen actividades iniciales y el plan de trabajo.  Se crea
-  el repositorio de trabajo.
+- 21 de marzo: Se definen actividades iniciales y el plan de trabajo.  Se crea el repositorio de trabajo.
 
-- 4 de abril: Montado inicial del backend. Decido utilizar parte del trabajo
-  previo realizado en la Tarea Corta #1.  El backend está escrito en C#. Hoy
-  solamente se inicializa el proyecto y se discute informalmente el desarrollo
-  futuro.
+- 25 Marzo: Se agenda y realiza una reunión para verificar si es posible trasladar las fechas de lo entregable de cada integrante, ya que algunos de estos tiene ciertos trabajos y exámenes que requieren de tiempo extra, por lo que se va a atrasar ciertas entregas.
 
-- 6 de abril: A partir de la especificación del proyecto se determinan los
-  modelos conceptual y relacional a utilizar.
+- 01 de Abril: Se define que se va a realizar una reunión para generar el reporte ejecutivo #1, donde se analizaron los diversos aspectos de trabajo que ya fueron realizados, las actividades que se atrasaron y demás.
 
-- 9 de abril: Intenté instalar EntityFramework Core en mi entorno de trabajo
-  sin mayor éxito debido a problemas de dependencias. Documenté en bitácora
-  actividades realizadas hasta ahora.
+- 4 de abril: Montado inicial del backend. Decido utilizar parte del trabajo previo realizado en la Tarea Corta #1.  El backend está escrito en C#. Hoy solamente se inicializa el proyecto y se discute informalmente el desarrollo futuro.
 
-- 16 de abril: Creo endpoints para checkin y booking. Parecen funcionar bien
-  según Swagger. También arreglé un bug en el endpoint de editar usuario debido
-  a lazy evaluation que introduje hace poco debido a una limitación de EF.
+- 6 de abril: A partir de la especificación del proyecto se determinan los modelos conceptual y relacional a utilizar.
 
-- 22 de abril: Termino el último endpoint que me solicitan los compañeros de
-  trabajo (para operaciones CRUD sobre promociones).
+-7  Abril: Se crea la segunda reunión para los resumenes ejecutivos de cada semana, donde, igualmente que en la primera, se identifica las tareas que ya se han cumplido y cuales se han atrasado según la agenda de trabajo.
 
-- 24 de abril: Se documenta el backend. Se revisa que no existan más problemas de
-  integración.
+- 9 de abril: Intenté instalar EntityFramework Core en mi entorno de trabajo sin mayor éxito debido a problemas de dependencias. Documenté en bitácora actividades realizadas hasta ahora.
+
+- 16 de abril: Creo endpoints para checkin y booking. Parecen funcionar bien según Swagger. También arreglé un bug en el endpoint de editar usuario debido a lazy evaluation que introduje hace poco debido a una limitación de EF.
+
+- 22 de abril: Termino el último endpoint que me solicitan los compañeros de trabajo (para operaciones CRUD sobre promociones).
+
+- 24 de abril: Se documenta el backend. Se revisa que no existan más problemas de integración. Se realiza una última reunión para verificar y coxnsolidar lo que se tiene y lo que se falta para la entrega final, así también para finalizar los detalles del trabajo escrito que faltan.

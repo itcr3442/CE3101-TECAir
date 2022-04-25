@@ -11,7 +11,7 @@ import java.util.*
 class OfflineSession(
     private val username: String,
     private val password: String,
-    private val cx: Context,
+    var cx: Context,
     private val cache: LocalDB =
         Room.databaseBuilder(cx.applicationContext, LocalDB::class.java, "cache")
             .allowMainThreadQueries().build(),
@@ -19,6 +19,10 @@ class OfflineSession(
         Room.databaseBuilder(cx.applicationContext, PendingOpDB::class.java, "pending-ops")
             .allowMainThreadQueries().build()
 ) : Session {
+    override fun changeContext(cx: Context) {
+        this.cx = cx
+    }
+
     override fun getUsername(): String {
         return username
     }
