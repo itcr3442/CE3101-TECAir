@@ -8,7 +8,7 @@ graph ER {
 	node [shape=ellipse]; {node [label=<<u>código</u>>] c0; c1; c2;}
 	node [shape=ellipse]; {node [label=<<u>username</u>>] username;}
 	node [shape=ellipse]; {node [label=<identidad estudiantil>] "identidad estudiantil";}
-	node [shape=ellipse]; "¿es pax?"; peso; color; "nombre completo"; correo; clave; "teléfono"; nombre; apellido; "carné"; universidad; descuento; imagen; "período"; inicio; fin; precio; estado; asientos; orden; tiquete; salida; llegada;
+	node [shape=ellipse]; "¿es pax?"; peso; color; "nombre completo"; correo; clave; "teléfono"; nombre; apellido; "carné"; universidad; descuento; imagen; "período"; inicio; fin; precio; estado; asientos; orden; tiquete; salida; llegada; asiento;
 	node [shape=ellipse]; { node[style=dashed]; "¿reservando?"; "¿abierto?"; "¿cerrado?"; }
 	node [shape=diamond]; reserva; recorre; origen; destino; "vuela con"; chequea; aplica; usa; asigna;
 
@@ -62,6 +62,7 @@ graph ER {
 
 	usuario -- chequea [label="m",len=1.00];
 	segmento -- chequea [label="n",len=1.00];
+	chequea -- asiento;
 
 	aplica -- promo [label="n",len=1.00,color="black:white:black"];
 	aplica -- vuelo [label="1",len=1.00];
