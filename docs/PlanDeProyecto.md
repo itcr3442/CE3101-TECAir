@@ -198,6 +198,19 @@ José Morales desarrollará la app móvil, la cual tendrá la misma funcionalida
 
 ### José Retana
 
+- 21 Marzo: Se atiende a la reunión inicial para la definición de las actividad a realizar, los roles, reglas y demás
+
+- 7 de abril: A partir de los inicios del app web planteados por Ignacio, se empieza a montar un mockup de la página de búsqueda de los viajes disponibles. En este se muestran los espacios para escribir los códigos ed los aeropuertos y la tabla vacía con nombres de filas según lo estipulado por Alejandro Soto en el modelo relacional.
+
+-10 abril: Se crea un mockup no funcional de la reservaciones de vuelos, donde se incluyen los espacios para tarjeta, código de promoción y demás.
+
+-17 abril: Una vez implementados los endpoints de Alejandro Soto, se Implementa la funcionalidad a la página de búsqueda de vuelos.
+
+-19 abril: Se hace la funcionalidad de la página de reservaciones de vuelos o de "booking". No se implementa la parte de promociones, ya que falta este endpoint.
+
+-23 abril: Se implementan las promociones en la página de booking/reservaciones de vuelos.
+
+-24 abril: Se ayuda a terminal el trabajo escrito, los manuales de ususario y las pruebas de funcionalidad.
 ### Ignacio Vargas
 
 ### Alejandro Soto
@@ -224,5 +237,4 @@ José Morales desarrollará la app móvil, la cual tendrá la misma funcionalida
 - 22 de abril: Termino el último endpoint que me solicitan los compañeros de
   trabajo (para operaciones CRUD sobre promociones).
 
-- 24 de abril: Se documenta el backend. Se revisa que no existan más problemas de
-  integración.
+- 24 de abril: Se documenta el backend. Se revisa que no existan más problemas de integración.

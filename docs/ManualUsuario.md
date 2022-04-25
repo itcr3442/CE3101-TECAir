@@ -39,6 +39,8 @@ La interacción con el servidor se da por medio de consultas http a la direcció
 
 ## Gestión de usuario
 
+En la página principal se puede observar el área para el inicio de sesión o "Log In" al sistema. En este aparece 
+
 ## Búsqueda de vuelos
 
 ## Reservación de vuelos
