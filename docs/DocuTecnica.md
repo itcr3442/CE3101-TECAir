@@ -81,8 +81,9 @@ Para la entidad fuerte "segmento" se pasa a una relación, donde se incluyen tod
 
 ### Servidor
 
+Muchas de las estructuras se comparten con la app móvil (ver siguiente sección).
 
-### App móvil
+### Estructuras comunes y de app móvil
 
 En el caso de la aplicación móvil solo era necesario tener una imagen similar a la del servidor de los datos, sin embargo, se podía omitir varias relaciones presentes en la base de datos principal pues no son relevantes para la funcionalidad de la aplicación móvil. 
 
@@ -288,4 +289,6 @@ El problema encontrado consistía en que la aplicación móvil no podía realiza
 
 ![](imgs/diagramaClasesAppMovil.png)
 
-### APP Web
+### App web
+
+![](imgs/diagramaClasesWeb.png)

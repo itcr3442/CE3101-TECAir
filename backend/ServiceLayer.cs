@@ -305,7 +305,12 @@ class ServiceLayer
         }
 
         var total = promo != null ? promo.Price : flight.Price;
-        pax.Miles += 1;
+
+		// Solo se agregan millas a estudiantes
+		if (pax.StudentId != null)
+		{
+        	pax.Miles += 1;
+		}
 
         db.Bookings.Add(new Booking { Flight = flightId, Pax = paxId, Promo = promoId });
         return Save() ?? Results.Ok(new Booked { Total = total });
