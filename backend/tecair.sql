@@ -155,7 +155,8 @@ CREATE TABLE public.users (
     email character varying(256),
     university character varying(256),
     student_id character varying(64),
-    type public.user_type NOT NULL
+    type public.user_type NOT NULL,
+    miles numeric DEFAULT 0
 );
 
 

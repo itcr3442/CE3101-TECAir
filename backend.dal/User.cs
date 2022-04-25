@@ -24,6 +24,7 @@ public partial class User
     public string? University { get; set; }
     public string? StudentId { get; set; }
     public UserType Type { get; set; }
+    public decimal Miles { get; set; }
 
 	// Navegación por lazy evaluation
     [JsonIgnore]

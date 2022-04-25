@@ -56,6 +56,7 @@ class ServiceLayer
             University = user.University,
             StudentId = user.StudentId,
             Type = user.Type,
+            Miles = 0,
         };
 
         db.Users.Add(row);
@@ -84,17 +85,18 @@ class ServiceLayer
             University = user.University,
             StudentId = user.StudentId,
             Type = user.Type,
+            Miles = user.Miles,
         };
 
         return Results.Ok(plain);
     }
 
     /* Actualiza un usuario.
-	 *
-	 * El parámetro `id` es el UUID del usuario a actualizar y `edit` contiene
-	 * la información a actualizar. Los elementos de `edit` que sean nulos se
-	 * ignoran.
-	 */
+     *
+     * El parámetro `id` es el UUID del usuario a actualizar y `edit` contiene
+     * la información a actualizar. Los elementos de `edit` que sean nulos se
+     * ignoran.
+     */
     public IResult UpdateUser(Guid id, EditUser edit)
     {
         var user = (from u in db.Users where u.Id == id select u).SingleOrDefault();
@@ -136,8 +138,8 @@ class ServiceLayer
     }
 
     /* Dado el UUID de un pasajero, obtiene la lista de UUIDs de aquellos vuelos
-	 * que pasajero haya reservado y que actualmente se encuentren abiertos.
-	 */
+     * que pasajero haya reservado y que actualmente se encuentren abiertos.
+     */
     public IResult GetOpenFlights(Guid paxId)
     {
         var user = db.Users.Where(u => u.Id == paxId).SingleOrDefault();
@@ -154,12 +156,12 @@ class ServiceLayer
     }
 
     /* Añaade un nuevo vuelo.
-	 *
-	 * El objeto parámetro contiene la lista de segmentos, aeronaves y
-	 * aeropuertos que constarán el vuelo. Esta operación puede fallar si
-	 * cualquiera de los identificadores es incorrecto o si existe una colisión
-	 * de identidad con respecto al número de vuelo.
-	 */
+     *
+     * El objeto parámetro contiene la lista de segmentos, aeronaves y
+     * aeropuertos que constarán el vuelo. Esta operación puede fallar si
+     * cualquiera de los identificadores es incorrecto o si existe una colisión
+     * de identidad con respecto al número de vuelo.
+     */
     public IResult AddFlight(NewFlight newFlight)
     {
         if (newFlight.Segments.Length == 0 || newFlight.Airports.Length != newFlight.Segments.Length + 1)
@@ -222,8 +224,8 @@ class ServiceLayer
     }
 
     /* Dado un identificador de vuelo, obtiene el vuelo y la
-	 * constitución de su ruta.
-	 */
+     * constitución de su ruta.
+     */
     public IResult GetFlight(Guid flightId)
     {
         var flight = db.Flights.Where(f => f.Id == flightId).SingleOrDefault();
@@ -263,14 +265,14 @@ class ServiceLayer
     }
 
     /* Crea una nueva reservación de vuelo.
-	 *
-	 * este método toma el identificador del vuelo a reservar y
-	 * una descripción de la reservación.
-	 *
-	 * El vuelo debe estar en estado de reservación y además el
-	 * pasajero no debe haber reservado este vuelo en particular
-	 * todavqa.
-	 */
+     *
+     * este método toma el identificador del vuelo a reservar y
+     * una descripción de la reservación.
+     *
+     * El vuelo debe estar en estado de reservación y además el
+     * pasajero no debe haber reservado este vuelo en particular
+     * todavqa.
+     */
     public IResult BookFlight(Guid flightId, NewBooking booking)
     {
         var paxId = booking.Pax;
@@ -303,6 +305,7 @@ class ServiceLayer
         }
 
         var total = promo != null ? promo.Price : flight.Price;
+        pax.Miles += 1;
 
         db.Bookings.Add(new Booking { Flight = flightId, Pax = paxId, Promo = promoId });
         return Save() ?? Results.Ok(new Booked { Total = total });
@@ -476,9 +479,9 @@ class ServiceLayer
     }
 
     /* Retorna todos los vuelos en el sistema.
-	 *
-	 * Si "filterBooking" es true, solo se consideran los vuelos
-	 */
+     *
+     * Si "filterBooking" es true, solo se consideran los vuelos
+     */
     public IResult DumpFlights(bool filterBooking)
     {
         IEnumerable<Flight> flights = db.Flights;
@@ -553,9 +556,9 @@ class ServiceLayer
         }
 
         /* Esta expresión construye una descripción del segmento junto
-		 * a información descriptiva que se encuentra en otras tabla para
-		 * formar la salida.
-		 */
+         * a información descriptiva que se encuentra en otras tabla para
+         * formar la salida.
+         */
         var tagged = from segment in segments
                      select new TaggedSegment
                      {
@@ -573,13 +576,13 @@ class ServiceLayer
     }
 
     /* Chequea un pasajero en un segmento de vuelo.
-	 *
-	 * El chequeo requiere que el vuelo se haya abierto y además que
-	 * el pasajero no haya realizado esta operación todavía en el segmento
-	 * particular. Se considera que un pax se ha chequeado en un vuelo si
-	 * se ha chequeado en al menos uno de los segmentos del vuelo. Los asientos
-	 * de vuelo se toman en cuenta y no se permite la repitición de estos.
-	 */
+     *
+     * El chequeo requiere que el vuelo se haya abierto y además que
+     * el pasajero no haya realizado esta operación todavía en el segmento
+     * particular. Se considera que un pax se ha chequeado en un vuelo si
+     * se ha chequeado en al menos uno de los segmentos del vuelo. Los asientos
+     * de vuelo se toman en cuenta y no se permite la repitición de estos.
+     */
     public IResult CheckIn(Guid segmentId, CheckIn checkIn)
     {
         var segment = (from s in db.Segments where s.Id == segmentId select s).SingleOrDefault();
@@ -610,12 +613,12 @@ class ServiceLayer
     }
 
     /* Dada una cadena de origen y una de destino, busca vuelos
-	 * que contengan a una subruta que inicia en ese origen y termina
-	 * en ese destino.
-	 *
-	 * Retorna el mismo tipo de resultados que GetFlight(), véase ese
-	 * método para detalles.
-	 */
+     * que contengan a una subruta que inicia en ese origen y termina
+     * en ese destino.
+     *
+     * Retorna el mismo tipo de resultados que GetFlight(), véase ese
+     * método para detalles.
+     */
     public IResult SearchFlights(string fromLoc, string toLoc)
     {
         var fromPort = (from a in db.Airports where a.Code == fromLoc select a).SingleOrDefault();
@@ -647,13 +650,13 @@ class ServiceLayer
     private Random random = new Random();
 
     /* Construye una descripción de la ruta de un vuelo.
-	 *
-	 * Esta operación se utiliza de manera general para describir por
-	 * completo a un vuelo. La respuesta incluye al vuelo en sí, todos
-	 * sus segmentos, todas las paradas y datos auxiliares (comentarios,
-	 * tiempos, etc) que son de interés inmediato para las aplicaciones
-	 * clientes.
-	 */
+     *
+     * Esta operación se utiliza de manera general para describir por
+     * completo a un vuelo. La respuesta incluye al vuelo en sí, todos
+     * sus segmentos, todas las paradas y datos auxiliares (comentarios,
+     * tiempos, etc) que son de interés inmediato para las aplicaciones
+     * clientes.
+     */
     private SearchResult FlightRoute(Flight flight)
     {
         var query = from segment in db.Segments
@@ -712,15 +715,15 @@ class ServiceLayer
     }
 
     /* Intenta guardar los cambios realizados a la base de datos.
-	 * En caso de NO ocurrir errores, retorna nulo. Si hay un error
-	 * "esperable" (generalmente colisión de llaves primarias) trata
-	 * de traducir esto a una respuesta apropiada. La intención es
-	 * utilizar este método de la siguiente manera:
-	 *
-	 *   return Save() ?? Results.Ok(...);
-	 *
-	 * Lo cual simplifica el manejo de errores.
-	 */
+     * En caso de NO ocurrir errores, retorna nulo. Si hay un error
+     * "esperable" (generalmente colisión de llaves primarias) trata
+     * de traducir esto a una respuesta apropiada. La intención es
+     * utilizar este método de la siguiente manera:
+     *
+     *   return Save() ?? Results.Ok(...);
+     *
+     * Lo cual simplifica el manejo de errores.
+     */
     private IResult? Save()
     {
         try

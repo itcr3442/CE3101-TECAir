@@ -122,6 +122,7 @@ digraph g { graph [ rankdir = "LR" ];
         <tr><td bgcolor="grey96" align="left" port="university"><font face="Times-bold"> university </font></td><td align="left" port="university_right"><font color="#535353"> character varying (256) </font></td></tr>
         <tr><td bgcolor="grey96" align="left" port="student_id"><font face="Times-bold"> student_id </font></td><td align="left" port="student_id_right"><font color="#535353"> character varying (64) </font></td></tr>
         <tr><td bgcolor="grey96" align="left" port="type"><font face="Times-bold"> type </font></td><td align="left" port="type_right"><font color="#535353"> public.user_type NOT NULL </font></td></tr>
+        <tr><td bgcolor="grey96" align="left" port="type"><font face="Times-bold"> miles </font></td><td align="left" port="type_right"><font color="#535353"> numeric NOT NULL </font></td></tr>
       </table>
     >];
   "public.bags":flight_right -> "public.flights":id
