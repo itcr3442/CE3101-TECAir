@@ -1,8 +1,16 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import {
+  NgxMatDatetimePickerModule,
+  NgxMatNativeDateModule,
+  NgxMatTimepickerModule
+} from '@angular-material-components/datetime-picker';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -17,6 +25,7 @@ import { PromosPageComponent } from './components/promos-page/promos-page.compon
 import { FlightSearchComponent } from './components/flight-search/flight-search.component';
 import { CheckInComponent } from './components/check-in/check-in.component';
 import { UserAdminComponent } from './components/user-admin/user-admin.component';
+import { RegisterFlightComponent } from './components/register-flight/register-flight.component';
 
 @NgModule({
   declarations: [
@@ -30,13 +39,21 @@ import { UserAdminComponent } from './components/user-admin/user-admin.component
     FlightSearchComponent,
     CheckInComponent,
     UserAdminComponent,
+    RegisterFlightComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    TooltipModule
+    FormsModule,
+    TooltipModule,
+    MatDatepickerModule,
+    MatInputModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
+    NgxMatNativeDateModule,
+    BrowserAnimationsModule
   ],
 
   providers: [AuthGuard],

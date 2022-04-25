@@ -90,6 +90,7 @@ export class UserAdminComponent implements OnInit {
 
     this.registerService.resetForm(this.registerForm)
 
+
     this.registerService.getUser(id).subscribe((user: any) => {
       let r_user = user.body as User
       console.log("Current user:", r_user)
@@ -111,6 +112,8 @@ export class UserAdminComponent implements OnInit {
     let passwordField = this.registerForm.get('password')
     passwordField?.setValidators(Validators.required);
     this.current_user_id = null
+    this.isStudent = false
+    this.updateFormStudent()
   }
 
   onStudentChange(event: Event) {
@@ -186,6 +189,8 @@ export class UserAdminComponent implements OnInit {
         this.registerService.edit_user(this.current_user_id ?? "", this.username, this.password, this.firstName, this.lastName, this.phone, this.email, this.isStudent, this.university, this.studentId).subscribe(
           (resp: any) => {
             this.registerService.resetForm(this.registerForm)
+            this.isStudent = false
+            this.updateFormStudent()
             this.refreshUsers()
           },
           err => {
@@ -199,6 +204,8 @@ export class UserAdminComponent implements OnInit {
         this.registerService.register_user(this.username, this.password, this.firstName, this.lastName, this.phone, this.email, this.isStudent, this.university, this.studentId).subscribe(
           (resp: any) => {
             this.registerService.resetForm(this.registerForm)
+            this.isStudent = false
+            this.updateFormStudent()
             this.refreshUsers()
           },
           err => {

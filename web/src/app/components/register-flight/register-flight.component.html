@@ -1,0 +1,193 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-1 loginBox">
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                <div class="mb-3 form-group">
+                    <label for="id">No.</label>
+                    <input type="id" id="id" formControlName="no" class="form-control" placeholder="Número de vuelo">
+                </div>
+                <div class="mb-3 form-group">
+                    <label for="price">Precio</label>
+                    <input type="id" id="price" formControlName="precio" class="form-control"
+                        placeholder="Costo del viaje">
+                </div>
+                <div class="mb-3 form-group">
+                    <label for="comment">Comentario</label>
+                    <input type="id" id="comment" formControlName="comment" class="form-control"
+                        placeholder="Información adicional">
+                </div>
+
+
+
+                <div class="row mb-3 card">
+                    <div class="card-header">Origen</div>
+                    <div id="origen-row" class="card-body row">
+                        <div class="col-md-2">
+                            <label for="airport-OG">Aeropuerto</label>
+
+                            <select id="airport-OG" class="form-select">
+                                <option *ngFor="let airport of airportsList" [value]="airport.id">{{airport.code}}
+                                </option>
+
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="plane-OG">Avión</label>
+
+                            <select id="plane-OG" class="form-select">
+                                <option *ngFor="let airplane of aircraftsList" [value]="airplane.id">
+                                    {{airplane.code}}
+                                </option>
+
+                            </select>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row">
+
+                                <div class="col">
+                                    <mat-form-field>
+                                        <input id="partida-OG" matInput [ngxMatDatetimePicker]="pickerFrom">
+                                        <mat-datepicker-toggle matSuffix [for]="$any(pickerFrom)">
+                                        </mat-datepicker-toggle>
+                                        <ngx-mat-datetime-picker #pickerFrom [enableMeridian]="true">
+                                        </ngx-mat-datetime-picker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="partida-OG">Hora de partida</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field>
+                                        <input id="llegada-OG" matInput [ngxMatDatetimePicker]="pickerTo">
+                                        <mat-datepicker-toggle matSuffix [for]="$any(pickerTo)">
+                                        </mat-datepicker-toggle>
+                                        <ngx-mat-datetime-picker #pickerTo [enableMeridian]="true">
+                                        </ngx-mat-datetime-picker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="llegada-OG">Hora de llegada</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3 card" *ngFor='let in of counter() ;let i = index'>
+                    <div class="card-header">{{"Destino #" + (i + 1)}}</div>
+                    <div id="row-{{i}}" class="row card-body">
+                        <div class="col-md-2">
+                            <label for="select-airport-{{i}}">Aeropuerto</label>
+
+                            <select id="select-airport-{{i}}" class="form-select">
+                                <option *ngFor="let airport of airportsList" [value]="airport.id">{{airport.code}}
+                                </option>
+
+                            </select>
+                        </div>
+                        <ng-container *ngIf="i < totalAirports-2">
+                            <div class="col-md-2">
+                                <label for="select-plane-{{i}}">Avión</label>
+
+                                <select id="select-plane-{{i}}" class="form-select">
+                                    <option *ngFor="let airplane of aircraftsList" [value]="airplane.id">
+                                        {{airplane.code}}
+                                    </option>
+
+                                </select>
+                            </div>
+                        </ng-container>
+                        <div class="col-md-8">
+                            <ng-container *ngIf="i < totalAirports-2">
+                                <div class="row">
+
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <input id="partida-{{i}}" matInput [ngxMatDatetimePicker]="pickerFrom">
+                                            <mat-datepicker-toggle matSuffix [for]="$any(pickerFrom)">
+                                            </mat-datepicker-toggle>
+                                            <ngx-mat-datetime-picker #pickerFrom [enableMeridian]="true">
+                                            </ngx-mat-datetime-picker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="partida-{{i}}">Hora de partida</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <input id="llegada-{{i}}" matInput [ngxMatDatetimePicker]="pickerTo">
+                                            <mat-datepicker-toggle matSuffix [for]="$any(pickerTo)">
+                                            </mat-datepicker-toggle>
+                                            <ngx-mat-datetime-picker #pickerTo [enableMeridian]="true">
+                                            </ngx-mat-datetime-picker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="llegada-{{i}}">Hora de llegada</label>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="i == totalAirports-2">
+                                <div class="row">
+                                    <div class="col-md-8"></div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-primary" (click)="addAirport()">+</button>
+                                    </div>
+                                    <ng-container *ngIf="totalAirports > 2">
+                                        <div class="col">
+                                            <button type="button" class="btn btn-danger"
+                                                (click)="decreaseAirport()">-</button>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+
+                </div>
+
+                <ng-container *ngIf="this.message">
+                    <p>
+                        {{this.message}}
+                    </p>
+                </ng-container>
+                <div class="row g-2">
+                    <button type="submit" class="btn btn-primary">Registrar</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4 col-md-offset-1">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <!-- <th>UUID</th> -->
+                            <th>No. Vuelo</th>
+                            <th>Comentario</th>
+                            <th>Paradas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let flight of flightsList">
+                            <!-- <td>{{worker.id}}</td> -->
+                            <td>{{flight.flight.no}}</td>
+                            <td>{{flight.flight.comment}}</td>
+                            <td>
+                                <div *ngFor="let route of flight.route">{{route.code}}</div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger" (click)="deleteFlight(flight.flight.id)">
+                                    Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
