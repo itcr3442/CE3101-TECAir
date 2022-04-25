@@ -35,6 +35,27 @@ linestretch: 1.5
 
 La interacción con el servidor se da por medio de consultas http a la dirección ip del servidor en el puerto 5000. A continuación se describe como llevar a cabo las operaciones solicitadas en la especificación. Puede probar cada una de las operaciones en la aplicación de swagger.
 
+![](imgs/swagger/sw_01.png)
+![](imgs/swagger/sw_02.png)
+![](imgs/swagger/sw_03.png)
+![](imgs/swagger/sw_04.png)
+![](imgs/swagger/sw_05.png)
+![](imgs/swagger/sw_06.png)
+![](imgs/swagger/sw_07.png)
+![](imgs/swagger/sw_08.png)
+![](imgs/swagger/sw_09.png)
+![](imgs/swagger/sw_10.png)
+![](imgs/swagger/sw_11.png)
+![](imgs/swagger/sw_12.png)
+![](imgs/swagger/sw_13.png)
+![](imgs/swagger/sw_14.png)
+![](imgs/swagger/sw_15.png)
+![](imgs/swagger/sw_16.png)
+![](imgs/swagger/sw_17.png)
+![](imgs/swagger/sw_18.png)
+![](imgs/swagger/sw_19.png)
+![](imgs/swagger/sw_20.png)
+
 # App Web
 
 ## Gestión de usuario
