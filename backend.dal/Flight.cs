@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
+// Modelo de vuelo
 public partial class Flight
 {
     public Flight()
@@ -19,6 +20,7 @@ public partial class Flight
     public decimal Price { get; set; }
     public FlightState State { get; set; }
 
+	// Navegación por lazy evaluation
     [JsonIgnore]
     public virtual ICollection<Bag> Bags { get; set; }
     [JsonIgnore]

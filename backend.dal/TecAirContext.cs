@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 
+// Contexto de base de datos. Este archivo fue generado automáticamente
+// por las herramientas de scaffolding de .NET
 public partial class TecAirContext : DbContext
 {
     static TecAirContext()
@@ -20,6 +22,11 @@ public partial class TecAirContext : DbContext
         configuration = app.Configuration;
     }
 
+	/* Datasets raíces.
+	 *
+	 * La capa de servicios accede estas propiedades para iniciar
+	 * consultas a la base de datos.
+	 */
     public virtual DbSet<Aircraft> Aircraft { get; set; } = null!;
     public virtual DbSet<Airport> Airports { get; set; } = null!;
     public virtual DbSet<Bag> Bags { get; set; } = null!;
@@ -34,11 +41,13 @@ public partial class TecAirContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
+			// Las credenciales de conexión salen de aquí
             optionsBuilder.UseLazyLoadingProxies()
                 .UseNpgsql(configuration.GetConnectionString("TecAir"));
         }
     }
 
+	// Esto relaciona el modelo OOP con el modelo relacional
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasPostgresEnum<FlightState>("flight_state")

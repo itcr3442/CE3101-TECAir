@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
+// Modelo de segmento
 public partial class Segment
 {
     public Guid Id { get; set; }
@@ -15,6 +16,7 @@ public partial class Segment
     public DateTimeOffset ToTime { get; set; }
     public Guid Aircraft { get; set; }
 
+	// Navegación por lazy evaluation
     [JsonIgnore]
     public virtual Aircraft AircraftNavigation { get; set; } = null!;
     [JsonIgnore]

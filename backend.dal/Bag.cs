@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
+// Modelo de maleta
 public partial class Bag
 {
     public Guid Id { get; set; }
@@ -13,6 +14,7 @@ public partial class Bag
     public decimal Weight { get; set; }
     public string Color { get; set; } = null!;
 
+	// Navegación por lazy evaluation
     [JsonIgnore]
     public virtual Flight FlightNavigation { get; set; } = null!;
     [JsonIgnore]

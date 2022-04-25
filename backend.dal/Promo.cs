@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
+// Modelo de promoción
 public partial class Promo
 {
     public Guid Id { get; set; }
@@ -14,6 +15,7 @@ public partial class Promo
     public DateTime EndTime { get; set; }
     public byte[]? Img { get; set; }
 
+	// Navegación por lazy evaluation
     [JsonIgnore]
     public virtual Flight FlightNavigation { get; set; } = null!;
 }
