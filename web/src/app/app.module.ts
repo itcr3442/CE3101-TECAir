@@ -26,6 +26,7 @@ import { FlightSearchComponent } from './components/flight-search/flight-search.
 import { CheckInComponent } from './components/check-in/check-in.component';
 import { UserAdminComponent } from './components/user-admin/user-admin.component';
 import { RegisterFlightComponent } from './components/register-flight/register-flight.component';
+import { OpenFlightsComponent } from './components/open-flights/open-flights.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { RegisterFlightComponent } from './components/register-flight/register-f
     CheckInComponent,
     UserAdminComponent,
     RegisterFlightComponent,
+    OpenFlightsComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,42 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-1 loginBox">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <!-- <th>UUID</th> -->
+                            <th>No. Vuelo</th>
+                            <th>Comentario</th>
+                            <th>Paradas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let flight of flightsList">
+                            <!-- <td>{{worker.id}}</td> -->
+                            <td>{{flight.flight.no}}</td>
+                            <td>{{flight.flight.comment}}</td>
+                            <td>
+                                <div *ngFor="let route of flight.route">{{route.code}}</div>
+                            </td>
+                            <td>
+                                <div className="container">
+
+
+
+                                    <div className="d-grid gap-2 col-6 mx-auto">
+                                        <button type="button" class="btn btn-secondary" (click)="
+                                        openFlight(flight.flight.id)">
+                                            Abrir
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

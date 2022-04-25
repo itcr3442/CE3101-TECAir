@@ -66,4 +66,8 @@ export class FlightsService {
   public getAllFlights() {
     return this.repo.getData("flights")
   }
+
+  public openFlight(id: string) {
+    return this.repo.create("flights/" + id + "/open", {})
+  }
 }
