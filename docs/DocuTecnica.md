@@ -41,7 +41,7 @@ nocite: |
 
 ## Modelo relacional
 
-![](img/esquema.png)
+![](imgs/esquema.png)
 
 ## Estructuras de datos desarrolladas
 
@@ -245,8 +245,6 @@ El problema encontrado consistía en que la aplicación móvil no podía realiza
 ### REST API
 
 ![](imgs/diagramaClasesServer.png)
-
-### APP Móvil
 
 ### App móvil
 

@@ -95,6 +95,15 @@ José Morales desarrollará la app móvil, la cual tendrá la misma funcionalida
 
 ## Minutas de trabajo
 
+![](imgs/minuta1.png)
+
+![](imgs/minuta2.png)
+
+![](imgs/minuta3.png)
+
+![](imgs/minuta4.png)
+
+![](imgs/minuta5.png)
 
 ## Bitácoras
 
@@ -109,6 +118,11 @@ José Morales desarrollará la app móvil, la cual tendrá la misma funcionalida
 - 25 MAR
 
     + Colaboré con la creación y revisión del documento entregable que contenía el plan de trabajo inicial
+    + El equipo se reunió para tomar ciertas decisiones sobre aspectos operativos de grupo pues varios presentan dificultades con fechas de entrega estimada debido a exámenes de cursos exigentes en las fechas cercanas
+
+- 1 ABR
+
+    + Se realiza una reunión para discutir los avances hasta el momento de forma que se puedan incluír en el reporte ejecutivo 1.
 
 - 4 ABR
     
@@ -123,6 +137,7 @@ José Morales desarrollará la app móvil, la cual tendrá la misma funcionalida
     
     + Se investiga sobre el uso de la biblioteca `Retrofit2` para el consumo de servicios REST.
     + Se realiza un diseño inicial de la arquitectura de la aplicación móvil a implementar.
+    + Se realiza una reunión para discutir los avances hasta el momento de forma que se puedan incluír en el reporte ejecutivo 2.
 
 - 8 ABR
 
@@ -174,6 +189,12 @@ José Morales desarrollará la app móvil, la cual tendrá la misma funcionalida
     + Se redacta el manual de instalación para las diferentes aplicaciones desarrolladas en grupo.
     + Se realizan pruebas de integración con la aplicación REST
 
+- 24 ABR
+
+    + Se realizan pruebas de funcionamiento de sistema.
+    + Se completa documentación faltante.
+    + Se agregan correciones a App Web basados en resultados de pruebas de todo el sistema en conjunto.
+    + Se realiza la entrega final del proyecto.
 
 ### José Retana
 
