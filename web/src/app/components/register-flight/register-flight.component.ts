@@ -21,8 +21,10 @@ interface Aircraft {
   styleUrls: ['./register-flight.component.css']
 })
 export class RegisterFlightComponent implements OnInit {
+
   myDatePickerFrom: string = ""
   myDatePickerTo: string = ""
+
 
   flightsList: Array<FlightById> = []
   airportsList: Array<Airport> = []

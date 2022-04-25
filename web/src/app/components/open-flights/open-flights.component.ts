@@ -9,6 +9,7 @@ import { BoringFlight, FlightsService } from 'src/app/services/flights.service';
 })
 export class OpenFlightsComponent implements OnInit {
 
+  // lista de vuelos que no se han abierto aún 
   flightsList: Array<FlightById> = []
 
   constructor(private flightsService: FlightsService) { }
@@ -17,6 +18,7 @@ export class OpenFlightsComponent implements OnInit {
     this.refreshFlights()
   }
 
+  // refrescar lista de vuelos
   refreshFlights() {
     this.flightsService.getAllFlights().subscribe((res: any) => {
       console.log(res)

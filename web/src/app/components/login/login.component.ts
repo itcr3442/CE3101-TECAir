@@ -19,8 +19,11 @@ export class LoginComponent implements OnInit {
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
   })
+  // mensaje de login
   loginMsg: string = ""
+  // para errores más que todo
   message: string = ""
+  // estado del usuario
   logged: boolean;
 
   constructor(

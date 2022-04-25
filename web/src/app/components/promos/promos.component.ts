@@ -18,6 +18,7 @@ export class PromosComponent implements OnInit {
   flight_descriptors: string[] = ["", "", "", "", ""]
 
   constructor(private promoService: PromosService, private flightsService: FlightsService) {
+    //cantidad de promociones (máx 5)
     this.num_promos = 0
     this.promoService.getPromos().subscribe((res) => {
       console.log(res)

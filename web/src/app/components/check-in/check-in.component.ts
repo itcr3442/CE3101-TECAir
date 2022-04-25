@@ -7,7 +7,6 @@ import { AuthService } from 'src/app/services/auth.service';
 import { RegisterService } from 'src/app/services/register.service';
 import { User } from 'src/app/interfaces/user';
 
-
 interface Cart {
   selectedSeat: string | null,
   cartId: string,
@@ -23,12 +22,14 @@ export class CheckInComponent implements OnInit {
   stage: number = 0
   // 0 = escoger usuario, 1 = escoger vuelo, 2 = escoger asiento
   seatConfig: any = null;
+  // mapa de los asientos
   seatmap = Array<any>();
   seatChartConfig = {
     showRowsLabel: false,
     showRowWisePricing: false,
     newSeatNoForRow: false
   };
+  // guarda información de los asientos
   cart: Cart = {
     selectedSeat: null,
     cartId: "",
@@ -36,6 +37,7 @@ export class CheckInComponent implements OnInit {
   };
 
   users_list: Array<User> = []
+  // id de usuario que se selecciona para check-in
   selectedUser = ""
   userFlights: Array<FlightById> = []
 

@@ -23,10 +23,22 @@ export class FlightsService {
 
   constructor(private repo: RepositoryService) { }
 
+  /**
+   * 
+   * @param id id del vuelo
+   * @returns información detallada del vuelo
+   */
   public flightById(id: string) {
     return this.repo.getData("flights/" + id)
   }
 
+  /**
+   * Realiza el check in de un usuario para un segmento de su vuelo
+   * @param id id del segmento
+   * @param userId id del usuario
+   * @param seat el num de asiento del usuario
+   * @returns info de la respuesta
+   */
   public checkInSegment(id: string, userId: string, seat: number) {
     let checkinInfo = {
       pax: userId,
@@ -36,6 +48,11 @@ export class FlightsService {
     return this.repo.create("segments/" + id + "/checkin", checkinInfo)
   }
 
+  /**
+   * 
+   * @param id id del usuario
+   * @returns Retorna los vuelos reservados del usuario
+   */
   public getUsersBookedFlights(id: string) {
     return this.repo.getData("users/" + id + "/open")
   }
@@ -51,6 +68,15 @@ export class FlightsService {
     return this.repo.getData("aircraft")
   }
 
+  /**
+   * Para registrar un vuelo
+   * @param no num de vuelo
+   * @param price precio de tiquete
+   * @param comment detalle adicional
+   * @param segments segmentos del vuelo ed tipo Segment
+   * @param airports aeropuertos (n+1 segmentos)
+   * @returns información de la respuesta
+   */
   public registerFlight(no: number, price: number, comment: string, segments: Segment[], airports: string[]) {
     let flight = {
       no,
@@ -62,6 +88,11 @@ export class FlightsService {
     return this.repo.create("flights", flight)
   }
 
+  /**
+   * Borra un vuelo
+   * @param id 
+   * @returns 
+   */
   public delete_flight(id: string) {
     return this.repo.delete(
       "flights/" + id)

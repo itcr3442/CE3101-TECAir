@@ -30,6 +30,10 @@ export class AuthService {
     return false;
   }
 
+  /**
+   * 
+   * @returns El nivel de rol del usuario que está loggeado
+   */
   public getRole(): number {
     if (localStorage.getItem('isLoggedIn') == "true") {
       let role = localStorage.getItem('role')
@@ -48,6 +52,12 @@ export class AuthService {
     return JSON.parse(localStorage.getItem('token') || '{}')
   }
 
+  /**
+   * 
+   * @param username username del usuario
+   * @param password contraseña
+   * @returns retorna los datos del usuario
+   */
   public login(username: string, password: string) {
 
     let loginUrl = "check_login?username=" + username.trim() + "&password=" + password

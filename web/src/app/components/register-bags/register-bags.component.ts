@@ -22,11 +22,14 @@ export class RegisterBagsComponent implements OnInit {
 
   message: string = ""
 
-
+  // lista de usuarios
   users_list: Array<User> = []
+  // id de usuario que se selecciona
   selectedUser = ""
+  // vuelos en los que el usuario está checkeado
   userFlights: Array<FlightById> = []
 
+  // vuelo que se escoge para asignar maletas
   flightInfo = {
     uuid: "",
   }

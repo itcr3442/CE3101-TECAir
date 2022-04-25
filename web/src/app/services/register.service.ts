@@ -93,6 +93,10 @@ export class RegisterService {
     return this.repositoryService.getData("users/" + id)
   }
 
+  /**
+   * resetea el formgroup dejando todos sus campos vacíos
+   * @param formGroup un formgroup a resetear
+   */
   public resetForm = (formGroup: FormGroup) => {
     Object.values(formGroup.controls).forEach((control) => control.reset())
   }

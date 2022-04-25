@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+// página dedicada a solo mostrar promos
 @Component({
   selector: 'app-promos-page',
   templateUrl: './promos-page.component.html',

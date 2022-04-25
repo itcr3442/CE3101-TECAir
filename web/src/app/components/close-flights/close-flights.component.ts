@@ -5,11 +5,14 @@ import { User } from 'src/app/interfaces/user';
 import { BoringFlight, FlightsService } from 'src/app/services/flights.service';
 import { RegisterService } from 'src/app/services/register.service';
 
+
+// pasagero donde "pax" es el id
 interface Passenger {
   pax: string,
   bags: number
 }
 
+// pasagero donde "pax" es un usuario completo
 interface PassengerUser {
   pax: User,
   bags: number
