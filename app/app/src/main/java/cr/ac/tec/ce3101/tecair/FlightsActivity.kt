@@ -19,6 +19,7 @@ class FlightsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_flights)
+        (application as TECAirApp).session?.changeContext(this)
         flightList = findViewById(R.id.flightList)
     }
     

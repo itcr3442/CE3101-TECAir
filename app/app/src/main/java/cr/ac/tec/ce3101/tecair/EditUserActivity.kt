@@ -32,7 +32,8 @@ class EditUserActivity : AppCompatActivity() {
         setContentView(R.layout.activity_edit_user)
         //parse user information
         user = Gson().fromJson(intent.getStringExtra("info"), User::class.java)
-        
+
+        (application as TECAirApp).session?.changeContext(this)
         //obtain references to graphical objects
         username = findViewById<EditText>(R.id.editUsernameText)
         password = findViewById<EditText>(R.id.editPasswordText)

@@ -17,7 +17,7 @@ class OnlineSession(
     url: String,
     private val username: String,
     private val password: String,
-    private val cx: Context,
+    var cx: Context,
     private val cache: LocalDB =
         Room.databaseBuilder(cx.applicationContext, LocalDB::class.java, "cache")
             .allowMainThreadQueries().build(),
@@ -33,6 +33,10 @@ class OnlineSession(
             Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
         service = retrofit.create(TECAirService::class.java)
+    }
+
+    override fun changeContext(cx: Context) {
+        this.cx = cx
     }
 
     override fun getUsername(): String {
@@ -371,6 +375,9 @@ class OnlineSession(
                             afterOp(true)
                             simpleDialog(cx, "Enjoy your flight")
                         } else {
+                            if (response.code() == 409) {
+                                simpleDialog(cx, "Flight is already booked for current user")
+                            }
                             afterOp(false)
                         }
                     }

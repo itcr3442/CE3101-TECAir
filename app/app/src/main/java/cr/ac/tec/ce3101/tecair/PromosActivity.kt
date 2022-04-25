@@ -21,6 +21,7 @@ class PromosActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_promos)
+        (application as TECAirApp).session?.changeContext(this)
         promoList = findViewById(R.id.promoList)
         refreshPromoList()
     }

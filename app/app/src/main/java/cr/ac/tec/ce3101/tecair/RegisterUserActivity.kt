@@ -29,6 +29,7 @@ class RegisterUserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_user)
+        (application as TECAirApp).session?.changeContext(this)
         //obtain references to graphical objects
         username = findViewById<EditText>(R.id.newUsernameText)
         password = findViewById<EditText>(R.id.newPasswordText)

@@ -211,6 +211,7 @@ José Morales desarrollará la app móvil, la cual tendrá la misma funcionalida
 -23 abril: Se implementan las promociones en la página de booking/reservaciones de vuelos.
 
 -24 abril: Se ayuda a terminal el trabajo escrito, los manuales de ususario y las pruebas de funcionalidad.
+
 ### Ignacio Vargas
 
 ### Alejandro Soto

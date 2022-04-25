@@ -1,10 +1,13 @@
 package cr.ac.tec.ce3101.tecair
 
+import android.content.Context
+
 /**
  * Defines the base operations that any type of session should be
  * able to perform
  */
 interface Session {
+    fun changeContext(cx: Context)
     /**
      * Retrieves the username used in the session
      */

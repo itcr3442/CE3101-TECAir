@@ -19,6 +19,7 @@ class UserListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_list)
+        (application as TECAirApp).session?.changeContext(this)
         userList = findViewById(R.id.userList)
         refreshUserList()
     }
