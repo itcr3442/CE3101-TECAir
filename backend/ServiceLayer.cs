@@ -152,7 +152,22 @@ class ServiceLayer
                   where booking.Pax == paxId && booking.FlightNavigation.State == FlightState.Checkin
                   select booking.FlightNavigation.Id;
 
-        return Results.Ok(ids.ToArray());
+        return Results.Ok(ids.Distinct().ToArray());
+    }
+
+    // Obtiene los vuelos donde el usuario se ha chequeado.
+    public IResult GetCheckedFlights(Guid paxId)
+    {
+        var user = db.Users.Where(u => u.Id == paxId).SingleOrDefault();
+        if (user == null)
+        {
+            return Results.NotFound();
+        }
+
+        var ids = from checkin in db.Checkins
+                  select checkin.SegmentNavigation.FlightNavigation.Id;
+
+        return Results.Ok(ids.Distinct().ToArray());
     }
 
     /* Añaade un nuevo vuelo.
@@ -306,11 +321,11 @@ class ServiceLayer
 
         var total = promo != null ? promo.Price : flight.Price;
 
-		// Solo se agregan millas a estudiantes
-		if (pax.StudentId != null)
-		{
-        	pax.Miles += 1;
-		}
+        // Solo se agregan millas a estudiantes
+        if (pax.StudentId != null)
+        {
+            pax.Miles += 1;
+        }
 
         db.Bookings.Add(new Booking { Flight = flightId, Pax = paxId, Promo = promoId });
         return Save() ?? Results.Ok(new Booked { Total = total });
