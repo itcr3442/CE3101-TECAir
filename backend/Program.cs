@@ -90,6 +90,14 @@ app.MapGet("/users/{id}/open", (Guid id) =>
     }
 });
 
+app.MapGet("/users/{id}/checked", (Guid id) =>
+{
+    using (var db = new TecAirContext(app))
+    {
+        return new ServiceLayer(db).GetCheckedFlights(id);
+    }
+});
+
 app.MapGet("/flights", () =>
 {
     using (var db = new TecAirContext(app))
