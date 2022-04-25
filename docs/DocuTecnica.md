@@ -1,7 +1,7 @@
 ---
 title:
   Instituto Tecnológico de Costa Rica\endgraf\bigskip \endgraf\bigskip\bigskip\
-  TecAir Proyecto 1: TECAir \endgraf\bigskip\bigskip\bigskip\bigskip
+  Proyecto 1 - TECAir \endgraf\bigskip\bigskip\bigskip\bigskip
 author:
   - José Morales Vargas, carné 2019024270
   - Alejandro Soto Chacón, carné 2019008164
@@ -187,7 +187,7 @@ La arquitectura anterior es producto de los requerimientos de la aplicación mó
 
 Para permitir que la REST API se pudiese desplegar en varios sistemas distintos se decidió hacer del connection string un dato provisto en la máquina del cliente. Inicialmente se creyó que las aplicaciones desplegadas en IIS tomarían valores de variables de ambiente del sistema que contiene el IIS, sin embargo esto resultó ser equivoco. 
 
-- Resolución: Se siguieron los pasos indicados por [@unkown-author-2015] para la configuración de variables de ambiente en IIS.
+- Resolución: Se siguieron los pasos indicados por [@unknown-author-2015] para la configuración de variables de ambiente en IIS.
 
 ### Solicitudes a HTTP con "clear text"
 
@@ -209,7 +209,31 @@ El problema encontrado consistía en que la aplicación móvil no podía realiza
 
 ## Conclusiones
 
+- Se aplicaron los conocimiento adquiridos en el curso sobre modelos conceptuales y relacionales de bases de datos.
+
+- Se desarrolló exitosamente un servicio REST API en C# usando el Entity Framework.
+
+- Se hizo uso de SQLite como base de datos empotrada para una aplicación móvil.
+
+- Se utilizaron exitosamente tecnologías para el desarrollo de aplicaciones web tales como HTML5, CSS, Boostrap y Angular. Las aplicaciones exponen correctamente las funcionalidades solicitadas a los usuarios. 
+
+- Para servicios REST minimalistas, el flujo de trabajo con ASP.NET Core y las herramientas de OpenApi/Swagger facilitan una implementación rápida y eficiente, sin pérdida en desempeño o en mantenibilidad.
+
+- De querer tener un servicio web corriendo en una máquina de Windows y que el mismo sea accesible desde computadoras exteriores, IIS es una herramienta que se puede utilizr para lograr este objetivo.
+
+- Se cumplió con la solicitud de documentación para usuario final, es decir, se confeccionaron tanto manuales de instalación como manuales de operación para los usuarios finales.
+
 ## Recomendaciones
+
+- Utilizar room como interfaz para manipular bases de datos en SQLite, puesto que permite chequear que las queries sean correctas a tiempo de compilación, ventaja que no se tiene al usar las APIs base. 
+
+- Usar el EntityFramework para interacción con bases de datos en C# 
+
+- Usar Npgsql para la programación de 
+
+- Si se desea usar Windows como sistema operativo de servidor, se recomeinda utilizar las herramientas de IIS. 
+
+- Se recomiendo el uso de herramientas de control de versiones pues facilitan fuertemente la colaboración en grupo.
 
 ## Bibliografía
 
@@ -218,12 +242,14 @@ El problema encontrado consistía en que la aplicación móvil no podía realiza
 
 ## Diagramas de clases
 
-### Backend
+### REST API
 
-![](imgs/diagramaClasesAppServer.png)
+![](imgs/diagramaClasesServer.png)
+
+### APP Móvil
 
 ### App móvil
 
 ![](imgs/diagramaClasesAppMovil.png)
 
-## Anexos 
+### APP Web
