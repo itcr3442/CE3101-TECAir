@@ -78,8 +78,6 @@ En la página de despliegue de promociones se muestra el carrusel con todas las 
 
 ![](imgs/web5.jpg)
 
-## Gestión de promociones
-
 ## Chequeo de pasajeros
 
 Con una cuenta de trabajador, se puede accesar al tab de Chequeo de Pasageros, donde se mostrará inicialmente la lista de vuelos y sus paradas, junto con la posibilidad de seleccionar cuál de los segmentos del vuelo se desea hacer el proceso de chequeo de los pasajeros. Debajo de este, se encuentra también un botón "Chequear" para proceder con este proceso en el segmento indicado.
@@ -98,9 +96,23 @@ Una vez seleccionado un usuario, se muestra en pantalla visualmente cada asiento
 
 ## Gestión de vuelos
 
+Al ingresar al tab de gestión de vuelo con una cuenta autorizada, se mostrará a la izquierda un form que permitirá registrar un nuevo vuelo, donde se le pregunta número, precio, comentario, el aeropuerto de origen junto con el avión a utilizar y las horas de llegada y partida. EN la sección más baja del forms, se muestra la opción para registrar al avión un nuevo destino, el se realiza escogiendo el aeropuerto de escogencia y dándole click al botón "+". Después de hacer esto se le permitirá modificar lo mismo que lo que se determinó para el aeropuerto de origen. También se le permite quitar destinos si se agregán más de los que se necesitan, lo cuyal se realiza apretando el botón rojo con un "-". En el lado derecho se mostrarán una lista con información resumida de los vuelos registrados en ese momento.
+
+![](imgs/web11.jpg)
+
 ## Apertura de vuelos
+En esta pantalla para administradores se es posible ver la lista de vuelos en este momento sin abrir, cada uno con un botón que permite abrirlos.
+
+![](imgs/web12.jpg)
 
 ## Cierre de vuelos
+En esta pantalla para administradores se es posible ver la lista de vuelos en este momento que se pueden cerrar, cada uno con un botón que permite cerrarlos a voluntad.
+
+![](imgs/web13.jpg)
+
+Al apretar alguno de los botones de los aviones, se pasa a la pantalla del reporte del cierre, donde aparecen la lista con los pasajeros y la cantidad de maletas que llevaban, así como la opción para confirmar la clausura del vuelo.
+
+![](imgs/web14.jpg)
 
 # App Móvil
 
