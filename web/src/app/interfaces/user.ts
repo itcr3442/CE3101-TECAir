@@ -9,4 +9,5 @@ export interface User {
     email: string,
     university: string,
     studentId: string
+    miles: number,
 }

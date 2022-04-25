@@ -43,7 +43,9 @@
                         </div>
                         <div class="col-md-8">
                             <div class="row">
-
+                                <div class="col-md-3">
+                                    <label for="partida-OG">Hora de partida</label>
+                                </div>
                                 <div class="col">
                                     <mat-form-field>
                                         <input id="partida-OG" matInput [ngxMatDatetimePicker]="pickerFrom">
@@ -53,11 +55,12 @@
                                         </ngx-mat-datetime-picker>
                                     </mat-form-field>
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="partida-OG">Hora de partida</label>
-                                </div>
+
                             </div>
                             <div class="row">
+                                <div class="col-md-3">
+                                    <label for="llegada-OG">Hora de llegada</label>
+                                </div>
                                 <div class="col">
                                     <mat-form-field>
                                         <input id="llegada-OG" matInput [ngxMatDatetimePicker]="pickerTo">
@@ -67,9 +70,7 @@
                                         </ngx-mat-datetime-picker>
                                     </mat-form-field>
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="llegada-OG">Hora de llegada</label>
-                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -102,7 +103,9 @@
                         <div class="col-md-8">
                             <ng-container *ngIf="i < totalAirports-2">
                                 <div class="row">
-
+                                    <div class="col-md-3">
+                                        <label for="partida-{{i}}">Hora de partida</label>
+                                    </div>
                                     <div class="col">
                                         <mat-form-field>
                                             <input id="partida-{{i}}" matInput [ngxMatDatetimePicker]="pickerFrom">
@@ -112,11 +115,12 @@
                                             </ngx-mat-datetime-picker>
                                         </mat-form-field>
                                     </div>
-                                    <div class="col-md-3">
-                                        <label for="partida-{{i}}">Hora de partida</label>
-                                    </div>
+
                                 </div>
                                 <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="llegada-{{i}}">Hora de llegada</label>
+                                    </div>
                                     <div class="col">
                                         <mat-form-field>
                                             <input id="llegada-{{i}}" matInput [ngxMatDatetimePicker]="pickerTo">
@@ -126,9 +130,7 @@
                                             </ngx-mat-datetime-picker>
                                         </mat-form-field>
                                     </div>
-                                    <div class="col-md-3">
-                                        <label for="llegada-{{i}}">Hora de llegada</label>
-                                    </div>
+
                                 </div>
                             </ng-container>
                             <ng-container *ngIf="i == totalAirports-2">
