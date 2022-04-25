@@ -131,7 +131,7 @@ INSERT INTO public.segments(
   id, flight, seq_no, from_loc, from_time, to_loc, to_time, aircraft)
   VALUES ('68f878e4-ed9b-4b6f-81c0-1ea0fe6e6903', '391f7ffc-c83e-4876-b582-c401809a9b9f', 1,
       'a1581cea-3a53-4677-9897-3c02fa4e677f', '2020-07-07 23:30:00-02', 
-      '67fcda5a-16f4-4e86-9aff-7a23a027dc52', '2020-07-08 04:30:00-02', '391f7ffc-c83e-4876-b582-c401809a9b9f');
+      '67fcda5a-16f4-4e86-9aff-7a23a027dc52', '2020-07-08 04:30:00-02', '8de9045b-db71-4882-af44-85a34ed4d852');
 INSERT INTO public.segments(
   id, flight, seq_no, from_loc, from_time, to_loc, to_time, aircraft)
   VALUES ('7f7e9409-c788-40b6-a53a-a4fa83975e11', 'b9b51f2f-6457-4b51-9366-b1e99f2e704b', 1,

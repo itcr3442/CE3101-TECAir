@@ -37,7 +37,7 @@ nocite: |
 
 ## Modelo conceptual
 
-![](img/er.png)
+![](imgs/er.png)
 
 ## Justificación de mapeo conceptual-relacional
 
