@@ -90,7 +90,7 @@ app.MapGet("/users/{id}/open", (Guid id) =>
     }
 });
 
-app.MapGet("/users/{id}/open", (Guid id) =>
+app.MapGet("/users/{id}/checked", (Guid id) =>
 {
     using (var db = new TecAirContext(app))
     {
