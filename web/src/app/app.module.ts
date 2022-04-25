@@ -28,6 +28,7 @@ import { UserAdminComponent } from './components/user-admin/user-admin.component
 import { RegisterFlightComponent } from './components/register-flight/register-flight.component';
 import { OpenFlightsComponent } from './components/open-flights/open-flights.component';
 import { CloseFlightsComponent } from './components/close-flights/close-flights.component';
+import { RegisterBagsComponent } from './components/register-bags/register-bags.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { CloseFlightsComponent } from './components/close-flights/close-flights.
     RegisterFlightComponent,
     OpenFlightsComponent,
     CloseFlightsComponent,
+    RegisterBagsComponent,
   ],
   imports: [
     BrowserModule,
