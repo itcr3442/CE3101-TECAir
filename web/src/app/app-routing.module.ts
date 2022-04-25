@@ -14,6 +14,7 @@ import { CheckInComponent } from './components/check-in/check-in.component';
 import { UserAdminComponent } from './components/user-admin/user-admin.component';
 import { RegisterFlightComponent } from './components/register-flight/register-flight.component';
 import { OpenFlightsComponent } from './components/open-flights/open-flights.component';
+import { CloseFlightsComponent } from './components/close-flights/close-flights.component';
 
 
 const routes: Routes = [
@@ -27,6 +28,7 @@ const routes: Routes = [
   { path: 'check-in', component: CheckInComponent, canActivate: [AuthGuard], data: { role: RoleLevels.Admin } },
   { path: 'flight_register', component: RegisterFlightComponent, canActivate: [AuthGuard], data: { role: RoleLevels.Admin } },
   { path: 'flight_open', component: OpenFlightsComponent, canActivate: [AuthGuard], data: { role: RoleLevels.Admin } },
+  { path: 'flight_close', component: CloseFlightsComponent, canActivate: [AuthGuard], data: { role: RoleLevels.Admin } },
 
 ];
 

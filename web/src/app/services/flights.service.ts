@@ -70,4 +70,8 @@ export class FlightsService {
   public openFlight(id: string) {
     return this.repo.create("flights/" + id + "/open", {})
   }
+
+  public closeFlight(id: string) {
+    return this.repo.create("flights/" + id + "/close", {})
+  }
 }
