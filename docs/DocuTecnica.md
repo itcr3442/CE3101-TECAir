@@ -41,6 +41,38 @@ nocite: |
 
 ## Justificación de mapeo conceptual-relacional
 
+# UUID
+Para este proyecto se utilizaron en la mayoría de relaciones/entidades UUID o Identificadores Únicos Universales como las llaves de sus erespectivas relaciones, esto se realizó con el objetivo de poder lograr la correcta sincronización entre el app mobil y app web, y para así lograr que el sistema responda bien a cambios incluso si ocurren conflictos entre versiones de la base de datos.
+
+# Mapeo de entidad Vuelo
+
+Esta entidad fuerte se convierte en una relación de tal manera que se mantienen sus atributos simples. Se utiliza un uuid llamada "id" como llave primaria de esta relación
+
+# Mapeo de entidad Usuario
+
+Similarmente a la entidad "vuelo", la entidad "usuario" se convierte en una relación, de manera que se mapeen todos sus atributos en esta relación, separando los atributos compuestos nombres completos y las identidades estudiantiles en sus distintos componentes. Se utiliza un uuid llamada "id" como llave primaria de esta relación
+
+# Mapeo de entidad Aeronave
+
+Para la entidad fuerte "aeronave" se pasa a una relación, incluyendo todos sus atributos simples. Se utiliza un uuid llamada "id" como llave primaria de esta relación
+
+# Mapeo de entidad Aeropuertos
+
+Para la entidad fuerte "aeropuertos" se pasa a una relación, donde se incluyen todos sus atributos simples. Se utiliza un uuid llamada "id" como llave primaria de esta relación.
+
+# Mapeo de entidad Maleta y relación "asigna"
+
+Para la entidad fuerte "maleta" se pasa a una relación, donde se incluyen todos sus atributos simples y se utiliza un uuid llamada "id" como llave primaria de esta relación. Este está relacionado con usuario y con vuelo por medio de la relación "asigna" de tipo N:1, lo cual implica que en maleta (el lado N de la relación) se inncluyen como llaves foráneas el uuid del usuario llamado "dueño" y el uuid del vuelo llamado "flight".
+
+# Mapeo de Promos y relaciónes "usa" y "aplica"
+
+Para la entidad fuerte "promos" se pasa a una relación, donde se incluyen todos sus atributos simples y se utiliza un uuid llamada "id" como llave primaria de esta relación. Este está relacionado con vuelo y con usuario por medio de las relación "usa" de tipo N:M y aplica de tipo N:1. Para su simplificación se simplifica las relaciones en una nueva relación llamada "bookings" donde se tienen tres llaves primarias, todas de tipo uuid, "flight" la id de los vuelos, "pax" siendo la de los usuarios y "promo" siendo la de las promos.
+
+# Mapeo de Segments y relaciónes "chequea", "origen", "detino", "vuela con" y "recorre"
+
+Para la entidad fuerte "segmento" se pasa a una relación, donde se incluyen todos sus atributos simples y se utiliza un uuid llamada "id" como llave primaria de esta relación. Para la relaciónes de segmento, se tiene "recorre" de tipo N:1 con vuelo,para las relaciones "origen" y "destino" de tipo N:1 con aeropuerto, la relación "vuela con" con aeronave de tipo N:1. Para cada una de estas, se incluye una llave foránea en Segments, para así mantener la conexión entre todas estas relaciones.Para la relación con usuario de "chequea", al ser de tipo N:M, se crea una relación adicional llamado "checkins" el cual tiene como llave primaria la uuid "pax" de usuarios y la uuid "segment" para los segmentos, junto con el atributo de la relación "seat".
+
+
 ## Modelo relacional
 
 ![](imgs/esquema.png)
@@ -148,6 +180,8 @@ data class Promo(
 ```
 
 ## Descripción detallada de la arquitectura desarrollada
+
+
 
 ### Diagrama de arquitectura
 
