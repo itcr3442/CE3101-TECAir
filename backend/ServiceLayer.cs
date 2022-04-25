@@ -13,23 +13,23 @@ using backend.dal;
 
 class ServiceLayer
 {
-	// Construye la capa de servicios dado un contexto de base de datos.
+    // Construye la capa de servicios dado un contexto de base de datos.
     public ServiceLayer(TecAirContext context)
     {
         db = context;
     }
 
-	// Verifica si un par usuario-contraseña cnstituye credenciales válidas.
+    // Verifica si un par usuario-contraseña cnstituye credenciales válidas.
     public IResult CheckLogin(string username, string password)
     {
         var user = (from u in db.Users where u.Username == username select u).SingleOrDefault();
         if (user == null || user.Hash == null || user.Salt == null)
         {
-			// En este caso, no se ha definido una contraseña
+            // En este caso, no se ha definido una contraseña
             return Results.Unauthorized();
         }
 
-		// Se compara la prueba hash-sal contra lo almacenado
+        // Se compara la prueba hash-sal contra lo almacenado
         var salt = Convert.FromHexString(user.Salt);
         var hash = Convert.FromHexString(user.Hash);
         var challenge = HashFor(password, salt);
@@ -37,10 +37,10 @@ class ServiceLayer
         return hash.SequenceEqual(challenge) ? Results.Ok(user.Id) : Results.Unauthorized();
     }
 
-	// Agrega un nuevo usuario con sus datos personales y una clave.
+    // Agrega un nuevo usuario con sus datos personales y una clave.
     public IResult AddUser(NewUser user)
     {
-		// Criptográficamente, la sal debe ser idealmente aleatoria.
+        // Criptográficamente, la sal debe ser idealmente aleatoria.
         var salt = RandomSalt();
         var hash = HashFor(user.Password, salt);
 
@@ -62,7 +62,7 @@ class ServiceLayer
         return Save() ?? Results.Ok(row.Id); // Retorna el UUID de la nueva tupla
     }
 
-	// Obtiene parámetros de un usuario dado su identificador único.
+    // Obtiene parámetros de un usuario dado su identificador único.
     public IResult GetUser(Guid id)
     {
         var user = (from u in db.Users where u.Id == id select u).SingleOrDefault();
@@ -89,7 +89,7 @@ class ServiceLayer
         return Results.Ok(plain);
     }
 
-	/* Actualiza un usuario.
+    /* Actualiza un usuario.
 	 *
 	 * El parámetro `id` es el UUID del usuario a actualizar y `edit` contiene
 	 * la información a actualizar. Los elementos de `edit` que sean nulos se
@@ -105,7 +105,7 @@ class ServiceLayer
 
         user.Username = edit.Username ?? user.Username;
 
-		// Recálculo de par sal-hash en caso de cambio de contraseña
+        // Recálculo de par sal-hash en caso de cambio de contraseña
         if (edit.Password != null)
         {
             var newSalt = RandomSalt();
@@ -123,10 +123,10 @@ class ServiceLayer
         return Save() ?? Results.Ok();
     }
 
-	// Elimina un usuario del sistema.
+    // Elimina un usuario del sistema.
     public IResult DeleteUser(Guid id)
     {
-		// Primero deben eliminarse las referencias al usuario en otras tablas.
+        // Primero deben eliminarse las referencias al usuario en otras tablas.
         db.Bookings.RemoveRange(from b in db.Bookings where b.Pax == id select b);
         db.Bags.RemoveRange(from b in db.Bags where b.Owner == id select b);
         db.Checkins.RemoveRange(from c in db.Checkins where c.Pax == id select c);
@@ -135,7 +135,7 @@ class ServiceLayer
         return Save() ?? Results.Ok();
     }
 
-	/* Dado el UUID de un pasajero, obtiene la lista de UUIDs de aquellos vuelos
+    /* Dado el UUID de un pasajero, obtiene la lista de UUIDs de aquellos vuelos
 	 * que pasajero haya reservado y que actualmente se encuentren abiertos.
 	 */
     public IResult GetOpenFlights(Guid paxId)
@@ -153,7 +153,7 @@ class ServiceLayer
         return Results.Ok(ids.ToArray());
     }
 
-	/* Añaade un nuevo vuelo.
+    /* Añaade un nuevo vuelo.
 	 *
 	 * El objeto parámetro contiene la lista de segmentos, aeronaves y
 	 * aeropuertos que constarán el vuelo. Esta operación puede fallar si
@@ -167,7 +167,7 @@ class ServiceLayer
             return Results.BadRequest();
         }
 
-		// Verificación de integridad
+        // Verificación de integridad
         foreach (var airport in newFlight.Airports)
         {
             if (db.Airports.Where(a => a.Id == airport).SingleOrDefault() == null)
@@ -176,7 +176,7 @@ class ServiceLayer
             }
         }
 
-		// Verificación de integridad
+        // Verificación de integridad
         foreach (var segment in newFlight.Segments)
         {
             if (db.Aircraft.Where(a => a.Id == segment.Aircraft).SingleOrDefault() == null)
@@ -201,7 +201,7 @@ class ServiceLayer
             return result;
         }
 
-		// Se crean los segmentos del vuelo
+        // Se crean los segmentos del vuelo
         for (var i = 0; i < newFlight.Segments.Length; ++i)
         {
             var segment = new Segment
@@ -221,7 +221,7 @@ class ServiceLayer
         return Save() ?? Results.Ok(row.Id);
     }
 
-	/* Dado un identificador de vuelo, obtiene el vuelo y la
+    /* Dado un identificador de vuelo, obtiene el vuelo y la
 	 * constitución de su ruta.
 	 */
     public IResult GetFlight(Guid flightId)
@@ -236,7 +236,7 @@ class ServiceLayer
         return flight != null ? Results.Ok(result) : Results.NotFound();
     }
 
-	// Elimina un vuelo a partir de su UUID.
+    // Elimina un vuelo a partir de su UUID.
     public IResult DeleteFlight(Guid flightId)
     {
         var flight = db.Flights.Where(f => f.Id == flightId).SingleOrDefault();
@@ -245,24 +245,24 @@ class ServiceLayer
             return Results.NotFound();
         }
 
-		// Deben descartarse las referencias al vuelo
+        // Deben descartarse las referencias al vuelo
         db.Bookings.RemoveRange(db.Bookings.Where(b => b.Flight == flightId));
         db.Bags.RemoveRange(db.Bags.Where(b => b.Flight == flightId));
         db.Promos.RemoveRange(db.Promos.Where(p => p.Flight == flightId));
 
-		// Se eliminan segmentos y sus checkins asociados
+        // Se eliminan segmentos y sus checkins asociados
         foreach (var segment in db.Segments.Where(s => s.Flight == flightId).ToArray())
         {
             db.Checkins.RemoveRange(db.Checkins.Where(c => c.Segment == segment.Id));
             db.Segments.Remove(segment);
         }
 
-		// Finalmente, se puede eliminar el vuelo
+        // Finalmente, se puede eliminar el vuelo
         db.Flights.Remove(flight);
         return Save() ?? Results.Ok();
     }
 
-	/* Crea una nueva reservación de vuelo.
+    /* Crea una nueva reservación de vuelo.
 	 *
 	 * este método toma el identificador del vuelo a reservar y
 	 * una descripción de la reservación.
@@ -287,7 +287,7 @@ class ServiceLayer
             return Results.BadRequest();
         }
 
-		// Aplicación de la promoción.
+        // Aplicación de la promoción.
         Promo? promo = null;
         if (promoId != null)
         {
@@ -308,7 +308,7 @@ class ServiceLayer
         return Save() ?? Results.Ok(new Booked { Total = total });
     }
 
-	// Registra una maleta para un pasajero que se encuentra chequeado.
+    // Registra una maleta para un pasajero que se encuentra chequeado.
     public IResult AddBag(Guid flightId, NewBag bag)
     {
         var validColor = bag.Color.Length == 7 && bag.Color[0] == '#';
@@ -324,7 +324,7 @@ class ServiceLayer
             }
         }
 
-		// Restricciones
+        // Restricciones
         if (bag.Weight < 0 || bag.Weight > 1000 || !validColor)
         {
             return Results.BadRequest();
@@ -344,6 +344,7 @@ class ServiceLayer
                        where checkin.Pax == bag.Owner && segment.Flight == flightId
                        select 1;
 
+        // El pasajero debe estar chequeado
         if (checkins.Count() == 0)
         {
             return Results.BadRequest();
@@ -361,6 +362,10 @@ class ServiceLayer
         return Save() ?? Results.Ok(new InsertedBag { Id = row.Id, No = row.No });
     }
 
+    // Abre un vuelo (habilita checkin).
+    //
+    // Para que esto sea permitido, el vuelo debe estar en booking o checkin.
+    // Una vez que se inicia este proceso, ya no es posible hacer booking nuevamente.
     public IResult OpenFlight(Guid flightId)
     {
         var flight = (from f in db.Flights where f.Id == flightId select f).SingleOrDefault();
@@ -384,7 +389,11 @@ class ServiceLayer
         }
     }
 
-	// Cierra un vuelo
+    // Cierra un vuelo.
+    //
+    // La lógica es análoga a abrir un vuelo, con la diferencia que al momento
+    // de cerrar se genera un resumen de listado de maletas por pasajero que se
+    // utiliza para emitir un reporte.
     public IResult CloseFlight(Guid flightId)
     {
         var flight = (from f in db.Flights where f.Id == flightId select f).SingleOrDefault();
@@ -413,6 +422,7 @@ class ServiceLayer
                     where segment.Flight == flightId
                     select checkin.PaxNavigation;
 
+        // Cuenta maletas por cada pasajero chequeado (no cuentan pasajeros no chequeados)
         var close = new List<PaxClose>();
         foreach (var pax in paxes.Distinct().ToArray())
         {
@@ -428,7 +438,7 @@ class ServiceLayer
         return Save() ?? Results.Ok(close);
     }
 
-	// Devuelve un vuelo al estado inicial (booking).
+    // Devuelve un vuelo al estado inicial (booking).
     public IResult ResetFlight(Guid flightId)
     {
         var flight = (from f in db.Flights where f.Id == flightId select f).SingleOrDefault();
@@ -437,7 +447,7 @@ class ServiceLayer
             return Results.NotFound();
         }
 
-		// Elimina todos los bookings y checkins existentes.
+        // Elimina todos los bookings y checkins existentes.
         db.Bookings.RemoveRange(from b in db.Bookings where b.Flight == flightId select b);
         db.Checkins.RemoveRange(
             from c in db.Checkins
@@ -451,12 +461,13 @@ class ServiceLayer
         return Save() ?? Results.Ok();
     }
 
-	// Retorna todos los usuarios en el sistema.
+    // Retorna todos los usuarios en el sistema.
     public IResult DumpUsers()
     {
         var users = db.Users.ToArray();
         foreach (var user in users)
         {
+            // Descarta información sensible
             user.Hash = null;
             user.Salt = null;
         }
@@ -464,7 +475,7 @@ class ServiceLayer
         return Results.Ok(users);
     }
 
-	/* Retorna todos los vuelos en el sistema.
+    /* Retorna todos los vuelos en el sistema.
 	 *
 	 * Si "filterBooking" es true, solo se consideran los vuelos
 	 */
@@ -479,24 +490,25 @@ class ServiceLayer
         return Results.Ok(flights.ToArray());
     }
 
-	// Retorna todas las promos en el sistema.
+    // Retorna todas las promos en el sistema.
     public IResult DumpPromos()
     {
         return Results.Ok(db.Promos.ToArray());
     }
 
-	// Reporta los aeropuertos.
+    // Reporta los aeropuertos.
     public IResult DumpAirports()
     {
         return Results.Ok(db.Airports.ToArray());
     }
 
-	// Reporta las aeronaves.
+    // Reporta las aeronaves.
     public IResult DumpAircraft()
     {
         return Results.Ok(db.Aircraft.ToArray());
     }
 
+    // Busca el UUID de una promoción a partir del código de promoción.
     public IResult SearchPromo(string code)
     {
         var promo = (from p in db.Promos where p.Code == code select p).SingleOrDefault();
@@ -508,6 +520,7 @@ class ServiceLayer
         return Results.Ok(promo.Id);
     }
 
+    // Elimina una promoción.
     public IResult DeletePromo(Guid promoId)
     {
         var promo = db.Promos.Where(p => p.Id == promoId).SingleOrDefault();
@@ -516,6 +529,7 @@ class ServiceLayer
             return Results.NotFound();
         }
 
+        // Se eliminan referencias a la promoción antes de eliminarla
         foreach (var booking in db.Bookings.Where(b => b.Promo == promoId))
         {
             booking.Promo = null;
@@ -525,6 +539,11 @@ class ServiceLayer
         return Save() ?? Results.Ok();
     }
 
+    // Vuelca todos los segmentos en el sistema.
+    //
+    // Si `filterBooking` es true, se filtra para solo mostrar los
+    // segmentos asociados a vuelos que están actualmente aceptando
+    // reservaciones.
     public IResult DumpSegments(bool filterBooking)
     {
         var segments = db.Segments.ToList();
@@ -533,6 +552,10 @@ class ServiceLayer
             segments = segments.Where(s => s.FlightNavigation.State == FlightState.Booking).ToList();
         }
 
+        /* Esta expresión construye una descripción del segmento junto
+		 * a información descriptiva que se encuentra en otras tabla para
+		 * formar la salida.
+		 */
         var tagged = from segment in segments
                      select new TaggedSegment
                      {
@@ -549,6 +572,14 @@ class ServiceLayer
         return Results.Ok(tagged.ToArray());
     }
 
+    /* Chequea un pasajero en un segmento de vuelo.
+	 *
+	 * El chequeo requiere que el vuelo se haya abierto y además que
+	 * el pasajero no haya realizado esta operación todavía en el segmento
+	 * particular. Se considera que un pax se ha chequeado en un vuelo si
+	 * se ha chequeado en al menos uno de los segmentos del vuelo. Los asientos
+	 * de vuelo se toman en cuenta y no se permite la repitición de estos.
+	 */
     public IResult CheckIn(Guid segmentId, CheckIn checkIn)
     {
         var segment = (from s in db.Segments where s.Id == segmentId select s).SingleOrDefault();
@@ -578,11 +609,19 @@ class ServiceLayer
         return Save() ?? Results.Ok();
     }
 
+    /* Dada una cadena de origen y una de destino, busca vuelos
+	 * que contengan a una subruta que inicia en ese origen y termina
+	 * en ese destino.
+	 *
+	 * Retorna el mismo tipo de resultados que GetFlight(), véase ese
+	 * método para detalles.
+	 */
     public IResult SearchFlights(string fromLoc, string toLoc)
     {
         var fromPort = (from a in db.Airports where a.Code == fromLoc select a).SingleOrDefault();
         var toPort = (from a in db.Airports where a.Code == toLoc select a).SingleOrDefault();
 
+        // No hay resultados si los aeropuertos no existen
         if (fromPort == null || toPort == null)
         {
             return Results.Ok(new SearchResult[] { });
@@ -607,6 +646,14 @@ class ServiceLayer
     private TecAirContext db;
     private Random random = new Random();
 
+    /* Construye una descripción de la ruta de un vuelo.
+	 *
+	 * Esta operación se utiliza de manera general para describir por
+	 * completo a un vuelo. La respuesta incluye al vuelo en sí, todos
+	 * sus segmentos, todas las paradas y datos auxiliares (comentarios,
+	 * tiempos, etc) que son de interés inmediato para las aplicaciones
+	 * clientes.
+	 */
     private SearchResult FlightRoute(Flight flight)
     {
         var query = from segment in db.Segments
@@ -623,6 +670,8 @@ class ServiceLayer
         while (valid)
         {
             var segment = enumerator.Current;
+
+            // Unavail enumera los asientos ocupados
             var unavail = from checkin in db.Checkins
                           where checkin.Segment == segment.Id
                           select checkin.Seat;
@@ -662,6 +711,16 @@ class ServiceLayer
         };
     }
 
+    /* Intenta guardar los cambios realizados a la base de datos.
+	 * En caso de NO ocurrir errores, retorna nulo. Si hay un error
+	 * "esperable" (generalmente colisión de llaves primarias) trata
+	 * de traducir esto a una respuesta apropiada. La intención es
+	 * utilizar este método de la siguiente manera:
+	 *
+	 *   return Save() ?? Results.Ok(...);
+	 *
+	 * Lo cual simplifica el manejo de errores.
+	 */
     private IResult? Save()
     {
         try
@@ -694,6 +753,7 @@ class ServiceLayer
         }
     }
 
+    // Genera una sal aleatoria de 16 bytes
     private byte[] RandomSalt()
     {
         var salt = new byte[16];
@@ -701,11 +761,16 @@ class ServiceLayer
         return salt;
     }
 
+    // Calcula el campo de hash de clave a partir del plaintext y la sal 
     private byte[] HashFor(string password, byte[] salt)
     {
         return KeyDerivation.Pbkdf2(password, salt, KeyDerivationPrf.HMACSHA256, 1000, 16);
     }
 }
+
+/* Las siguientes clases definen el formato de datos de la API
+ * y se utilizan en los endpoints anteriores.
+ */
 
 public class NewUser
 {
