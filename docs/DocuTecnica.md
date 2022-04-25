@@ -79,9 +79,208 @@ Para la entidad fuerte "segmento" se pasa a una relación, donde se incluyen tod
 
 ## Estructuras de datos desarrolladas
 
-### Servidor
+### Backend
 
 Muchas de las estructuras se comparten con la app móvil (ver siguiente sección).
+Se describen a continuación aquellas que son específicas del backend y/o de la
+interacción backend-app web.
+
+```csharp
+public class NewUser
+{
+    [Required]
+    public UserType Type { get; set; }
+    [Required]
+    public string Username { get; set; } = null!;
+    [Required]
+    public string Password { get; set; } = null!;
+    [Required]
+    public string FirstName { get; set; } = null!;
+    public string? LastName { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Email { get; set; }
+    public string? University { get; set; }
+    public string? StudentId { get; set; }
+}
+```
+
+Esta estructura se utiliza para crear nuevos usuarios. Nótese que no contiene
+sal ni hash, sino más bien la contraseña en texto plano, así como los datos de
+contacto del usuario. El tipo de usuario solamente puede establecerse una vez
+aquí.
+
+```csharp
+public class EditUser
+{
+    [Required]
+    public string Username { get; set; } = null!;
+    [Required]
+    public string Password { get; set; } = null!;
+    [Required]
+    public string FirstName { get; set; } = null!;
+    public string? LastName { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Email { get; set; }
+    public string? University { get; set; }
+    public string? StudentId { get; set; }
+}
+```
+
+Esta estructura es parecida a la anterior, pero elimina aquellos campos que ya
+no se pueden alterar una vez creado un usuario, como su tipo. Se utiliza al
+momento de editar usuarios. Los valores nulos se toman como indicios de no
+alterar el campo en cuestión, particularmente útil para contraseña ya que la
+msima no es recuperable si no se conoce.
+
+```csharp
+public class NewBooking
+{
+    [Required]
+    public Guid Pax { get; set; }
+    public Guid? Promo { get; set; }
+}
+```
+
+Estructura utilizada para reservar un vuelo. El identificador de vuelo se
+conoce a partir de la query string.
+
+```csharp
+public class CheckIn
+{
+    [Required]
+    public Guid Pax { get; set; }
+    [Required]
+    public int Seat { get; set; }
+}
+```
+
+Semejante al anterior, se utiliza para hacer check-in. El número de asiento
+debe ser no negativo y menor que el máximo del segmento donde se hace chequeo.
+
+```csharp
+public class NewBag
+{
+    [Required]
+    public Guid Owner { get; set; }
+    [Required]
+    public decimal Weight { get; set; }
+    [Required]
+    public string Color { get; set; } = null!;
+}
+```
+
+Utilizado para insertar una maleta de un pasajero chequeado.  El color tiene la
+forma `#rrggbb` y el peso es no negativo.
+
+```csharp
+public class NewFlight
+{
+    [Required]
+    public int No { get; set; }
+    [Required]
+    public decimal Price { get; set; }
+    [Required]
+    public string? Comment { get; set; } = null!;
+    [Required]
+    public NewSegment[] Segments { get; set; } = null!;
+    [Required]
+    public Guid[] Airports { get; set; } = null!;
+}
+```
+
+Para la inserción de nuevos vuelos. El número de vuelo es especificado por el
+usuario, junto a precio y comentario. Los segmentos deben de ser una lista no
+vvacía y los aeropuertos deben tener exactamente un elemento más que la lista
+de segmentos.
+
+```csharp
+public class NewSegment
+{
+    [Required]
+    public Guid Aircraft { get; set; }
+    [Required]
+    public DateTimeOffset FromTime { get; set; }
+    [Required]
+    public DateTimeOffset ToTime { get; set; }
+}
+```
+
+Estructura que se referencia en `NewFlight` para la creación de segmentos del
+vuelo en cuestión, ya que los segmentos son entidades débiles.
+
+```csharp
+public class Booked
+{
+    public decimal Total { get; set; }
+}
+```
+
+Respuesta exitosa a una reservación, indicando el monto total a cobrar.
+
+```csharp
+public class SearchResult
+{
+    public Flight Flight { get; set; } = null!;
+    public Airport[] Route { get; set; } = null!;
+    public SegmentSeats[] Segments { get; set; } = null!;
+}
+```
+
+Resultado de búsqueda o de información sobre vuelo. Incluye un vuelo, su ruta
+completa y los segmentos que la conforman.
+
+```csharp
+public class TaggedSegment
+{
+    public Guid Id { get; set; }
+    public Guid Flight { get; set; }
+    public int SeqNo { get; set; }
+    public String FromLoc { get; set; } = null!;
+    public DateTimeOffset FromTime { get; set; }
+    public String ToLoc { get; set; } = null!;
+    public DateTimeOffset ToTime { get; set; }
+    public Guid Aircraft { get; set; }
+}
+```
+
+Campos de un segmento junto a información de utilidad (nombre de aeropuertos en
+vez de UUIDs). Usado al volcar segmentos.
+
+```csharp
+public class SegmentSeats
+{
+    public Guid Id { get; set; }
+    public DateTimeOffset FromTime { get; set; }
+    public DateTimeOffset ToTime { get; set; }
+    public string AircraftCode { get; set; } = null!;
+    public int Seats { get; set; }
+    public int[] Unavail { get; set; } = null!;
+}
+```
+
+Contenido de un segmento tras enumerar un vuelo, incluye los asientos ya no
+disponibles.
+
+```csharp
+public class InsertedBag
+{
+    public Guid Id { get; set; }
+    public int No { get; set; }
+}
+```
+
+Respuesta a una maleta recién agregada.
+
+```csharp
+public class PaxClose
+{
+    public Guid Pax { get; set; }
+    public int Bags { get; set; }
+}
+```
+
+Elemento de respuesta a cierre de vuelo, indica un pasajero y su número de
+maletas.
 
 ### Estructuras comunes y de app móvil
 
