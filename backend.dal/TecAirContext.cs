@@ -322,6 +322,9 @@ public partial class TecAirContext : DbContext
             entity.Property(e => e.Type)
                 .HasColumnName("type");
 
+            entity.Property(e => e.Miles)
+                .HasColumnName("miles");
+
             entity.Property(e => e.Hash)
                 .HasMaxLength(32)
                 .HasColumnName("hash")
