@@ -185,6 +185,7 @@ José Morales desarrollará la app móvil, la cual tendrá la misma funcionalida
     + Se replican las funcionalidades ya implementadas para sesiones sin conexión para las sesiones online. 
 
 - 23 ABR
+
     + Se agrega documentación interna a la aplicación móvil.
     + Se redacta el manual de instalación para las diferentes aplicaciones desarrolladas en grupo.
     + Se realizan pruebas de integración con la aplicación REST
@@ -204,19 +205,19 @@ José Morales desarrollará la app móvil, la cual tendrá la misma funcionalida
 
 - 01 Abril: Se crea una reunión para generar el reporte ejecutivo 1, y así discutir lo que se ha realizado por cada estudiante hasta el momento.
 
--6  Abril: A partir de los inicios del app web planteados por Ignacio, se empieza a montar un mockup de la página de búsqueda de los viajes disponibles. En este se muestran los espacios para escribir los códigos ed los aeropuertos y la tabla vacía con nombres de filas según lo estipulado por Alejandro Soto en el modelo relacional.
+- 6  Abril: A partir de los inicios del app web planteados por Ignacio, se empieza a montar un mockup de la página de búsqueda de los viajes disponibles. En este se muestran los espacios para escribir los códigos ed los aeropuertos y la tabla vacía con nombres de filas según lo estipulado por Alejandro Soto en el modelo relacional.
 
--7  Abril: Se crea una reunión para generar el reporte ejecutivo 2, y así discutir lo que se ha realizado por cada estudiante hasta el momento.
+- 7  Abril: Se crea una reunión para generar el reporte ejecutivo 2, y así discutir lo que se ha realizado por cada estudiante hasta el momento.
 
--10 Abril: Se crea un mockup no funcional de la reservaciones de vuelos, donde se incluyen los espacios para tarjeta, código de promoción y demás.
+- 10 Abril: Se crea un mockup no funcional de la reservaciones de vuelos, donde se incluyen los espacios para tarjeta, código de promoción y demás.
 
--17 Abril: Una vez implementados los endpoints de Alejandro Soto, se Implementa la funcionalidad a la página de búsqueda de vuelos.
+- 17 Abril: Una vez implementados los endpoints de Alejandro Soto, se Implementa la funcionalidad a la página de búsqueda de vuelos.
 
--19 Abril: Se hace la funcionalidad de la página de reservaciones de vuelos o de "booking". No se implementa la parte de promociones, ya que falta este endpoint.
+- 19 Abril: Se hace la funcionalidad de la página de reservaciones de vuelos o de "booking". No se implementa la parte de promociones, ya que falta este endpoint.
 
--23 Abril: Se implementan las promociones en la página de booking/reservaciones de vuelos.
+- 23 Abril: Se implementan las promociones en la página de booking/reservaciones de vuelos.
 
--24 abril: Se ayuda a terminal el trabajo escrito, los manuales de ususario y las pruebas de funcionalidad. Se realiza una reunión general para realizar las pruebas finales de funcionalidad y lo que falta de documentación de errores y problemas incompletos, para así poder realizar la entrega final.
+- 24 abril: Se ayuda a terminal el trabajo escrito, los manuales de ususario y las pruebas de funcionalidad. Se realiza una reunión general para realizar las pruebas finales de funcionalidad y lo que falta de documentación de errores y problemas incompletos, para así poder realizar la entrega final.
 ### Ignacio Vargas
 
 - 21/03: Se hace una primera reunión general para discutir las especificaciones del proyecto, y así de una empezar con las partes y labores más administrativas, como la repartición de roles, actividades, reglas, etc.

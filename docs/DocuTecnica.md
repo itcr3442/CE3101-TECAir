@@ -217,6 +217,8 @@ La arquitectura anterior es producto de los requerimientos de la aplicación mó
 
 ## Problemas conocidos
 
+- No es un problema per se, sino que es una anotación sobre una funcionalidad de la aplicación móvil (que además se consideraba extra). Se estipula la posibilidad de que una promoción tenga una imagen asociada. Está la lógica para extraer los datos, almacenarlos localmente, e incluso está el espacio apartado para presentar dicha imagen, sin embargo, debido a restricciones de tiempo no se completó la rutina para interpretar los datos de la imagen y cargarlos en la vista de lista de promociones de la app móvil. 
+
 ## Problemas encontrados
 
 ### Configuración de variables de ambiente en IIS: 
