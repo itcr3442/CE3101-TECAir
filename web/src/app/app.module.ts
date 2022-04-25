@@ -11,6 +11,8 @@ import {
   NgxMatTimepickerModule
 } from '@angular-material-components/datetime-picker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ColorPickerModule } from 'ngx-color-picker';
+
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -59,7 +61,8 @@ import { RegisterBagsComponent } from './components/register-bags/register-bags.
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
     NgxMatNativeDateModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ColorPickerModule
   ],
 
   providers: [AuthGuard],

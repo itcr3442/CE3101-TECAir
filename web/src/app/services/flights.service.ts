@@ -40,6 +40,10 @@ export class FlightsService {
     return this.repo.getData("users/" + id + "/open")
   }
 
+  public getUsersCheckedFlights(id: string) {
+    return this.repo.getData("users/" + id + "/checked")
+  }
+
   public getAirports() {
     return this.repo.getData("airports")
   }

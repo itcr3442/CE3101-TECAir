@@ -96,4 +96,10 @@ export class RegisterService {
   public resetForm = (formGroup: FormGroup) => {
     Object.values(formGroup.controls).forEach((control) => control.reset())
   }
+
+  public registerBags = (id: string, owner: string, weight: number, color: string) => {
+    let bag = { owner, weight, color }
+    console.log("Bag:", bag)
+    return this.repositoryService.create("flights/" + id + "/bag", bag)
+  }
 }
