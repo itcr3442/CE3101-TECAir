@@ -71,7 +71,7 @@ graph ER {
 	usa -- tiquete;
 
 	usuario -- asigna [label="1",len=1.00];
-	maleta -- asigna [label="n",len=1.00];
+	maleta -- asigna [label="n",len=1.00,color="black:white:black"];
 	vuelo -- asigna [label="1",len=1.00];
 
 	segmento -- origen [label="n",len=1.00,color="black:white:black"];
